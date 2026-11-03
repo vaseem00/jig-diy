@@ -4,7 +4,7 @@
 import { spawn } from "node:child_process";
 import { existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
-import { delimiter, dirname, join, resolve } from "node:path";
+import { delimiter, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export class CaptureError extends Error {
@@ -144,6 +144,13 @@ function linkedFolder(file, roots) {
   }
   return null;
 }
+// The current folder as the shell names it ($PWD) when that is another spelling of process.cwd() (Linux and macOS give
+// the real path, so only $PWD shows a current folder inside a linked folder), else null. As jig.mjs shellCwd().
+function shellCwd() {
+  const pwd = process.env.PWD, here = process.cwd();
+  if (process.platform === "win32" || !pwd || !isAbsolute(pwd) || resolve(pwd) === here) return null;
+  return sameId(resolve(pwd), here) ? resolve(pwd) : null;
+}
 
 // browserArgs(profile) -> the command-line switches of the headless browser: a fresh profile, software WebGL, no
 // throttling, and switches that ask for less background traffic of the browser itself (no variations seed, sync,
@@ -237,7 +244,9 @@ export async function capture(url, { out, width = 1280, height = 900, scale = 1,
     const clip = { x: Math.max(0, box.x), y: Math.max(0, box.y), width: box.width, height: Math.min(box.height, Math.floor(16000 / scale)), scale: 1 };
     const shot = await send("Page.captureScreenshot", { format, ...(format === "webp" ? { quality: 90 } : {}), clip, captureBeyondViewport: true });
     // Never write through a link: a linked folder, a symbolic link, or a hard link (a file with more than one name).
-    const linked = linkedFolder(file, [pageDir(url), process.cwd()]);
+    const shell = shellCwd(), rel = shell && relative(process.cwd(), file);
+    const linked = linkedFolder(file, [pageDir(url), process.cwd()])
+      ?? (shell && rel !== ".." && !rel.startsWith(`..${sep}`) && !isAbsolute(rel) ? linkedFolder(join(shell, rel), [pageDir(url), shell]) : null);
     if (linked) throw new CaptureError(`The folder "${linked}" is a link to another folder. jig does not write through links. Remove the link, or give --out another path.`);
     let st;
     try { st = lstatSync(file, { throwIfNoEntry: false }); } catch { st = undefined; }

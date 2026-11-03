@@ -214,9 +214,30 @@ details.tech summary::after,details.tech[open] summary::after{content:none}
    there app.js fitBoq() sets data-break only on the item cells that make the table scroll sideways) */
 .lede,.trip label .it{overflow-wrap:anywhere}
 .boq td[data-break]{overflow-wrap:anywhere}
+/* the BOQ table: app.js fitBoq() sets data-fit only when the table would scroll sideways with no short word broken:
+   "wrap" (Buy and Rate wrap at a space), then "stack" (each row is a grid, as on a phone) */
+.boq[data-fit~="wrap"] tbody td:nth-child(4),.boq[data-fit~="wrap"] tbody td:nth-child(5){white-space:normal}
+.boq[data-fit~="stack"] thead{display:none}
+.boq[data-fit~="stack"],.boq[data-fit~="stack"] tbody,.boq[data-fit~="stack"] tfoot{display:block}
+.boq[data-fit~="stack"] tr{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:2px 8px;padding:8px 0;border-bottom:1px solid var(--faint)}
+.boq[data-fit~="stack"] td{border:0;padding:0}
+.boq[data-fit~="stack"] tbody td:nth-child(1){grid-row:1/4}
+.boq[data-fit~="stack"] tbody td:nth-child(2){grid-column:2;grid-row:1;overflow-wrap:anywhere}
+.boq[data-fit~="stack"] tbody td:nth-child(3){grid-column:2;grid-row:2}
+.boq[data-fit~="stack"] tbody td:nth-child(4){grid-column:2;grid-row:3;text-align:left;font-family:inherit}
+.boq[data-fit~="stack"] tbody td:nth-child(5){grid-column:3;grid-row:2;color:var(--muted)}
+.boq[data-fit~="stack"] tbody td:nth-child(6){grid-column:3;grid-row:1;font-weight:600;color:var(--ink)}
+.boq[data-fit~="stack"] td[data-l]::before{content:attr(data-l) ": ";color:var(--muted)}
+.boq[data-fit~="stack"] tr.grp{display:block;padding:0;border:0}
+.boq[data-fit~="stack"] tr.grp td{display:block;padding:10px 8px 6px}
+.boq[data-fit~="stack"] tfoot tr{grid-template-columns:minmax(0,1fr) auto}
+.boq[data-fit~="stack"] tfoot tr.total td{border-top:0;padding-top:4px}
+.boq[data-fit~="stack"] tfoot tr.total{border-top:2px solid var(--ink);border-bottom:0}
 /* the Parts table: cut sizes stay on one line; app.js sets data-fit only when the table would scroll sideways, one
-   stage at a time: "stack" (the material goes under the name), "wrap" (sizes wrap after a ×), "mat" (a long material
-   name breaks inside the word), "break" (a long part name breaks too) */
+   stage at a time: "stack" (the material goes under the name), "wrap" (sizes wrap after a ×), "wide" (the Parts card
+   takes the full width of the tab), "mat" (a long material name breaks inside the word), "break" (a long part name
+   breaks too) */
+.grid2:has(.parts[data-fit~="wide"]){grid-template-columns:minmax(0,1fr)}
 .parts[data-fit~="stack"] .pmat{display:none}
 .parts[data-fit~="stack"] .pm{display:block;color:var(--muted);font-size:12px}
 .parts[data-fit~="wrap"] th:nth-child(4),.parts[data-fit~="wrap"] td:nth-child(4){white-space:normal}

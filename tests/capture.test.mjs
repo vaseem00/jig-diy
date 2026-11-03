@@ -4,7 +4,7 @@
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { existsSync, linkSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmdirSync, rmSync, symlinkSync, utimesSync, writeFileSync } from "node:fs";
+import { existsSync, linkSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmdirSync, rmSync, symlinkSync, unlinkSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -112,7 +112,7 @@ test("a live capture removes a stale profile and its own profile, and never writ
   try {
     await assert.rejects(capture(pathToFileURL(q).href, { out: join(alias, "site", "lnk", "y.png"), wait: 0, tmp: root }), /The folder ".*lnk" is a link to another folder/);
     assert.deepEqual(readdirSync(away), [], "nothing written through the link");
-  } finally { rmdirSync(alias); }
+  } finally { if (process.platform === "win32") rmdirSync(alias); else unlinkSync(alias); } // a junction goes with rmdir, a symbolic link with unlink
 });
 
 test("the capture command: a route that the page changes (#build/99) exits 1 and the report says so", { skip: !BROWSER && "no Chrome, Chromium or Edge on this machine" }, async () => {
@@ -142,6 +142,20 @@ test("a live capture: WebP, --select clips to the element, a wide page scrolls s
   assert.deepEqual(r.consoleErrors, []);
   assert.equal(r.sidewaysScroll, true);
   await assert.rejects(capture(pathToFileURL(p).href, { out: join(TMP, "none.png"), wait: 0, select: "#missing" }), /No element matches --select "#missing"/);
+});
+
+test("the capture command from a current folder inside a linked folder of the page folder: refused (exit 3)", async (t) => {
+  if (!BROWSER) return t.skip("no Chrome, Chromium or Edge on this machine");
+  const site = mkdtempSync(join(TMP, "site-")), away = mkdtempSync(join(TMP, "away-")), shots = join(site, "shots");
+  const p = join(site, "here.html");
+  writeFileSync(p, readFileSync(page("here.html", "<p>Hi</p>")));
+  symlinkSync(away, shots, process.platform === "win32" ? "junction" : "dir");
+  // As a shell after "cd site/shots": Linux and macOS give the real path as the current folder, $PWD the linked one.
+  const r = await new Promise((ok) => execFile(process.execPath, [JIG, "capture", p, "--out", "x.png", "--wait", "0", "-q"], { cwd: shots, env: { ...process.env, PWD: shots }, encoding: "utf8", timeout: 120000 },
+    (err, stdout, stderr) => ok({ code: err ? err.code : 0, stdout, stderr })));
+  assert.equal(r.code, 3, r.stderr);
+  assert.match(r.stderr, /The folder ".*shots" is a link to another folder/);
+  assert.deepEqual(readdirSync(away), [], "nothing written through the link");
 });
 
 test("the capture command: exit 1 on console errors, the report carries them", async (t) => {

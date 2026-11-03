@@ -250,11 +250,23 @@ test("narrow screens: titles and long words break inside the word, phases keep r
   assert.equal(decl(rule('.parts[data-fit~="mat"] .pm,.parts[data-fit~="mat"] td.pmat'), "overflow-wrap"), "anywhere");
   assert.equal(decl(rule('.parts[data-fit~="break"] td:nth-child(2),.parts[data-fit~="break"] td.pmat'), "overflow-wrap"), "anywhere");
   assert.doesNotMatch(css, /\.parts (th|td):nth-child\(4\)[^{]*\{white-space:normal\}/, "no unconditional wrap of the sizes");
-  assert.ok(/^function fitParts\(/m.test(app) && app.includes('for (const f of ["stack", "stack wrap", "stack wrap mat", "stack wrap mat break"]) { if (!over()) break; t.dataset.fit = f; }'), "app.js fits the Parts table");
+  // before a material name breaks, the Parts card takes the full width of the Cut tab (the page text is the system
+  // font, so its width is not known when the page is built)
+  assert.equal(decl(rule('.grid2:has(.parts[data-fit~="wide"])'), "grid-template-columns"), "minmax(0,1fr)");
+  assert.ok(/^function fitParts\(/m.test(app) && app.includes('for (const f of ["stack", "stack wrap", "wide", "wide stack", "wide stack wrap", "wide stack wrap mat", "wide stack wrap mat break"]) { if (!over()) break; t.dataset.fit = f; }'), "app.js fits the Parts table");
   assert.ok(app.includes('len(v, false).replace(/ /g, "\\u00a0")).join("\\u00a0× ")'), "a mixed fraction keeps a no-break space");
   // a BOQ item breaks a long word at any width only where fitBoq() marks it; in print, an item with a word of 20 letters
   // or more may break (fitBoq() measures the screen, not the paper)
-  assert.ok(/^function fitBoq\(/m.test(app) && app.includes('td.dataset.break = ""; if (!over()) break;'), "app.js fits the BOQ");
+  assert.ok(/^function fitBoq\(/m.test(app) && app.includes('cells.filter((td) => td.hasAttribute("data-long"))') && app.includes('td.dataset.break = ""; if (!over()) return;'), "app.js breaks only a long word in the BOQ");
+  // then, while the table would still scroll sideways, Buy and Rate wrap at a space, and last each row stacks as on a
+  // phone: a short word never breaks
+  assert.ok(app.includes('for (const f of ["wrap", "wrap stack"]) { t.dataset.fit = f; if (!over()) return; }'), "app.js wraps, then stacks the BOQ");
+  assert.equal(decl(rule('.boq[data-fit~="wrap"] tbody td:nth-child(4),.boq[data-fit~="wrap"] tbody td:nth-child(5)'), "white-space"), "normal");
+  assert.equal(decl(rule('.boq[data-fit~="stack"] tr'), "display"), "grid");
+  assert.equal(decl(rule('.boq[data-fit~="stack"] thead'), "display"), "none");
+  // the stacked rows are the phone rows: the same declarations as under 601 px
+  for (const sel of ["tr", "td", "tbody td:nth-child(1)", "tbody td:nth-child(2)", "tbody td:nth-child(3)", "tbody td:nth-child(5)", "tbody td:nth-child(6)", "td[data-l]::before", "tr.grp", "tr.grp td", "tfoot tr", "tfoot tr.total td", "tfoot tr.total"])
+    assert.equal(rule(`.boq[data-fit~="stack"] ${sel}`), rule(`.boq ${sel}`, media("(max-width:600px)")), `.boq[data-fit~="stack"] ${sel}`);
   assert.equal(decl(rule(".boq td[data-break]"), "overflow-wrap"), "anywhere");
   assert.equal(decl(rule(".boq td[data-long]", media("print")), "overflow-wrap"), "anywhere");
   assert.doesNotMatch(css.replace(media("print"), ""), /td\[data-long\]/, "data-long breaks a word only in print");

@@ -218,9 +218,30 @@ details.tech summary::after,details.tech[open] summary::after{content:none}
    there app.js fitBoq() sets data-break only on the item cells that make the table scroll sideways) */
 .lede,.trip label .it{overflow-wrap:anywhere}
 .boq td[data-break]{overflow-wrap:anywhere}
+/* the BOQ table: app.js fitBoq() sets data-fit only when the table would scroll sideways with no short word broken:
+   "wrap" (Buy and Rate wrap at a space), then "stack" (each row is a grid, as on a phone) */
+.boq[data-fit~="wrap"] tbody td:nth-child(4),.boq[data-fit~="wrap"] tbody td:nth-child(5){white-space:normal}
+.boq[data-fit~="stack"] thead{display:none}
+.boq[data-fit~="stack"],.boq[data-fit~="stack"] tbody,.boq[data-fit~="stack"] tfoot{display:block}
+.boq[data-fit~="stack"] tr{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:2px 8px;padding:8px 0;border-bottom:1px solid var(--faint)}
+.boq[data-fit~="stack"] td{border:0;padding:0}
+.boq[data-fit~="stack"] tbody td:nth-child(1){grid-row:1/4}
+.boq[data-fit~="stack"] tbody td:nth-child(2){grid-column:2;grid-row:1;overflow-wrap:anywhere}
+.boq[data-fit~="stack"] tbody td:nth-child(3){grid-column:2;grid-row:2}
+.boq[data-fit~="stack"] tbody td:nth-child(4){grid-column:2;grid-row:3;text-align:left;font-family:inherit}
+.boq[data-fit~="stack"] tbody td:nth-child(5){grid-column:3;grid-row:2;color:var(--muted)}
+.boq[data-fit~="stack"] tbody td:nth-child(6){grid-column:3;grid-row:1;font-weight:600;color:var(--ink)}
+.boq[data-fit~="stack"] td[data-l]::before{content:attr(data-l) ": ";color:var(--muted)}
+.boq[data-fit~="stack"] tr.grp{display:block;padding:0;border:0}
+.boq[data-fit~="stack"] tr.grp td{display:block;padding:10px 8px 6px}
+.boq[data-fit~="stack"] tfoot tr{grid-template-columns:minmax(0,1fr) auto}
+.boq[data-fit~="stack"] tfoot tr.total td{border-top:0;padding-top:4px}
+.boq[data-fit~="stack"] tfoot tr.total{border-top:2px solid var(--ink);border-bottom:0}
 /* the Parts table: cut sizes stay on one line; app.js sets data-fit only when the table would scroll sideways, one
-   stage at a time: "stack" (the material goes under the name), "wrap" (sizes wrap after a ×), "mat" (a long material
-   name breaks inside the word), "break" (a long part name breaks too) */
+   stage at a time: "stack" (the material goes under the name), "wrap" (sizes wrap after a ×), "wide" (the Parts card
+   takes the full width of the tab), "mat" (a long material name breaks inside the word), "break" (a long part name
+   breaks too) */
+.grid2:has(.parts[data-fit~="wide"]){grid-template-columns:minmax(0,1fr)}
 .parts[data-fit~="stack"] .pmat{display:none}
 .parts[data-fit~="stack"] .pm{display:block;color:var(--muted);font-size:12px}
 .parts[data-fit~="wrap"] th:nth-child(4),.parts[data-fit~="wrap"] td:nth-child(4){white-space:normal}
@@ -1400,26 +1421,32 @@ function showStep(i, fly = true) {
 }
 // The Parts table fits its card. Cut sizes stay on one line and the material has its own column until the table would
 // scroll sideways. Then, one stage at a time while it still would (data-fit): the material goes under the name
-// ("stack"), the sizes wrap after a "×" ("wrap"), a long material name breaks inside a word ("mat"), and last a long
-// part name breaks too ("break"). It fits again only when the width changes, so its own change of height cannot loop.
+// ("stack"), the sizes wrap after a "×" ("wrap"), the Parts card takes the full width of the tab ("wide"), a long
+// material name breaks inside a word ("mat"), and last a long part name breaks too ("break"). So a wide font (the
+// page text is the system font) never breaks a short name while there is room to give. It fits again only when the
+// width of the tab changes, so its own change of size cannot loop.
 function fitParts(force = false) {
-  const t = $("table.parts"), s = t?.parentElement, w = s?.clientWidth ?? 0;
+  const t = $("table.parts"), s = t?.parentElement, w = t?.closest(".grid2")?.clientWidth ?? 0;
   if (!t || (w === fitWidth && !force)) return;
   fitWidth = w;
   if (!w) return; // a hidden tab: fit when it shows
   const over = () => s.scrollWidth > s.clientWidth + 1;
   t.removeAttribute("data-fit");
-  for (const f of ["stack", "stack wrap", "stack wrap mat", "stack wrap mat break"]) { if (!over()) break; t.dataset.fit = f; }
+  for (const f of ["stack", "stack wrap", "wide", "wide stack", "wide stack wrap", "wide stack wrap mat", "wide stack wrap mat break"]) { if (!over()) break; t.dataset.fit = f; }
 }
-// The BOQ item column: when the table would scroll sideways, a long word breaks inside the word (data-break) in one
-// item cell at a time, the cell with the widest word first, until the table fits. So "Sandpaper" stays whole next to
-// a 40-letter material name. Under 601 px each row is a grid and page.css breaks every item. Same width memo rule.
+// The BOQ fits its card, one stage at a time while the table would scroll sideways. First a word of 20 letters or
+// more (data-long) breaks inside the word (data-break), in one item cell at a time, the cell with the widest word
+// first; so "Sandpaper" stays whole next to a 40-letter material name. Then the Buy and Rate cells wrap at a space
+// (data-fit "wrap"), and last each row stacks as on a phone ("wrap stack"). A short word never breaks, whatever the
+// width of the system font. Under 601 px each row is a grid and page.css breaks a word only when it is longer than
+// the line. Same width memo rule.
 function fitBoq(force = false) {
   const t = $("[data-panel=shop] table.boq"), s = t?.closest(".scroll"), w = s?.clientWidth ?? 0;
   if (!t || (w === boqWidth && !force)) return;
   boqWidth = w;
   if (!w) return;
   const over = () => s.scrollWidth > s.clientWidth + 1, cells = $$("tbody td:nth-child(2)", t);
+  t.removeAttribute("data-fit");
   cells.forEach((td) => td.removeAttribute("data-break"));
   if (!over()) return;
   const rg = document.createRange(), widest = (td) => {
@@ -1431,7 +1458,8 @@ function fitBoq(force = false) {
     }
     return m;
   };
-  for (const [td] of cells.map((td) => [td, widest(td)]).sort((a, b) => b[1] - a[1])) { td.dataset.break = ""; if (!over()) break; }
+  for (const [td] of cells.filter((td) => td.hasAttribute("data-long")).map((td) => [td, widest(td)]).sort((a, b) => b[1] - a[1])) { td.dataset.break = ""; if (!over()) return; }
+  for (const f of ["wrap", "wrap stack"]) { t.dataset.fit = f; if (!over()) return; }
 }
 function tab(name, { focus = false, hash = true } = {}) {
   current = name;

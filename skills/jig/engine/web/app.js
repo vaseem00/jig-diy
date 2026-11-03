@@ -409,26 +409,32 @@ function showStep(i, fly = true) {
 }
 // The Parts table fits its card. Cut sizes stay on one line and the material has its own column until the table would
 // scroll sideways. Then, one stage at a time while it still would (data-fit): the material goes under the name
-// ("stack"), the sizes wrap after a "×" ("wrap"), a long material name breaks inside a word ("mat"), and last a long
-// part name breaks too ("break"). It fits again only when the width changes, so its own change of height cannot loop.
+// ("stack"), the sizes wrap after a "×" ("wrap"), the Parts card takes the full width of the tab ("wide"), a long
+// material name breaks inside a word ("mat"), and last a long part name breaks too ("break"). So a wide font (the
+// page text is the system font) never breaks a short name while there is room to give. It fits again only when the
+// width of the tab changes, so its own change of size cannot loop.
 function fitParts(force = false) {
-  const t = $("table.parts"), s = t?.parentElement, w = s?.clientWidth ?? 0;
+  const t = $("table.parts"), s = t?.parentElement, w = t?.closest(".grid2")?.clientWidth ?? 0;
   if (!t || (w === fitWidth && !force)) return;
   fitWidth = w;
   if (!w) return; // a hidden tab: fit when it shows
   const over = () => s.scrollWidth > s.clientWidth + 1;
   t.removeAttribute("data-fit");
-  for (const f of ["stack", "stack wrap", "stack wrap mat", "stack wrap mat break"]) { if (!over()) break; t.dataset.fit = f; }
+  for (const f of ["stack", "stack wrap", "wide", "wide stack", "wide stack wrap", "wide stack wrap mat", "wide stack wrap mat break"]) { if (!over()) break; t.dataset.fit = f; }
 }
-// The BOQ item column: when the table would scroll sideways, a long word breaks inside the word (data-break) in one
-// item cell at a time, the cell with the widest word first, until the table fits. So "Sandpaper" stays whole next to
-// a 40-letter material name. Under 601 px each row is a grid and page.css breaks every item. Same width memo rule.
+// The BOQ fits its card, one stage at a time while the table would scroll sideways. First a word of 20 letters or
+// more (data-long) breaks inside the word (data-break), in one item cell at a time, the cell with the widest word
+// first; so "Sandpaper" stays whole next to a 40-letter material name. Then the Buy and Rate cells wrap at a space
+// (data-fit "wrap"), and last each row stacks as on a phone ("wrap stack"). A short word never breaks, whatever the
+// width of the system font. Under 601 px each row is a grid and page.css breaks a word only when it is longer than
+// the line. Same width memo rule.
 function fitBoq(force = false) {
   const t = $("[data-panel=shop] table.boq"), s = t?.closest(".scroll"), w = s?.clientWidth ?? 0;
   if (!t || (w === boqWidth && !force)) return;
   boqWidth = w;
   if (!w) return;
   const over = () => s.scrollWidth > s.clientWidth + 1, cells = $$("tbody td:nth-child(2)", t);
+  t.removeAttribute("data-fit");
   cells.forEach((td) => td.removeAttribute("data-break"));
   if (!over()) return;
   const rg = document.createRange(), widest = (td) => {
@@ -440,7 +446,8 @@ function fitBoq(force = false) {
     }
     return m;
   };
-  for (const [td] of cells.map((td) => [td, widest(td)]).sort((a, b) => b[1] - a[1])) { td.dataset.break = ""; if (!over()) break; }
+  for (const [td] of cells.filter((td) => td.hasAttribute("data-long")).map((td) => [td, widest(td)]).sort((a, b) => b[1] - a[1])) { td.dataset.break = ""; if (!over()) return; }
+  for (const f of ["wrap", "wrap stack"]) { t.dataset.fit = f; if (!over()) return; }
 }
 function tab(name, { focus = false, hash = true } = {}) {
   current = name;

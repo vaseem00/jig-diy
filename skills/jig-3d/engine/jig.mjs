@@ -283,11 +283,25 @@ function linkedFolder(path, roots, opt = "--out") {
   }
 }
 
+// The current folder as the shell names it ($PWD), when that is another spelling of process.cwd(), else null. On Linux
+// and macOS the kernel gives the current folder by its real path, so after "cd proj/out", where out is a linked folder,
+// only $PWD still shows the link. $PWD counts only when it names the same folder (device and inode): a parent process
+// that changed the folder without updating $PWD leaves a stale value. Windows keeps the path as given in process.cwd().
+function shellCwd() {
+  const pwd = process.env.PWD, here = cwd();
+  if (process.platform === "win32" || !pwd || !isAbsolute(pwd) || resolve(pwd) === here) return null;
+  return sameFile(resolve(pwd), here) ? resolve(pwd) : null;
+}
+
 // Every output goes through here. It never writes through a link: a symbolic link, or a hard link (a file with more
 // than one name), could point outside the project folder. Nor through a linked folder below base (the project folder)
-// or the current folder. flag: the writeFileSync flag ("wx": never replace a file). opt: the option the messages name.
+// or the current folder. An output in the current folder is checked also by the shell's name of that folder, so a
+// current folder inside a linked folder of the project is refused on every system. flag: the writeFileSync flag ("wx":
+// never replace a file). opt: the option the messages name.
 function writeFile(path, data, base, { flag, opt = "--out" } = {}) {
   linkedFolder(path, [base, cwd()], opt);
+  const shell = shellCwd(), rel = shell && relative(cwd(), path);
+  if (shell && rel !== ".." && !rel.startsWith(`..${sep}`) && !isAbsolute(rel)) linkedFolder(join(shell, rel), [base, shell], opt);
   let st;
   try { st = lstatSync(path, { throwIfNoEntry: false }); } catch { st = undefined; }
   if (st && (st.isSymbolicLink() || (st.isFile() && st.nlink > 1)))

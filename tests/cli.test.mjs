@@ -4,9 +4,9 @@
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
 import { execFile, execFileSync } from "node:child_process";
-import { existsSync, linkSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmdirSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { existsSync, linkSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmdirSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, resolve as resolvePath, sep } from "node:path";
+import { isAbsolute, join, resolve as resolvePath, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { ENGINE_VERSION } from "../engine/lib/version.mjs";
 import { SCHEMA } from "../engine/lib/schema.mjs";
@@ -20,10 +20,10 @@ const KEYS = ["ok", "engine", "command", "project", "counts", "problems", "total
 const TMP = mkdtempSync(join(tmpdir(), "jig-cli-"));
 after(() => rmSync(TMP, { recursive: true, force: true }));
 
-// run(args, { cwd, input }) -> { code, stdout, stderr }
-function run(args, { cwd = ROOT, input = "" } = {}) {
+// run(args, { cwd, input, env }) -> { code, stdout, stderr }
+function run(args, { cwd = ROOT, input = "", env } = {}) {
   return new Promise((ok) => {
-    const child = execFile(process.execPath, [JIG, ...args], { cwd, encoding: "utf8", timeout: 120000, maxBuffer: 64 << 20 },
+    const child = execFile(process.execPath, [JIG, ...args], { cwd, encoding: "utf8", timeout: 120000, maxBuffer: 64 << 20, ...(env ? { env: { ...process.env, ...env } } : {}) },
       (err, stdout, stderr) => ok({ code: err ? (typeof err.code === "number" ? err.code : -1) : 0, stdout, stderr }));
     child.stdin.end(input);
   });
@@ -318,7 +318,8 @@ test("textUnits: wrapped lines join, list items and quotes stand alone, code and
 test("new: a starter that checks 0/0/0 in mm and in inches, and never writes over a file", async () => {
   const r = await run(["new", "my-box", "--report", "json"], { cwd: TMP });
   assert.equal(r.code, 0, r.stderr);
-  const file = join(TMP, "my-box", "project.json");
+  // the output path is the current folder of jig, which is the real path of TMP (macOS: /var is a link to /private/var)
+  const file = join(realpathSync(TMP), "my-box", "project.json");
   assert.deepEqual(JSON.parse(r.stdout).outputs, [file]);
   const P = JSON.parse(readFileSync(file, "utf8"));
   assert.deepEqual([P.id, P.title, P.units], ["my-box", "My box", "mm"]);
@@ -390,6 +391,12 @@ test("--out never writes over the project file: exit 2 and the project bytes unc
 // A link to a folder: a junction on Windows (it needs no privilege, so these tests run on every account), else a
 // symbolic link.
 const linkDir = (target, path) => symlinkSync(target, path, process.platform === "win32" ? "junction" : "dir");
+// Remove such a link, never what it points to: a junction goes with rmdir, a symbolic link with unlink (rmdir of a
+// symbolic link to a folder is ENOTDIR on Linux and macOS).
+const unlinkDir = (path) => (process.platform === "win32" ? rmdirSync(path) : unlinkSync(path));
+// The environment of a shell after "cd dir": on Linux and macOS the kernel gives jig the real path of a current folder
+// inside a linked folder, and only $PWD keeps the path through the link. Windows keeps it in the current folder itself.
+const shellIn = (dir) => ({ cwd: dir, env: { PWD: dir } });
 
 test("--out never writes over the project file through a linked folder or ::$DATA: the file identity counts", async () => {
   const root = join(TMP, `ident-${++n}`), proj = join(root, "proj"), link = join(root, "link"), file = join(proj, "project.json");
@@ -484,7 +491,7 @@ test("a linked folder in the project is refused also when --out spells the proje
     const ok = await run(["build", join(alias, "proj", "project.json"), "--out", join(alias, "proj", "out2") + sep, "-q"]);
     assert.equal(ok.code, 0, ok.stderr);
     assert.ok(existsSync(join(proj, "out2", "pine-bookshelf.html")));
-  } finally { rmdirSync(alias); }
+  } finally { unlinkDir(alias); }
 });
 
 test("a write from a current folder inside a linked folder of the project is refused (exit 3)", { skip: PAGE }, async () => {
@@ -493,15 +500,25 @@ test("a write from a current folder inside a linked folder of the project is ref
   mkdirSync(away);
   writeFileSync(join(proj, "project.json"), readFileSync(SHELF));
   linkDir(away, out);
-  const r = await run(["plan", "../project.json", "--out", "plan.md", "-q"], { cwd: out });
-  assert.equal(r.code, 3, r.stderr);
-  assert.match(r.stderr, /is a link to another folder/);
-  assert.ok(!existsSync(join(away, "plan.md")), "plan.md written through the link");
+  // The project by its absolute path, and as "../project.json": Windows resolves ".." in the path as written
+  // (proj/project.json); Linux and macOS resolve it from the real current folder (root/project.json, which does not
+  // exist), as every other program there does. Either way nothing goes through the link.
+  for (const project of [join(proj, "project.json"), "../project.json"]) {
+    const r = await run(["plan", project, "--out", "plan.md", "-q"], shellIn(out));
+    assert.equal(r.code, 3, `${project}: ${r.stderr}`);
+    if (process.platform === "win32" || isAbsolute(project)) assert.match(r.stderr, /is a link to another folder\. jig does not write through links\./, project);
+    else assert.match(r.stderr, /The file "\.\.\/project\.json" does not exist\./, project);
+    assert.ok(!existsSync(join(away, "plan.md")), `${project}: plan.md written through the link`);
+  }
+  // A $PWD that does not name the current folder (a parent process that changed the folder only) is not used.
+  const stale = await run(["plan", join(proj, "project.json"), "--out", "plan.md", "-q"], { cwd: away, env: { PWD: root } });
+  assert.equal(stale.code, 0, stale.stderr);
+  assert.ok(existsSync(join(away, "plan.md")), "from the real folder, plan.md is a normal output");
   // The current folder inside a linked folder that is not below the project: no refusal.
   const other = join(root, "other");
   mkdirSync(other);
   linkDir(other, join(root, "link"));
-  const ok = await run(["plan", join(proj, "project.json"), "--out", "plan.md", "-q"], { cwd: join(root, "link") });
+  const ok = await run(["plan", join(proj, "project.json"), "--out", "plan.md", "-q"], shellIn(join(root, "link")));
   assert.equal(ok.code, 0, ok.stderr);
   assert.ok(existsSync(join(other, "plan.md")));
 });
