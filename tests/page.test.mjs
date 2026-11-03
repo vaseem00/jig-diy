@@ -452,13 +452,25 @@ const tagPixels = (host) => {
 };`;
 async function live(name, html, script, { wait = 1500, ...opts } = {}) {
   const file = join(TMP, `${name}.html`);
-  writeFileSync(file, html.replace("\n</body>", `\n<script type="module">\n${HARNESS}\ntry {\n${script}\n} catch (e) { out({ failed: String(e?.stack ?? e).slice(0, 300) }); }\nout({ done: true });\n</script>\n</body>`));
-  const r = await capture(pathToFileURL(file).href, { out: join(TMP, `${name}.png`), width: 1280, height: 900, reducedMotion: true, wait, ...opts });
-  const got = {}, other = [];
-  for (const e of r.consoleErrors) { const m = /^console\.error: jig-test (.*)$/s.exec(e); if (m) Object.assign(got, JSON.parse(m[1])); else other.push(e); }
+  // capture() waits a fixed time (wait) after the load, then scrolls the page to the top for its picture. The checks
+  // must end before that, or the scroll can land between two of their steps. "late": they ended after it.
+  const run = async (ms) => {
+    const end = `out({ done: true, late: performance.now() > (performance.getEntriesByType("navigation")[0]?.loadEventStart || Infinity) + ${ms} - 200 });`;
+    writeFileSync(file, html.replace("\n</body>", `\n<script type="module">\n${HARNESS}\ntry {\n${script}\n} catch (e) { out({ failed: String(e?.stack ?? e).slice(0, 300) }); }\n${end}\n</script>\n</body>`));
+    const r = await capture(pathToFileURL(file).href, { out: join(TMP, `${name}.png`), width: 1280, height: 900, reducedMotion: true, wait: ms, ...opts });
+    const got = {}, other = [];
+    for (const e of r.consoleErrors) { const m = /^console\.error: jig-test (.*)$/s.exec(e); if (m) Object.assign(got, JSON.parse(m[1])); else other.push(e); }
+    return { r, got, other };
+  };
+  // A slow machine (software WebGL on a shared CI runner) may need more time: one more run with a longer wait, never a
+  // weaker check.
+  let { r, got, other } = await run(wait);
+  if ((got.done !== true || got.late) && got.failed === undefined) ({ r, got, other } = await run(Math.max(3 * wait, 8000)));
   assert.deepEqual(other, [], `${name}: console errors`);
   assert.equal(got.failed, undefined, `${name}: ${got.failed}`);
   assert.equal(got.done, true, `${name}: the page checks did not finish in time: ${JSON.stringify(got)}`);
+  assert.equal(got.late, false, `${name}: the page checks ended after capture() scrolled the page for its picture`);
+  delete got.late;
   return { ...got, sidewaysScroll: r.sidewaysScroll };
 }
 // A page with three.js stubs: the 3D slot reports an error, every text tab works, and nothing comes from the network.
@@ -539,7 +551,7 @@ test("live: Next and Back leave the Check box to the reader, on the last step to
     location.hash = "#build"; await sleep(250);
     out({ bare: location.hash });
     location.hash = "#nope"; await sleep(250);
-    out({ unknown: location.hash, after: eyebrow().slice(0, 12) });`, { hash: "build/3" });
+    out({ unknown: location.hash, after: eyebrow().slice(0, 12) });`, { hash: "build/3", wait: 3000 });
   assert.deepEqual(r.back, { box: false, rail: [], step: "Step 3 of 10" }, "Next then Back does not tick step 3");
   assert.deepEqual(r.finish, { box: false, rail: [] }, "Finish does not mark step 10 done while its box is empty");
   assert.deepEqual(r.ticked, { box: true, rail: [10] }, "the reader's tick marks the rail");
