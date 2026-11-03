@@ -6,7 +6,7 @@ The format follows [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/
 
 ## [Unreleased]
 
-## [1.0.0] - 2026-11-02
+## [1.0.0] - 2026-11-03
 
 The first public release. Jig turns a DIY project into one interactive build guide: a step-by-step plan, a bill of quantities, a purchase plan, a to-scale cut list and a 3D viewer that assembles the object part by part. The text follows the writing rules of ASD-STE100 Simplified Technical English, and a level switch serves a first-timer and an expert. Nine Agent Skills share one engine. [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) is the contract for this release.
 
