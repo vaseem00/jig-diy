@@ -1,0 +1,69 @@
+{
+  "skill_name": "jig-boq",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm in the UK and I've never built anything before. I need a 1200 x 600 bench top from 18 mm ply and four legs. Roughly what will the materials cost? Include the screws and some kind of oil finish.",
+      "expected_output": "A project.json in the user's folder (for example ./bench/) in mm with GBP and VAT included in the prices, a plywood sheet material with thick 18, a top part of 1200 x 600, four leg parts that share one label, fixings in uses and an oil finish with coverage. The BOQ comes from running the engine's boq command and is shown as the Markdown table with group codes, a 10% contingency and a total in pounds. Every rate is marked as an estimate, and the reply lists the assumptions (leg length, leg section, fixings) and suggests rails because four legs on a top rack.",
+      "files": [],
+      "expectations": [
+        "A project.json file is written in the user's working folder, not inside the skill folder",
+        "The project sets currency GBP and a tax entry with rate 0.2 and included true",
+        "The top is a part of a sheet material whose thick is 18, with the part size 1200 x 600 x 18",
+        "The four legs are four parts that share one label, one name and one size",
+        "The reply contains a BOQ produced by running node with engine/jig.mjs boq, not a table typed by hand",
+        "The reply states the total in pounds and names the contingency",
+        "The reply says the prices are estimates and lists at least two assumptions, one of them the leg length",
+        "The BOQ or the reply includes safety glasses or other protective equipment",
+        "The reply contains no dollar amounts"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Price out a 2x4 workbench frame: 4 legs at 34 in, 2 rails at 72 in, 4 stretchers at 21 in, plus a 72 x 24 top from 3/4 plywood and a box of 3 inch deck screws. I'm in Austin, TX, so add 8.25% sales tax. I want a CSV I can drop into Google Sheets.",
+      "expected_output": "A project in inches with the stud section at its actual size [3.5, 1.5], plywood at its actual 23/32 in thickness, currency USD and a sales tax of 0.0825 that is added (not included). The engine writes boq.csv with --format csv and the reply gives its path. The board count comes from the engine's cut plan (four 8 ft studs at typical prices). The reply marks prices as estimates and says where they come from.",
+      "files": [],
+      "expectations": [
+        "The project sets units to in",
+        "The stud material's section is the actual size 3.5 x 1.5, not 4 x 2",
+        "The plywood thick is 0.71875 (23/32 in), or the reply explains why it used a different actual thickness",
+        "The tax entry has rate 0.0825 and is not marked included",
+        "A CSV file is written by the engine's boq command with --format csv, and the reply gives its path",
+        "The number of studs to buy is taken from the engine output, not computed by hand from a sum of lengths",
+        "The reply marks the prices as estimates and gives their source or says they are typical prices",
+        "The reply gives the total with the sales tax line named"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "What would the materials cost for a pine bookcase, 1800 mm tall, 300 mm deep and 900 mm wide, with five shelves? We have two toddlers. Prices in euros please, I'm in Germany.",
+      "expected_output": "A project in mm with currency EUR and VAT 0.19 included, pine boards at actual sizes, two sides and five shelves (plus top and bottom if the design needs them) with shared labels, screws with a spare, and an anti-tip kit as a material with role anchor because the bookcase is six times taller than deep and the home has small children. The reply tells the user to fix the bookcase to the wall, gives the total with contingency, marks estimates and adds safety gear. It writes no assembly steps.",
+      "files": [],
+      "expectations": [
+        "The project sets currency EUR and a VAT tax entry with rate 0.19 and included true",
+        "The BOQ includes an anti-tip or wall-fixing kit from a material with role anchor",
+        "The reply tells the user to fix the bookcase to the wall and gives the tip-over risk to children as the reason",
+        "The board material uses an actual section, such as 18 x 300 mm, and the parts match it",
+        "The shelves are parts that share one label and one size",
+        "The BOQ comes from running the engine's boq command",
+        "The reply gives a total in euros with a contingency line and says the prices are estimates",
+        "The reply does not contain numbered assembly steps"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Compare the cost of a wardrobe carcass in 18 mm MDF against 18 mm birch plywood. Parts: 2 sides 2000 x 580, top and bottom 964 x 580, 3 shelves 964 x 560, and a back 2000 x 1000 in 6 mm hardboard. My local store quoted MDF 2440 x 1220 sheets at 38, birch ply 2500 x 1250 sheets at 92 and hardboard 2440 x 1220 at 14. About 60 screws, 4 x 50. I'm in Brisbane, so AUD with GST.",
+      "expected_output": "Two projects (or a project and a copy) that differ only in the carcass sheet material, both in AUD with GST 0.1 included. The quoted sheet prices carry no estimate mark (est false or estimate false); other prices stay estimates. Both totals come from the engine's boq command, shown side by side with the difference. The reply notes the tall, shallow carcass needs an anti-tip kit and wall fixing, and one practical difference besides price (MDF is heavier, sags sooner, swells when wet).",
+      "files": [],
+      "expectations": [
+        "Two project files are written, and the only material difference between them is the carcass sheet",
+        "Both projects set currency AUD and a GST tax entry with rate 0.1 and included true",
+        "The sheet prices the user quoted are not marked as estimates (est false on those materials, or estimate false on the project with est true on the others)",
+        "Both totals come from running the engine's boq command, and the reply shows them side by side with the difference",
+        "The back is a part of a 6 mm sheet material, and the sides use the 18 mm sheet",
+        "The BOQ includes an anti-tip kit or the reply tells the user to fix the wardrobe to the wall",
+        "The reply names at least one practical difference between MDF and plywood besides price"
+      ]
+    }
+  ]
+}

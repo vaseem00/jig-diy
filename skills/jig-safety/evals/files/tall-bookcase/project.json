@@ -1,0 +1,128 @@
+{
+  "jig": 1,
+  "id": "tall-bookcase",
+  "title": "Tall bookcase",
+  "summary": "A tall plywood bookcase for a child's bedroom, with a light under the top shelf.",
+  "level": "new",
+  "units": "mm",
+  "currency": "GBP",
+  "tax": { "rate": 0.2, "label": "VAT", "included": true },
+  "priceNote": "Example prices from a UK DIY store.",
+  "pricesAsOf": "2026-11-01",
+  "kerf": 3,
+  "stores": {
+    "diy": { "name": "DIY store" }
+  },
+  "materials": {
+    "ply18": { "kind": "sheet", "name": "Birch plywood", "spec": "18 mm", "thick": 18, "stock": [{ "w": 2440, "h": 1220, "price": 62 }], "store": "diy", "color": "#e8cfa4" },
+    "hardboard": { "kind": "sheet", "name": "Hardboard", "spec": "6 mm", "thick": 6, "stock": [{ "w": 2440, "h": 1220, "price": 14 }], "store": "diy", "color": "#8a6a4a" },
+    "screw-4x40": { "kind": "each", "name": "Wood screw", "spec": "4 x 40 mm, countersunk", "pack": 100, "packName": "box of 100", "price": 6.5, "len": 40, "d": 4, "head": "flat", "store": "diy" },
+    "screw-3x16": { "kind": "each", "name": "Pan-head screw", "spec": "3 x 16 mm", "pack": 100, "packName": "box of 100", "price": 3.2, "len": 16, "d": 3, "head": "pan", "store": "diy" },
+    "sand-120": { "kind": "each", "name": "Sandpaper", "spec": "120 grit", "unit": "sheet", "pack": 10, "price": 4, "store": "diy" },
+    "oil": { "kind": "amount", "name": "Danish oil", "unit": "L", "pack": 0.5, "packName": "0.5 L tin", "price": 12.5, "coverage": 12, "coats": 2, "store": "diy" },
+    "light": { "kind": "each", "name": "LED cabinet light", "spec": "230 V, for a fixed connection", "price": 18, "store": "diy" }
+  },
+  "tools": [
+    { "id": "tape", "name": "Tape measure", "have": true },
+    { "id": "pencil", "name": "Pencil", "have": true },
+    { "id": "saw", "name": "Circular saw", "get": "borrow", "power": true },
+    { "id": "drill", "name": "Cordless drill", "have": true, "power": true },
+    { "id": "sander", "name": "Random orbit sander", "have": true, "power": true },
+    { "id": "glasses", "name": "Safety glasses", "ppe": true, "price": 5, "store": "diy" },
+    { "id": "mask", "name": "Dust mask", "spec": "FFP2", "ppe": true, "price": 6, "store": "diy" }
+  ],
+  "parts": [
+    { "id": "A1", "label": "A", "name": "Side", "material": "ply18", "size": [18, 1800, 280], "at": [0, 0, 0] },
+    { "id": "A2", "label": "A", "name": "Side", "material": "ply18", "size": [18, 1800, 280], "at": [782, 0, 0] },
+    { "id": "B1", "label": "B", "name": "Shelf", "material": "ply18", "size": [764, 18, 280], "at": [18, 60, 0] },
+    { "id": "B2", "label": "B", "name": "Shelf", "material": "ply18", "size": [764, 18, 280], "at": [18, 480, 0] },
+    { "id": "B3", "label": "B", "name": "Shelf", "material": "ply18", "size": [764, 18, 280], "at": [18, 900, 0] },
+    { "id": "B4", "label": "B", "name": "Shelf", "material": "ply18", "size": [764, 18, 280], "at": [18, 1320, 0] },
+    { "id": "B5", "label": "B", "name": "Shelf", "material": "ply18", "size": [764, 18, 280], "at": [18, 1782, 0] },
+    { "id": "C1", "label": "C", "name": "Back", "material": "hardboard", "size": [800, 1800, 6], "at": [0, 0, -6] }
+  ],
+  "steps": [
+    {
+      "id": "cut", "phase": "Prepare", "title": "Cut the parts", "pose": "kit", "cuts": true, "minutes": 40,
+      "tools": ["tape", "pencil", "saw"],
+      "do": [
+        "Mark each part on the plywood from the cut list.",
+        "Cut each part on the waste side of the line.",
+        "Write the part letter on each part."
+      ],
+      "check": "Make sure that you have two sides A, five shelves B and one back C."
+    },
+    {
+      "id": "sand", "phase": "Prepare", "title": "Sand the parts", "pose": "kit", "minutes": 30,
+      "tools": ["sander", "mask"], "uses": { "sand-120": 4 }, "teach": ["sand"],
+      "do": ["Sand all faces and edges with 120 grit.", "Remove the dust with a dry cloth."],
+      "check": "Make sure that no saw marks show on the edges."
+    },
+    {
+      "id": "bottom", "phase": "Build", "title": "Attach the bottom shelf to the left side", "parts": ["A1", "B1"], "minutes": 15,
+      "tools": ["drill", "glasses"], "teach": ["pilot-hole", "countersink"],
+      "fasteners": [{ "material": "screw-4x40", "count": 3 }],
+      "do": [
+        "Put side A on its back edge on the floor.",
+        "Hold shelf B against the side, 60 mm above the bottom end.",
+        "Drill three pilot holes through the side into the shelf.",
+        "Install three screws."
+      ],
+      "check": "Make sure that the shelf is at 90 degrees to the side."
+    },
+    {
+      "id": "top", "phase": "Build", "title": "Attach the top shelf", "parts": ["B5"], "minutes": 10,
+      "tools": ["drill", "glasses"], "teach": ["pilot-hole"],
+      "fasteners": [{ "material": "screw-4x40", "count": 3 }],
+      "do": ["Align the top face of shelf B with the top end of the side.", "Drill three pilot holes.", "Install three screws."],
+      "check": "Make sure that the top shelf is flush with the top end of the side."
+    },
+    {
+      "id": "right", "phase": "Build", "title": "Attach the right side", "parts": ["A2"], "minutes": 15,
+      "tools": ["drill", "glasses"], "teach": ["pilot-hole"],
+      "fasteners": [{ "material": "screw-4x40", "count": 6 }],
+      "do": ["Put the second side A on the free ends of the two shelves.", "Drill three pilot holes into each shelf.", "Install six screws."],
+      "check": "Make sure that the two sides are parallel."
+    },
+    {
+      "id": "middle", "phase": "Build", "title": "Attach the middle shelves", "parts": ["B2", "B3", "B4"], "minutes": 30,
+      "tools": ["drill", "glasses", "tape"], "teach": ["pilot-hole"],
+      "fasteners": [{ "material": "screw-4x40", "count": 18 }],
+      "do": [
+        "Mark the shelf lines at 480, 900 and 1320 mm from the bottom end of each side.",
+        "Put each shelf B on its lines.",
+        "Drill three pilot holes through each side into each shelf.",
+        "Install the screws."
+      ],
+      "check": "Make sure that each shelf is level."
+    },
+    {
+      "id": "back", "phase": "Build", "title": "Attach the back", "parts": ["C1"], "minutes": 20,
+      "tools": ["drill", "glasses", "tape"], "teach": ["square-diagonals"],
+      "fasteners": [{ "material": "screw-3x16", "count": 20 }],
+      "do": [
+        "Put the bookcase on its front edges on the floor.",
+        "Measure the two diagonals of the frame.",
+        "Put back C on the frame.",
+        "Install a screw every 300 mm along each side and each shelf."
+      ],
+      "check": "Make sure that the two diagonals are equal within 2 mm."
+    },
+    {
+      "id": "oil", "phase": "Finish", "title": "Apply the oil", "minutes": 30, "wait": 720,
+      "finish": { "material": "oil", "coats": 2 },
+      "do": ["Apply a thin coat of oil with a cloth.", "Wait 12 hours.", "Apply the second coat."],
+      "check": "Make sure that the oil is dry before you put books on the shelves."
+    },
+    {
+      "id": "light", "phase": "Finish", "title": "Install the light", "minutes": 30,
+      "tools": ["drill"], "uses": { "light": 1 },
+      "do": [
+        "Attach the light under the top shelf with the two screws in the kit.",
+        "Run the cable down the back of the bookcase to the light switch by the door.",
+        "Connect the cable to the terminals of the light switch."
+      ],
+      "check": "Make sure that the light comes on at the switch."
+    }
+  ]
+}

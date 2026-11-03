@@ -1,0 +1,341 @@
+{
+  "jig": 1,
+  "id": "raised-garden-bed",
+  "title": "Cedar raised garden bed",
+  "summary": "This cedar bed is 47 1/2 in long, 24 in wide and 11 in high. You cut twelve parts, attach them with deck screws, and fill the bed with soil.",
+  "level": "new",
+  "units": "in",
+  "currency": "USD",
+  "tax": { "rate": 0.07, "label": "Sales tax" },
+  "priceNote": "Example US home center prices (November 2026) with 7% sales tax. Replace them with the prices and the tax rate at your store.",
+  "pricesAsOf": "2026-11-02",
+  "kerf": 0.125,
+  "trim": 0.25,
+  "contingency": 0.1,
+  "terms": ["sawhorses"],
+
+  "stores": {
+    "home": { "name": "Home center", "note": "Pick straight boards with few knots. Look along each edge before you buy it." },
+    "online": { "name": "Online order", "online": true, "lead": 3, "note": "Order 3 days before you start." }
+  },
+
+  "materials": {
+    "cedar-2x6": { "kind": "linear", "name": "Cedar board", "spec": "2x6 (1 1/2 x 5 1/2 in), planed", "section": [5.5, 1.5], "stock": [{ "length": 96, "price": 24.98 }, { "length": 120, "price": 31.98 }, { "length": 144, "price": 38.98 }], "store": "home", "color": "#c98f62", "note": "Buy planed boards. Rough boards are thicker, and the parts then do not fit." },
+    "cedar-4x4": { "kind": "linear", "name": "Cedar post", "spec": "4x4 (3 1/2 x 3 1/2 in)", "section": [3.5, 3.5], "stock": [{ "length": 96, "price": 29.98 }], "store": "home", "color": "#b8794e", "note": "Keep the offcut. It gives the posts for a second bed." },
+    "screw": { "kind": "each", "name": "Deck screw", "spec": "#10 x 3 in, coated for outdoor use, star drive", "pack": 50, "packName": "box of 50", "price": 11.98, "len": 3, "d": 0.19, "head": "flat", "store": "home", "color": "#8a8f96", "note": "The box has a driver bit for the screws." },
+    "sand-80": { "kind": "each", "name": "Sandpaper", "spec": "80 grit", "unit": "sheet", "pack": 5, "price": 5.48, "store": "home" },
+    "oil": { "kind": "amount", "name": "Exterior wood oil", "spec": "clear, penetrating, for cedar", "unit": "qt", "pack": 1, "packName": "1 qt can", "price": 21.98, "coverage": 75, "coats": 1, "store": "online" },
+    "cloths": { "kind": "each", "name": "Lint-free cloth", "spec": "cotton", "unit": "cloth", "pack": 10, "packName": "pack of 10", "price": 6.49, "group": "Finish", "store": "online" },
+    "fabric": { "kind": "amount", "name": "Landscape fabric", "spec": "woven, 3 ft wide", "unit": "ft", "pack": 50, "packName": "3 x 50 ft roll", "price": 14.98, "store": "home", "note": "Optional. Use it only where weeds grow." },
+    "soil": { "kind": "amount", "name": "Raised bed soil", "spec": "mix for raised beds, 2 cu ft", "unit": "bag", "pack": 1, "packName": "2 cu ft bag", "price": 12.98, "store": "home" }
+  },
+
+  "tools": [
+    { "id": "tape", "name": "Tape measure", "have": true },
+    { "id": "pencil", "name": "Pencil", "have": true },
+    { "id": "square", "name": "Speed square", "price": 9.98, "store": "home" },
+    { "id": "saw", "name": "Circular saw", "spec": "7 1/4 in, 24 teeth or more", "get": "borrow", "power": true },
+    { "id": "horses", "name": "Two sawhorses", "get": "borrow" },
+    { "id": "drill", "name": "Cordless drill", "have": true, "power": true },
+    { "id": "bits", "name": "Drill bit set", "spec": "1/8 in drill bit and a countersink bit", "price": 8.98, "store": "home" },
+    { "id": "block", "name": "Sanding block", "price": 4.48, "store": "home" },
+    { "id": "glasses", "name": "Safety glasses", "ppe": true, "price": 5.98, "store": "home" },
+    { "id": "ears", "name": "Ear plugs", "spec": "foam, 10 pairs", "ppe": true, "price": 3.98, "store": "home" },
+    { "id": "mask", "name": "Dust mask", "spec": "N95, pack of 2", "ppe": true, "price": 7.98, "store": "home" },
+    { "id": "gloves", "name": "Nitrile gloves", "ppe": true, "price": 5.98, "store": "online" },
+    { "id": "level", "name": "Spirit level", "spec": "24 in or longer", "have": true },
+    { "id": "spade", "name": "Garden spade", "have": true },
+    { "id": "scissors", "name": "Scissors", "have": true },
+    { "id": "hose", "name": "Garden hose", "have": true }
+  ],
+
+  "parts": [
+    { "id": "A1", "label": "A", "name": "Long board", "material": "cedar-2x6", "size": [47.5, 5.5, 1.5], "at": [0, 0, 0] },
+    { "id": "A2", "label": "A", "name": "Long board", "material": "cedar-2x6", "size": [47.5, 5.5, 1.5], "at": [0, 5.5, 0] },
+    { "id": "A3", "label": "A", "name": "Long board", "material": "cedar-2x6", "size": [47.5, 5.5, 1.5], "at": [0, 0, 22.5] },
+    { "id": "A4", "label": "A", "name": "Long board", "material": "cedar-2x6", "size": [47.5, 5.5, 1.5], "at": [0, 5.5, 22.5] },
+    { "id": "B1", "label": "B", "name": "Short board", "material": "cedar-2x6", "size": [1.5, 5.5, 21], "at": [0, 0, 1.5] },
+    { "id": "B2", "label": "B", "name": "Short board", "material": "cedar-2x6", "size": [1.5, 5.5, 21], "at": [0, 5.5, 1.5] },
+    { "id": "B3", "label": "B", "name": "Short board", "material": "cedar-2x6", "size": [1.5, 5.5, 21], "at": [46, 0, 1.5] },
+    { "id": "B4", "label": "B", "name": "Short board", "material": "cedar-2x6", "size": [1.5, 5.5, 21], "at": [46, 5.5, 1.5] },
+    { "id": "C1", "label": "C", "name": "Post", "material": "cedar-4x4", "size": [3.5, 11, 3.5], "at": [1.5, 0, 1.5] },
+    { "id": "C2", "label": "C", "name": "Post", "material": "cedar-4x4", "size": [3.5, 11, 3.5], "at": [42.5, 0, 1.5] },
+    { "id": "C3", "label": "C", "name": "Post", "material": "cedar-4x4", "size": [3.5, 11, 3.5], "at": [1.5, 0, 19] },
+    { "id": "C4", "label": "C", "name": "Post", "material": "cedar-4x4", "size": [3.5, 11, 3.5], "at": [42.5, 0, 19] }
+  ],
+
+  "props": {
+    "ground": { "label": "Level ground", "size": [72, 1, 48], "at": [-12.25, -1.0625, -12], "color": "#a68d6b" },
+    "soil": { "label": "Soil", "size": [44.5, 10, 21], "at": [1.5, 0, 1.5], "color": "#5f4a39" }
+  },
+
+  "techniques": {
+    "cut-straight": {
+      "name": "Cut on the line",
+      "warn": [
+        { "type": "warning", "text": "Wear safety glasses. The saw can throw chips into your eyes." },
+        { "type": "warning", "text": "Wear ear protection. A loud saw can hurt your ears." },
+        { "type": "warning", "text": "Keep your hands 6 in from the blade. The blade can cut your fingers." },
+        { "type": "warning", "text": "Stand to the side of the saw line. A saw that jumps back can hit you." },
+        { "type": "warning", "text": "Support the board so that the cut stays open. A cut that closes on the blade makes the saw jump back toward you." },
+        { "type": "warning", "text": "Do not lock or remove the lower blade guard. The guard covers the blade after the cut." }
+      ],
+      "do": [
+        "Set the blade depth 1/4 in more than the thickness of the board.",
+        "If you cut a post, set the blade to its full depth.",
+        "Put the board on the sawhorses, with the line near a sawhorse.",
+        "Put a second support under a long waste piece, near the line.",
+        "Do not cut between two sawhorses that are far apart.",
+        "Align the blade with the waste side of the line.",
+        "Let the saw reach full speed before it touches the wood.",
+        "Push the saw slowly along the line.",
+        "Let a short waste piece fall. Do not hold it.",
+        "Before you lift the saw, let the blade stop."
+      ],
+      "why": "The blade removes {kerf} of wood. A cut on the waste side keeps the part at its full length.",
+      "tools": ["Circular saw", "Two sawhorses"]
+    },
+    "pilot-hole": {
+      "name": "Drill a pilot hole",
+      "warn": [{ "type": "warning", "text": "Wear safety glasses. The bit can throw chips into your eyes." }],
+      "do": [
+        "Put a scrap block under the board at the mark.",
+        "Hold the drill at 90° to the face.",
+        "Drill through the board into the scrap block."
+      ],
+      "why": "A pilot hole gives the screw a path. Without it, the cedar can split near an end.",
+      "tools": ["Cordless drill", "Drill bit set"]
+    },
+    "countersink": {
+      "name": "Countersink the hole",
+      "warn": [{ "type": "warning", "text": "Wear safety glasses. The bit can throw chips into your eyes." }],
+      "do": [
+        "Put the countersink bit in the pilot hole.",
+        "Drill until the cone is as wide as the screw head.",
+        "Remove the dust from the hole."
+      ],
+      "why": "The cone lets the screw head sit flush with the face.",
+      "tools": ["Cordless drill", "Drill bit set"]
+    },
+    "square-diagonals": {
+      "name": "Square a frame",
+      "do": [
+        "Measure the frame from corner to corner.",
+        "Measure the other diagonal.",
+        "If the two lengths are not equal, push the long diagonal corners together.",
+        "Measure again until the two lengths are equal within 1/8 in."
+      ],
+      "why": "A square frame has two equal diagonals.",
+      "tools": ["Tape measure"]
+    },
+    "finish-wipe": {
+      "name": "Apply an oil finish",
+      "warn": [
+        { "type": "warning", "text": "Wear nitrile gloves. Oil on your skin can cause a rash." },
+        { "type": "warning", "text": "Put used cloths flat outdoors to dry, or in a closed metal can of water. Oily cloths can catch fire." }
+      ],
+      "do": [
+        "Stir the oil for 1 minute.",
+        "Apply a thin coat with a lint-free cloth.",
+        "Rub the oil along the grain.",
+        "Wipe off the oil that stays on the face."
+      ],
+      "why": "A thin coat goes into the wood and dries. A thick coat stays sticky.",
+      "tools": ["Lint-free cloth", "Nitrile gloves"]
+    },
+    "level-check": {
+      "name": "Level the bed",
+      "do": [
+        "Put the spirit level on the top edge of a board.",
+        "Read the position of the bubble.",
+        "Turn the level end to end on the same spot.",
+        "Read the bubble again.",
+        "If the bubble is not between the lines, remove soil under the high end."
+      ],
+      "why": "A good level shows the same reading in the two directions.",
+      "tools": ["Spirit level", "Garden spade"]
+    }
+  },
+
+  "steps": [
+    {
+      "id": "cut", "phase": "Prepare", "title": "Cut the parts", "pose": "kit", "cuts": true, "minutes": 40,
+      "tools": ["tape", "pencil", "square", "saw", "horses", "glasses", "ears", "mask"],
+      "teach": ["measure-mark", "cut-straight"],
+      "warn": [{ "type": "warning", "text": "Wear a dust mask. Cedar dust can cause asthma." }],
+      "do": [
+        "Put each board on the two sawhorses.",
+        "Mark each cut from the cut list.",
+        { "t": "Measure each length two times before you cut.", "new": true },
+        "Cut each long board A and each short board B on the waste side of the line.",
+        "Cut each post C from two opposite faces.",
+        "Write the part letter on the inside face of each part."
+      ],
+      "check": "Make sure that you have four long boards A, four short boards B and four posts C.",
+      "why": "A 7 1/4 in circular saw cuts about 2 3/8 in deep. The post is 3 1/2 in thick, so you cut it from two faces.",
+      "tip": "Mark the post line on all four faces. The two cuts then meet."
+    },
+    {
+      "id": "drill", "phase": "Prepare", "title": "Drill the screw holes", "pose": "kit", "minutes": 30,
+      "focus": ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4"],
+      "tools": ["tape", "pencil", "square", "drill", "bits", "glasses"],
+      "teach": ["pilot-hole", "countersink"],
+      "do": [
+        "Draw a line across each long board A, 3 1/4 in from each end.",
+        "Draw a line across each short board B, 1 3/4 in from each end.",
+        "Mark two holes on each line of a long board, 1 1/4 in from the edges.",
+        "Mark two holes on each line of a short board, 2 in from the edges.",
+        "Drill a 1/8 in pilot hole through the board at each mark.",
+        "Countersink each hole on the outside face."
+      ],
+      "check": "Make sure that each board has four holes.",
+      "why": "The screws from a long board and a short board go into the same post. Different heights keep the screws apart."
+    },
+    {
+      "id": "back", "phase": "Build", "title": "Attach two long boards to two posts", "parts": ["A1", "A2", "C1", "C2"], "minutes": 20,
+      "from": [0, 6, -14], "view": { "az": 200, "el": 30, "note": "The picture shows the bed upright." },
+      "tools": ["tape", "square", "drill", "glasses"],
+      "fasteners": [
+        { "material": "screw", "at": [3.25, 1.25, 0], "dir": [0, 0, 1], "repeat": { "count": 2, "step": [41, 0, 0] } },
+        { "material": "screw", "at": [3.25, 4.25, 0], "dir": [0, 0, 1], "repeat": { "count": 2, "step": [41, 0, 0] } },
+        { "material": "screw", "at": [3.25, 6.75, 0], "dir": [0, 0, 1], "repeat": { "count": 2, "step": [41, 0, 0] } },
+        { "material": "screw", "at": [3.25, 9.75, 0], "dir": [0, 0, 1], "repeat": { "count": 2, "step": [41, 0, 0] } }
+      ],
+      "warn": [
+        { "type": "warning", "text": "Wear safety glasses. The driver bit can slip and throw chips." },
+        { "type": "warning", "text": "Hold the drill with two hands. A long screw that stops can twist your wrist." }
+      ],
+      "do": [
+        "Put two posts C on a flat surface, about 41 in apart.",
+        "Put two long boards A on the posts, edge to edge, with the outside faces up.",
+        "Align the ends of each post with the outer edges of the boards.",
+        "Move each post until it is 1 1/2 in from the ends of the boards.",
+        "Drive one screw through each hole into the posts."
+      ],
+      "check": "Make sure that each post is square to the boards.",
+      "why": "The gap at each end holds a short board B. The posts then sit inside the corners of the bed.",
+      "tip": "An offcut of cedar board is a good spacer: it is 1 1/2 in thick, the same as short board B."
+    },
+    {
+      "id": "front", "phase": "Build", "title": "Attach the last long boards to two posts", "parts": ["A3", "A4", "C3", "C4"], "minutes": 15,
+      "from": [0, 6, 14], "view": { "az": 20, "el": 24, "note": "The picture shows the bed upright, as it stands at the end." },
+      "tools": ["tape", "square", "drill", "glasses"],
+      "fasteners": [
+        { "material": "screw", "at": [3.25, 1.25, 24], "dir": [0, 0, -1], "repeat": { "count": 2, "step": [41, 0, 0] } },
+        { "material": "screw", "at": [3.25, 4.25, 24], "dir": [0, 0, -1], "repeat": { "count": 2, "step": [41, 0, 0] } },
+        { "material": "screw", "at": [3.25, 6.75, 24], "dir": [0, 0, -1], "repeat": { "count": 2, "step": [41, 0, 0] } },
+        { "material": "screw", "at": [3.25, 9.75, 24], "dir": [0, 0, -1], "repeat": { "count": 2, "step": [41, 0, 0] } }
+      ],
+      "warn": [
+        { "type": "warning", "text": "Wear safety glasses. The driver bit can slip and throw chips." },
+        { "type": "warning", "text": "Hold the drill with two hands. A long screw that stops can twist your wrist." }
+      ],
+      "do": [
+        "Put the last two posts C on a flat surface, about 41 in apart.",
+        "Put the last two long boards A on the posts, with the outside faces up.",
+        "Align each post 1 1/2 in from the ends of the boards.",
+        "Drive one screw through each hole into the posts."
+      ],
+      "check": "Put the two assemblies face to face. Make sure that the posts are at the same positions."
+    },
+    {
+      "id": "left", "phase": "Build", "title": "Attach the short boards at one end","parts": ["B1", "B2"], "minutes": 20,
+      "from": [-14, 0, 0], "view": { "az": -50, "el": 24 },
+      "tools": ["tape", "drill", "glasses"],
+      "fasteners": [
+        { "material": "screw", "at": [0, 2, 3.25], "dir": [1, 0, 0], "repeat": { "count": 2, "step": [0, 0, 17.5] } },
+        { "material": "screw", "at": [0, 3.5, 3.25], "dir": [1, 0, 0], "repeat": { "count": 2, "step": [0, 0, 17.5] } },
+        { "material": "screw", "at": [0, 7.5, 3.25], "dir": [1, 0, 0], "repeat": { "count": 2, "step": [0, 0, 17.5] } },
+        { "material": "screw", "at": [0, 9, 3.25], "dir": [1, 0, 0], "repeat": { "count": 2, "step": [0, 0, 17.5] } }
+      ],
+      "warn": [
+        { "type": "warning", "text": "Wear safety glasses. The driver bit can slip and throw chips." },
+        { "type": "warning", "text": "Hold the drill with two hands. A long screw that stops can twist your wrist." }
+      ],
+      "do": [
+        "Stand the two assemblies on their bottom edges, with the posts inside.",
+        "Move the assemblies until the outside faces are 24 in apart.",
+        "Put a short board B between the long boards at one end, against the posts.",
+        "Align the bottom edge of the short board with the bottom edges of the long boards.",
+        "Drive one screw through each hole into the posts.",
+        "Attach the second short board B above the first in the same way."
+      ],
+      "check": "Make sure that the short boards are flush with the ends of the long boards.",
+      "tip": "Ask a helper to hold the two assemblies upright."
+    },
+    {
+      "id": "right", "phase": "Build", "title": "Attach the short boards at the other end","parts": ["B3", "B4"], "minutes": 20,
+      "from": [14, 0, 0], "view": { "az": 50, "el": 24 },
+      "tools": ["tape", "drill", "glasses"], "teach": ["square-diagonals"],
+      "fasteners": [
+        { "material": "screw", "at": [47.5, 2, 3.25], "dir": [-1, 0, 0], "repeat": { "count": 2, "step": [0, 0, 17.5] } },
+        { "material": "screw", "at": [47.5, 3.5, 3.25], "dir": [-1, 0, 0], "repeat": { "count": 2, "step": [0, 0, 17.5] } },
+        { "material": "screw", "at": [47.5, 7.5, 3.25], "dir": [-1, 0, 0], "repeat": { "count": 2, "step": [0, 0, 17.5] } },
+        { "material": "screw", "at": [47.5, 9, 3.25], "dir": [-1, 0, 0], "repeat": { "count": 2, "step": [0, 0, 17.5] } }
+      ],
+      "warn": [
+        { "type": "warning", "text": "Wear safety glasses. The driver bit can slip and throw chips." },
+        { "type": "warning", "text": "Hold the drill with two hands. A long screw that stops can twist your wrist." }
+      ],
+      "do": [
+        "Put a short board B between the long boards at the bottom of the other end.",
+        "Measure the two diagonals of the bed from corner to corner.",
+        "If the diagonals are not equal, push the long diagonal corners together.",
+        "Drive one screw through each hole into the posts.",
+        "Attach the second short board B above the first in the same way."
+      ],
+      "check": "Make sure that the two diagonals are equal within 1/8 in.",
+      "why": "A square bed has two equal diagonals. The screws then keep that shape."
+    },
+    {
+      "id": "oil", "phase": "Finish", "title": "Apply the oil", "minutes": 30, "wait": 1440,
+      "tools": ["block", "mask", "gloves"], "uses": { "sand-80": 2, "cloths": 2 },
+      "finish": { "material": "oil", "parts": ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4"] },
+      "teach": ["finish-wipe"],
+      "warn": [{ "type": "warning", "text": "When you sand, wear a dust mask. Cedar dust can cause asthma." }],
+      "do": [
+        "Sand the top edges and the outside corners with 80 grit.",
+        "Remove the dust with a dry cloth.",
+        "Do not apply oil to the inside faces.",
+        "Apply a thin coat of oil to the outside faces and the top edges.",
+        "After 15 minutes, wipe off the extra oil.",
+        "Wait 24 hours."
+      ],
+      "check": "Make sure that the oil is dry before you fill the bed with soil.",
+      "why": "Cedar lasts outdoors without a finish. The oil keeps the outside color longer, and no oil touches the soil."
+    },
+    {
+      "id": "place", "phase": "Finish","title": "Put the bed on level ground", "minutes": 40,
+      "props": ["ground"], "view": { "az": 32, "el": 30 },
+      "tools": ["tape", "spade", "level"], "teach": ["level-check"],
+      "warn": [{ "type": "warning", "text": "Call 811 before you dig. Buried cables and pipes can be near the surface." }],
+      "do": [
+        "Mark an area on the ground 6 in larger than the bed on each side.",
+        "Remove the grass in the area with the spade.",
+        "Scrape the high spots flat.",
+        "Put the bed in the area.",
+        "Put the level on each long board and each short board.",
+        "If the bubble is not between the lines, remove soil under the high corner."
+      ],
+      "check": "Make sure that the bubble is between the lines on each top board.",
+      "why": "A level bed holds water evenly. On a slope, the water runs out at the low end.",
+      "tip": "The bed weighs about 40 lb. Ask a helper to carry it."
+    },
+    {
+      "id": "fill", "phase": "Finish", "title": "Fill the bed with soil", "minutes": 30,
+      "props": ["ground", "soil"], "view": { "az": 32, "el": 34 },
+      "tools": ["scissors", "spade", "hose"], "uses": { "fabric": 4, "soil": 2.75 },
+      "do": [
+        "If weeds grow in this area, cut a 4 ft length of landscape fabric.",
+        "If you use fabric, put it flat on the ground inside the bed.",
+        "Pour the soil into the bed.",
+        "Spread the soil flat with the spade.",
+        "Fill the bed to 1 in below the top edge.",
+        "Wet the soil with a hose."
+      ],
+      "check": "After the soil is wet, make sure that it is 1 in to 2 in below the top edge.",
+      "why": "Wet soil sinks a little. The gap at the top keeps the soil and the water in the bed.",
+      "tip": "The bed holds about 5 1/2 cu ft of soil. Three 2 cu ft bags fill it."
+    }
+  ]
+}

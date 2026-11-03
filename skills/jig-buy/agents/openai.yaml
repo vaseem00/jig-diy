@@ -1,0 +1,9 @@
+interface:
+  display_name: "Jig Buy"
+  short_description: "Plan DIY store trips, order-by dates and tools to borrow"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  brand_color: "#C9531A"
+  default_prompt: "Use $jig-buy to plan my store trips and order dates for the workbench; I start on Saturday."
+policy:
+  allow_implicit_invocation: true

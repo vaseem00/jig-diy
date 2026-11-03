@@ -1,0 +1,199 @@
+# The method
+
+How to plan and explain a build so a first-timer and an expert can both follow it, and why each part of a guide exists. [format.md](format.md) gives the fields that hold each decision. [ste.md](ste.md) gives the writing rules. [safety.md](safety.md) gives the hazards and the hand-off list.
+
+## Contents
+
+1. [The reader's questions](#1-the-readers-questions)
+2. [Numbers to collect first](#2-numbers-to-collect-first)
+3. [Design the object as it is built](#3-design-the-object-as-it-is-built)
+4. [Steps](#4-steps)
+5. [Levels](#5-levels)
+6. [Writing](#6-writing)
+7. [Bill of quantities](#7-bill-of-quantities)
+8. [Purchase plan](#8-purchase-plan)
+9. [Safety](#9-safety)
+10. [Time](#10-time)
+11. [The 3D](#11-the-3d)
+
+## 1. The reader's questions
+
+A person who wants to build something asks five questions, in this order. Each part of the guide answers one, and nothing answers a question before the reader asks it.
+
+| Question | Answer | Where |
+|---|---|---|
+| What will I get, and can I do it? | The finished object, time, cost, difficulty, tools | Plan |
+| What do I buy, where, and when? | Trips in order, then the BOQ | Shop |
+| How do I get my parts out of the stock? | Boards and sheets to scale, with the cuts | Cut list |
+| What do I do now? | One step: picture, warnings, instructions, check | Build |
+| Did I do it right? | The check at the end of each step | Build |
+
+The first screen answers the first question with a picture and one sentence.
+
+## 2. Numbers to collect first
+
+Collect real numbers before you design anything. A guide built on a nominal size or an invented price is wrong in every later number.
+
+If the user's country, units or currency are unknown and they change the result, ask once. Otherwise use millimetres (inches when the user writes in feet and inches), the user's likely currency, and mark the prices as estimates.
+
+### 2.1 Actual timber sizes
+
+North American softwood is sold by a nominal size. The actual size is smaller:
+
+| Nominal | Actual (in) | Actual (mm) |
+|---|---|---|
+| 1x2, 1x3, 1x4 | 3/4 x 1 1/2, 3/4 x 2 1/2, 3/4 x 3 1/2 | 19 x 38, 19 x 64, 19 x 89 |
+| 1x6, 1x8 | 3/4 x 5 1/2, 3/4 x 7 1/4 | 19 x 140, 19 x 184 |
+| 1x10, 1x12 | 3/4 x 9 1/4, 3/4 x 11 1/4 | 19 x 235, 19 x 286 |
+| 2x2, 2x4 | 1 1/2 x 1 1/2, 1 1/2 x 3 1/2 | 38 x 38, 38 x 89 |
+| 2x6, 2x8 | 1 1/2 x 5 1/2, 1 1/2 x 7 1/4 | 38 x 140, 38 x 184 |
+| 2x10, 2x12 | 1 1/2 x 9 1/4, 1 1/2 x 11 1/4 | 38 x 235, 38 x 286 |
+| 4x4 | 3 1/2 x 3 1/2 | 89 x 89 |
+
+- Common lengths: 8, 10, 12 and 16 ft for 2x stock (8 ft = 96 in = 2438 mm), and 4, 6 and 8 ft for 1x boards at large stores.
+- Metric markets name planed timber by its sawn size. Planed timber (PAR, PSE, "dressed") is about 5 mm smaller in each dimension: "PAR 25 x 100" is about 20 x 94 mm. Read the finished size on the label, or measure one board.
+- Some metric sizes are already actual: CLS studs (38 x 63, 38 x 89 mm), Australian framing pine (70 x 35, 90 x 35, 90 x 45 mm).
+- Use the stock lengths that the user's store lists. Do not guess them.
+
+### 2.2 Sheets
+
+| Market | Common sheet | Thickness |
+|---|---|---|
+| North America | 4 x 8 ft (48 x 96 in); half and quarter sheets at large stores | "3/4 in" sanded plywood is 23/32 in (18.3 mm); "1/2 in" is 15/32 in (11.9 mm) |
+| Metric markets | 2440 x 1220 mm; also 2500 x 1250 mm, and 1525 x 1525 mm birch plywood | 6, 9, 12, 15, 18 mm |
+
+Many stores cut sheets to size. Add each cut size that the store sells as its own `stock` entry.
+
+### 2.3 Fasteners
+
+- **Screw length:** about 2.5 times the thickness of the part the screw goes through, with at least 25 mm (1 in) in the second part. A 19 mm board takes 4 x 45 to 50 mm screws (#8 x 2 in). A 38 mm board takes 5 x 80 to 90 mm screws (#10 x 3 in).
+- **Pilot hole:** about the core diameter of the screw: 2.5 to 3 mm for a 4 mm screw in softwood, 3 mm in hardwood. A pilot hole stops a split near an end.
+- **Spacing:** keep screws 20 to 40 mm from an edge and 50 to 150 mm apart. Three screws hold a 235 mm wide butt joint.
+- **Thin panels:** a 6 mm back takes 3 x 16 mm pan-head screws or 18-gauge brads.
+- **Wall fixings:** a screw into a wood stud holds the load. Studs are at 400 or 600 mm centres (16 or 24 in). Choose a screw that goes 30 mm (1 1/4 in) or more into the stud after the bracket and the plasterboard: a 4 x 50 mm screw through a 3 mm bracket and 12.5 mm plasterboard. Masonry needs plugs. Plasterboard alone takes only light loads on a hollow-wall anchor: not an anti-tip strap, a TV mount, a wall cabinet or a load above a bed ([safety.md](safety.md) section 6).
+
+### 2.4 Glue and finish
+
+| Product | Numbers to use |
+|---|---|
+| PVA wood glue | About 10 min to assemble, 30 to 60 min in clamps, 24 h to full strength. Outdoors, use a D3 or D4 (Type II or I) glue |
+| Water-based varnish or paint | Recoat after 2 to 4 h. Brushed coverage about 10 to 12 m² per L per coat (400 to 500 ft² per US gallon, 100 to 125 ft² per quart) |
+| Oil-based varnish | Recoat after 6 to 24 h, same coverage |
+| Hardwax oil | Recoat after 8 to 12 h, about 24 m² per L per coat |
+
+The can is the authority. Put the numbers from the user's product in `coverage`, `coats` and `wait`.
+
+### 2.5 Prices
+
+Never present an invented price as fact. Every rate the user did not give is an estimate: it shows an `est` badge. Say where the estimate comes from in `priceNote` and when in `pricesAsOf`. Set `est: false` only on a price the user gave or a quote you read.
+
+## 3. Design the object as it is built
+
+Choose joints a beginner can make with the tools named, and say why in the step's `why`.
+
+| Joint | Tools | Use for | Note |
+|---|---|---|---|
+| Butt joint with glue and screws | Drill, countersink bit | Boxes, shelves, benches | Screws into end grain hold less. Use glue and three screws |
+| Pocket screws | Pocket-hole jig, drill | Frames, table aprons | Hides the screws. The jig is one more tool |
+| Metal brackets | Drill | Shelves, frames, repairs | Fastest. The brackets show |
+| Dowels | Drill, dowel jig | Hidden joints | Needs accurate holes |
+| Dado (housing) | Router or table saw | Shelves in a carcass | Stiffest shelf. The parts overlap, so list them in `joins` |
+
+- **Include the parts that hold the parts:** cleats, back panels, brackets, anti-tip straps, feet and levelling shims. A back panel squares a carcass.
+- **Mind the span.** A 19 mm pine or plywood shelf that carries books sags past about 800 mm. An 18 mm MDF shelf sags past about 600 mm. Add a centre support or a front lip, or use a thicker board.
+- **Give every part a letter**, the same letter for identical parts, a real size and a real position.
+- **Plan for tipping.** If an object 600 mm (24 in) tall or more is tall and shallow (height more than twice the depth), it gets a wall fixing. A smaller object over the ratio (a lamp, a box) gets a wider or heavier base. In a home with children, anchor any storage unit taller than about 700 mm (27 in), even when the ratio is lower.
+- **Furniture that carries a person** (a step stool, a bench, a seat, a bed, a ladder, a platform): glue every load joint, keep the top inside the legs, and end with a load check. Make the base of a step stool as deep and as wide as it is tall, and set `safety.tipRatio` to 1 so that the engine checks it. [safety.md](safety.md) section 6 has the rules and the WARNING.
+- **Children's products** (any item that a child uses, sits in, sleeps in or plays on, for example a bunk bed, a changing table, a high chair, a safety gate, a toy box, a toy, a climbing toy): [safety.md](safety.md) section 8 has the standards, the gaps and the WARNINGs. Do not build a cot.
+- **Loads that hang or sit on top** (a ceiling rack, a swing or hammock hook, a fold-down desk, an aquarium stand): [safety.md](safety.md) section 6 has the fixings, the weights and the WARNINGs. A swing frame outdoors: section 9.
+- **A product with no row:** if no line above and no row of [safety.md](safety.md) names the product, read safety.md section 1 (a product with no row). It gives the hazard classes and the rule for the safety standard of the country. Give no safety gap, load limit or clearance from memory.
+
+## 4. Steps
+
+- **One visible change per step.** If the pictures of step n and step n+1 look the same, merge them. If a step adds two sub-assemblies, split it.
+- **Size:** 2 to 6 instructions and 1 to 4 new parts. Up to about 20 screws when they repeat one pattern (a back panel).
+- **Order:** prepare, then build, then finish. Inside a phase, use the order a real person can do. Work with gravity, keep clamping possible, square a frame before a part locks its shape, and apply the finish before a fixing that is hard to reach.
+- **Every step ends with a check** that catches the error the next step hides: square before the back goes on, level before the glue sets, all parts cut before the build starts.
+- **Preparation steps use the kit pose.** The parts lie flat with their letters, like the parts page of a flat-pack manual. `focus` lights the parts the step works on.
+- **Teach once, link after.** A technique card opens the first time a First time reader meets it. After that, it is one line in the card list.
+
+Orders that work:
+
+| Build | Order |
+|---|---|
+| Box or carcass (bookshelf, cabinet) | Cut, sand, mark and drill; bottom shelf on one side; top shelf; second side; middle shelves; square and attach the back; finish; wall fixing |
+| Table, bench or frame | Cut, sand; two end frames (legs and short rails); join them with the long rails; top; finish |
+| Planter or raised bed | Cut, sand; corner posts and the first course; the other courses; bottom slats or liner; finish before any soil goes in |
+| Wall shelf | Cut, sand, finish; find the studs and mark a level line; brackets; shelf |
+| Repair | Examine; remove the damaged part; prepare the joint; glue or fix; clamp and wait; finish to match. Model the object that exists as props with a label (the legs, the seat), and only the new or replaced pieces as parts. With no parts, the 3D view and the Fig 1 size come from the props in the Plan view. When a repair has parts, the 3D view and Fig 1 show only the parts, so Fig 1 gives the size of the new pieces. Say so in the reply |
+
+## 5. Levels
+
+The steps are the same for every reader. Only the depth changes:
+
+| Level | Sees | Time shown |
+|---|---|---|
+| First time (`new`) | Every instruction, the `new` lines (extra care: "Measure each length two times"), technique cards open the first time, Why and Tip notes | x 1.5 |
+| Some experience (`some`) | Instructions, technique cards closed, Tip notes | x 1.2 |
+| Experienced (`pro`) | Instructions, warnings and checks | x 1.0 |
+
+WARNINGs, CAUTIONs and checks show at every level. Safety never depends on level. Write `minutes` for an experienced person at an even pace. The multipliers are an estimate; say so if the user asks about time.
+
+## 6. Writing
+
+Write each instruction as one STE sentence that a tired person in a garage can follow:
+
+- A command verb first, one instruction per sentence, 20 words or fewer. Descriptions (why, tip, summary): 25 words or fewer.
+- Put a condition before its command: "If the lengths are not equal, push the long corners together."
+- Use active voice and no -ing verb forms.
+- Write numbers and units every time: "Drill a 3 mm pilot hole", never "a small pilot hole".
+- Use one word for one thing. If the part is a "shelf", it is never a "board" or a "plank" in a later step. Use the part letter: "shelf B".
+- Give a WARNING for a risk of injury and a CAUTION for a risk of damage. Put them before the instructions. Start with a command, then give the reason.
+
+[ste.md](ste.md) has the full rules, the word list and before-and-after rewrites.
+
+## 7. Bill of quantities
+
+- **Every quantity is computed.** Boards come from the cut packing, screws from `fasteners`, glue and sandpaper from `uses`, finish from the area x coats / coverage. If you want to type a quantity, model the thing that uses it instead.
+- **Need and purchase are two columns:** "24 pieces + 10% spare" and "1 pack of 50". The reader sees why they buy more than they use.
+- **Codes** are a group letter and a number inside the group: T timber and sheet, H hardware, C consumables, F finish, S safety, X tools, O other. A reader can tell a helper "I could not get H06", and a new timber row never changes that code.
+- **Contingency** is 10% by default, on its own line. Prices change and cuts go wrong.
+- **Tax:** with `tax.included`, prices hold the tax. Otherwise the tax is a line on the total.
+- **Estimates are marked.** Every rate the user did not give carries `est`.
+
+## 8. Purchase plan
+
+- Online orders come first, the longest lead time first: they must be placed before the build starts. With a start date, each trip gets an order-by date.
+- Then one trip per store. Each line shows the step that first needs it, so a reader can split a trip.
+- Borrowed tools are a separate list: ask a friend or a tool library.
+- Buy the tools you do not have before the first step that uses them.
+
+## 9. Safety
+
+- A power tool in a step needs a WARNING in that step or in a technique card it teaches. The engine enforces this.
+- An object 600 mm (24 in) tall or more that can tip gets a wall-fixing step with a WARNING about children. The engine checks the height-to-depth ratio. A smaller object over the ratio gets a wider or heavier base.
+- Finish steps name ventilation, gloves and the rag-fire risk of oil finishes.
+- An item near a stove, a fireplace, a heater or a sauna heater keeps the clearance that the maker of the heat source gives. This is on the stove label, or in the manual of the heater. If a stove has no label, keep the item 900 mm (36 in) from the stove. An item near a fire pit keeps the distance that the local fire service gives. The step that puts the item in place has a WARNING ([safety.md](safety.md) sections 5 and 9).
+- Name the protective equipment each step needs: glasses for drills and saws, ear protection for saws and sanders, a dust mask for sanding, gloves for finishes.
+- Hand off what a non-professional must not do: gas, mains wiring, structural changes, work above 2 m, permit work, asbestos and lead paint. Write the guide around it, say who does that part, and never write steps for it.
+
+## 10. Time
+
+- Active minutes come from the steps. Waiting (glue, finish) is shown apart, because a reader plans a weekend around it.
+- The plan shows the phases as a bar scaled by minutes, with the step chips under each phase.
+- Durations under 10 minutes show to the minute. Longer ones round to 5 minutes.
+
+## 11. The 3D
+
+The 3D answers four questions for each step: which part, where, which way round, and fixed where. It is not decoration.
+
+- **Real parts, real positions.** Every part is a box or a cylinder at its true size and position. Screws are true size too, and rings keep them visible at full-object scale.
+- **One lit set.** Done parts are plain. This step's parts are lit in the one accent colour. Future parts are hidden ("Show finished" ghosts them).
+- **Arrive along the path.** New parts move in from outside the model, and screws travel in along their axis. Set `from` when the real path differs: a drawer slides in from the front, a top drops from above.
+- **Camera with the work.** Set `view` for steps on the back, the top or the inside, so the screw heads face the reader. Keep one scale across the assembly steps unless a step needs `zoom`.
+- **Words stay out of the picture.** Part letters and screw rings are the only marks in the 3D. All words are in the step card.
+- **Context props, not parts.** A wall, a bench or a floor goes in `props` and shows only on the steps that list it, and in the Plan view unless `hero: false`.
+- **The picture shows the assembled orientation.** The 3D stays upright, so each step reads as progress. Write the text to agree with it: "Stand the frame upright with the back toward you." If the real work must happen on the floor or on the back, say so in the text, and set the step's `view.note` to "The picture shows the <object> upright." The note shows only under the 3D view. Never mention the picture in `do`, `check`, `why` or `tip`: print and `plan.md` have no picture.
+- **Apart and Show finished** answer "how do the parts meet" and "where does this step lead".
+
+If a step's picture does not answer the four questions, fix the camera or the step before you add words.

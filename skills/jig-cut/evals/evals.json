@@ -1,0 +1,66 @@
+{
+  "skill_name": "jig-cut",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to cut these from 2x4s with my circular saw: 4 legs at 34 in, 2 rails at 72 in and 4 stretchers at 21 in. At my store 8 ft studs are 3.98 each, 10 ft are 5.48 and 12 ft are 6.98. How many do I buy and where do I cut them?",
+      "expected_output": "A project in inches with the stud section at its actual size [3.5, 1.5], a kerf of 0.125 in, the three stock lengths with the user's prices (no estimate marks) and ten parts in three labels. The engine's cut command gives four 8 ft studs (USD 15.92): two boards with a 72 in rail and a 21 in stretcher, two boards with two 34 in legs and a 21 in stretcher, with start positions in fractions of an inch. The reply says the plan is the proven lowest cost (10 pieces), puts a WARNING about safety glasses, ear protection and clamping before the cut list, and tells the reader to measure from the cut end.",
+      "files": [],
+      "expectations": [
+        "The project sets units to in and kerf to 0.125 (or leaves the 1/8 in default)",
+        "The stud section is the actual size 3.5 x 1.5",
+        "The plan comes from running node with engine/jig.mjs cut, and buys four 96 in studs",
+        "The reply gives a cut position for each piece on each board, in inches",
+        "The user's prices carry no estimate mark, through est false or estimate false",
+        "The reply says the plan is the proven lowest cost, or that an exact search was used",
+        "A WARNING about eye and ear protection or clamping comes before the cut list in the reply",
+        "The reply does not compute the board count from a sum of lengths"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Cut list for a small cabinet from 18 mm birch plywood, sheets of 2440 x 1220 (about 64 EUR) or half sheets 1220 x 1220 (about 38 EUR). The faces have a visible grain that must run up the sides and left to right on the top, bottom and shelves. Two sides 720 x 560, top and bottom 764 x 560, two shelves 764 x 540. Please draw it.",
+      "expected_output": "A sheet material with thick 18, grain true and both sheet sizes as stock; six parts with letters, and no part set to grain any. The engine's cut command puts all six pieces on one full sheet (cheaper than two half sheets) with the long side of each piece along the sheet's long side. The SVG drawing is written with --format svg and its path is given. Prices are marked as estimates because the user wrote about.",
+      "files": [],
+      "expectations": [
+        "The sheet material sets grain to true and thick to 18",
+        "No cabinet part is set to grain any",
+        "The plan from the engine's cut command uses one 2440 x 1220 sheet",
+        "An SVG file is written by the engine's cut command with --format svg, and the reply gives its path",
+        "The reply says that every piece keeps its long side along the sheet's long side, or shows that no piece turns",
+        "The prices stay marked as estimates",
+        "The reply gives the used area or the waste of the sheet"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I'm in Pune. My timber shop sells teak 100 x 25 mm cut to length at 2400 rupees per metre, in 100 mm steps, up to 3 m. I need 16 slats 40 mm wide x 600 mm long (I'll rip them on my table saw) and 4 rails 900 mm long at the full 100 mm width. Trim 20 mm off the start of each length, 3 mm kerf. What lengths do I buy?",
+      "expected_output": "A project with currency INR, kerf 3, trim 20, and a linear teak material with section [100, 25] priced by perLength { price 2400, per 1000, max 3000, step 100 }. The 16 slats have rip true and a 40 mm width. The engine plans 20 pieces, so the reply says the plan is good but not proven lowest cost (more than 14 pieces). The reply explains that the engine gives each ripped slat the full board width, so two slats that can share one 100 mm width make the length count err high, and it offers the blank workaround or the saving. A WARNING about a push stick and kickback comes before the ripping advice.",
+      "files": [],
+      "expectations": [
+        "The project sets currency INR, kerf 3 and trim 20",
+        "The teak material uses perLength with price 2400, per 1000, max 3000 and step 100",
+        "The slats are parts with rip true and a width of 40 mm on the 100 x 25 section",
+        "The plan comes from running the engine's cut command",
+        "The reply says the plan is not proven optimal because the material has more than 14 pieces",
+        "The reply explains that two 40 mm slats can come from one 100 mm width and that the engine does not pack them side by side",
+        "A WARNING that names a push stick or kickback comes before the ripping advice"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Make me a cut list for a tall bookshelf for my daughter's room: 2 sides 1800 x 280 and 5 shelves 762 x 280, all from 18 mm MDF sheets of 2440 x 1220. I'll cut it with a circular saw on the garage floor.",
+      "expected_output": "A sheet material of 18 mm MDF with no grain, two sides and five shelves with shared labels. The engine's cut command puts all seven pieces on one sheet. Before the cut list, the reply gives a WARNING to wear safety glasses, ear protection and a dust mask (MDF dust) and to support and clamp the sheet. The reply says the bookshelf is more than twice as tall as deep and in a child's room, so it needs an anti-tip kit and a wall fixing. It also notes that 762 mm MDF shelves sag under books (past about 600 mm) and suggests a support or a thicker or stiffer board.",
+      "files": [],
+      "expectations": [
+        "The MDF material has thick 18 and does not set grain to true",
+        "The plan from the engine's cut command uses one 2440 x 1220 sheet",
+        "A WARNING with eye protection and ear protection comes before the cut list",
+        "The reply names a dust mask or dust protection for cutting MDF",
+        "The reply tells the user to fix the bookshelf to the wall with an anti-tip kit because of the risk to a child",
+        "The reply warns that 762 mm MDF shelves can sag and gives a fix",
+        "The cut plan is not typed by hand"
+      ]
+    }
+  ]
+}

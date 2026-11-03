@@ -1,0 +1,9 @@
+interface:
+  display_name: "Jig Verify"
+  short_description: "Check a built DIY guide page like a critic, with captures"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  brand_color: "#C9531A"
+  default_prompt: "Use $jig-verify to check my bookshelf guide page on a phone and in dark mode before I share it."
+policy:
+  allow_implicit_invocation: true

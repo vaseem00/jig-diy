@@ -1,0 +1,71 @@
+name: Project or feature request
+description: Ask for a new example project, a technique card, a material or unit the engine cannot model, or a change to a skill.
+title: "Request: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Jig makes build guides for things a non-professional can build safely at home: furniture, shelving, planters, workbenches, storage, simple outdoor builds and small furniture repairs.
+        Jig does not write steps for gas, mains wiring, structural work, work above 2 m, permit work, asbestos or lead paint. Requests for those are closed.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What do you ask for?
+      options:
+        - A new example project
+        - A project that the engine cannot model today
+        - A new technique card
+        - A new unit, currency, tax or pricing rule
+        - A change to a skill's instructions
+        - A change to the guide page
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: project
+    attributes:
+      label: The project or the change
+      description: For a project, give the object, its size, the materials and the tools. For anything else, describe the change.
+      placeholder: A wall-hung coat rack, 900 x 150 mm, oak board 20 mm thick, five steel hooks, two keyhole hangers.
+    validations:
+      required: true
+  - type: dropdown
+    id: size
+    attributes:
+      label: Project size
+      options:
+        - Small (up to 15 parts and 8 steps)
+        - Standard (up to 40 parts and 16 steps)
+        - Big (more than 40 parts or 16 steps)
+        - Not about a project
+    validations:
+      required: true
+  - type: dropdown
+    id: units
+    attributes:
+      label: Units
+      options:
+        - Millimetres
+        - Inches
+        - Not about a project
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it is worth adding
+      description: What it would teach, or what you cannot do today.
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What you tried instead
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you submit
+      options:
+        - label: I searched the existing issues.
+          required: true
+        - label: I read the Limits and safety section of the README.
+          required: true

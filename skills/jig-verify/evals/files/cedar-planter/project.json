@@ -1,0 +1,120 @@
+{
+  "jig": 1,
+  "id": "cedar-planter",
+  "title": "Cedar planter",
+  "summary": "A bottomless planter box, 24 x 12 x 11 in. You cut twelve parts from cedar boards and attach them with deck screws.",
+  "level": "some",
+  "units": "in",
+  "currency": "USD",
+  "tax": { "rate": 0.0725, "label": "Sales tax" },
+  "priceNote": "Example prices from a US home center.",
+  "pricesAsOf": "2026-11-01",
+  "kerf": 0.125,
+  "stores": {
+    "home": { "name": "Home center" }
+  },
+  "materials": {
+    "cedar": { "kind": "linear", "name": "Cedar board", "spec": "1x6 (3/4 x 5 1/2 in)", "section": [5.5, 0.75], "stock": [{ "length": 96, "price": 15.98 }], "store": "home", "color": "#c98b5a" },
+    "post": { "kind": "linear", "name": "Cedar post", "spec": "2x2 (1 1/2 x 1 1/2 in)", "section": [1.5, 1.5], "stock": [{ "length": 96, "price": 7.48 }], "store": "home", "color": "#b97a4c" },
+    "screw": { "kind": "each", "name": "Deck screw", "spec": "#8 x 1 5/8 in, coated", "pack": 100, "packName": "box of 100", "price": 9.97, "len": 1.625, "d": 0.164, "head": "flat", "store": "home", "color": "#8f959c" },
+    "oil": { "kind": "amount", "name": "Exterior wood oil", "spec": "clear", "unit": "qt", "pack": 1, "packName": "1 qt can", "price": 18.98, "coverage": 100, "coats": 1, "store": "home" }
+  },
+  "tools": [
+    { "id": "tape", "name": "Tape measure", "have": true },
+    { "id": "pencil", "name": "Pencil", "have": true },
+    { "id": "square", "name": "Speed square", "have": true },
+    { "id": "saw", "name": "Circular saw", "have": true, "power": true },
+    { "id": "drill", "name": "Cordless drill", "have": true, "power": true },
+    { "id": "bits", "name": "Countersink drill bit", "spec": "#8", "price": 7.98, "store": "home" },
+    { "id": "glasses", "name": "Safety glasses", "ppe": true, "price": 4.98, "store": "home" },
+    { "id": "ears", "name": "Ear plugs", "ppe": true, "price": 3.98, "store": "home" },
+    { "id": "gloves", "name": "Nitrile gloves", "ppe": true, "price": 5.98, "store": "home" }
+  ],
+  "parts": [
+    { "id": "A1", "label": "A", "name": "Side", "material": "cedar", "size": [24, 5.5, 0.75], "at": [0, 0, 11.25] },
+    { "id": "A2", "label": "A", "name": "Side", "material": "cedar", "size": [24, 5.5, 0.75], "at": [0, 5.5, 11.25] },
+    { "id": "A3", "label": "A", "name": "Side", "material": "cedar", "size": [24, 5.5, 0.75], "at": [0, 0, 0] },
+    { "id": "A4", "label": "A", "name": "Side", "material": "cedar", "size": [24, 5.5, 0.75], "at": [0, 5.5, 0] },
+    { "id": "B1", "label": "B", "name": "End", "material": "cedar", "size": [0.75, 5.5, 10.5], "at": [0, 0, 0.75] },
+    { "id": "B2", "label": "B", "name": "End", "material": "cedar", "size": [0.75, 5.5, 10.5], "at": [0, 5.5, 0.75] },
+    { "id": "B3", "label": "B", "name": "End", "material": "cedar", "size": [0.75, 5.5, 10.5], "at": [23.25, 0, 0.75] },
+    { "id": "B4", "label": "B", "name": "End", "material": "cedar", "size": [0.75, 5.5, 10.5], "at": [23.25, 5.5, 0.75] },
+    { "id": "C1", "label": "C", "name": "Post", "material": "post", "size": [1.5, 11, 1.5], "at": [0.75, 0, 0.75] },
+    { "id": "C2", "label": "C", "name": "Post", "material": "post", "size": [1.5, 11, 1.5], "at": [21.75, 0, 0.75] },
+    { "id": "C3", "label": "C", "name": "Post", "material": "post", "size": [1.5, 11, 1.5], "at": [0.75, 0, 9.75] },
+    { "id": "C4", "label": "C", "name": "Post", "material": "post", "size": [1.5, 11, 1.5], "at": [21.75, 0, 9.75] }
+  ],
+  "steps": [
+    {
+      "id": "cut", "phase": "Prepare", "title": "Cut the parts", "pose": "kit", "cuts": true, "minutes": 30,
+      "tools": ["tape", "pencil", "square", "saw", "glasses", "ears"], "teach": ["measure-mark", "cut-straight"],
+      "do": [
+        "Mark each cut from the cut list.",
+        { "t": "Measure each length two times before you cut.", "new": true },
+        "Cut each part on the waste side of the line.",
+        "Write the part letter on the inside face of each part."
+      ],
+      "check": "Make sure that you have four sides A, four ends B and four posts C."
+    },
+    {
+      "id": "front", "phase": "Build", "title": "Attach the front sides to two posts", "parts": ["A1", "A2", "C3", "C4"], "minutes": 15,
+      "tools": ["drill", "bits", "glasses"], "teach": ["pilot-hole", "countersink"],
+      "fasteners": [
+        { "material": "screw", "at": [1.5, 1.75, 12], "dir": [0, 0, -1], "repeat": { "count": 4, "step": [0, 2.5, 0] } },
+        { "material": "screw", "at": [22.5, 1.75, 12], "dir": [0, 0, -1], "repeat": { "count": 4, "step": [0, 2.5, 0] } }
+      ],
+      "warn": [{ "type": "warning", "text": "Wear safety glasses. The drill bit can throw chips into your eyes." }],
+      "do": [
+        "Put two sides A face down on the floor, one above the other.",
+        "Put two posts C across the sides, 3/4 in from each end.",
+        "Drill two pilot holes through each side into each post.",
+        "Install a screw in each hole."
+      ],
+      "check": "Make sure that the top ends of the posts are flush with the top edge of the upper side."
+    },
+    {
+      "id": "back", "phase": "Build", "title": "Attach the back sides to two posts", "parts": ["A3", "A4", "C1", "C2"], "minutes": 15,
+      "tools": ["drill", "bits", "glasses"], "teach": ["pilot-hole"],
+      "fasteners": [
+        { "material": "screw", "at": [1.5, 1.75, 0], "dir": [0, 0, 1], "repeat": { "count": 4, "step": [0, 2.5, 0] } },
+        { "material": "screw", "at": [22.5, 1.75, 0], "dir": [0, 0, 1], "repeat": { "count": 4, "step": [0, 2.5, 0] } }
+      ],
+      "warn": [{ "type": "warning", "text": "Wear safety glasses. The drill bit can throw chips into your eyes." }],
+      "do": [
+        "Put the other two sides A face down on the floor.",
+        "Put the two other posts C across the sides, 3/4 in from each end.",
+        "Drill two pilot holes through each side into each post.",
+        "Install a screw in each hole."
+      ],
+      "check": "Make sure that the two frames are the same."
+    },
+    {
+      "id": "ends", "phase": "Build", "title": "Attach the ends", "parts": ["B1", "B2", "B3", "B4"], "minutes": 20,
+      "tools": ["drill", "bits", "glasses", "tape"], "teach": ["pilot-hole", "square-diagonals"],
+      "fasteners": [
+        { "material": "screw", "at": [0, 1.75, 1.5], "dir": [1, 0, 0], "repeat": { "count": 4, "step": [0, 2.5, 0] } },
+        { "material": "screw", "at": [0, 1.75, 10.5], "dir": [1, 0, 0], "repeat": { "count": 4, "step": [0, 2.5, 0] } },
+        { "material": "screw", "at": [24, 1.75, 1.5], "dir": [-1, 0, 0], "repeat": { "count": 4, "step": [0, 2.5, 0] } },
+        { "material": "screw", "at": [24, 1.75, 10.5], "dir": [-1, 0, 0], "repeat": { "count": 4, "step": [0, 2.5, 0] } }
+      ],
+      "warn": [{ "type": "warning", "text": "Wear safety glasses. The drill bit can throw chips into your eyes." }],
+      "do": [
+        "Stand the two frames up with the posts inside.",
+        "Put two ends B between the frames at each end.",
+        "Drill two pilot holes through each end into each post.",
+        "Install a screw in each hole."
+      ],
+      "check": "Make sure that the two diagonals of the box are equal within 1/8 in."
+    },
+    {
+      "id": "finish", "phase": "Finish", "title": "Apply the oil", "minutes": 20, "wait": 720,
+      "tools": ["gloves"], "finish": { "material": "oil" }, "teach": ["finish-wipe"],
+      "do": [
+        "Remove the dust with a dry cloth.",
+        "Apply a thin coat of oil to all faces.",
+        "After 15 minutes, wipe off the extra oil."
+      ],
+      "check": "Make sure that the oil is dry before you fill the planter with soil."
+    }
+  ]
+}

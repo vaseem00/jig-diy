@@ -1,0 +1,80 @@
+{
+  "jig": 1,
+  "id": "inch-bench",
+  "title": "Stud bench",
+  "summary": "A low bench from 2x4 studs and a plywood top. You cut six studs, attach them with screws, and attach the top.",
+  "level": "some",
+  "units": "in",
+  "currency": "USD",
+  "tax": { "rate": 0.08, "label": "Sales tax" },
+  "priceNote": "Test prices.",
+  "pricesAsOf": "2026-11-02",
+  "kerf": 0.125,
+  "stores": {
+    "home": { "name": "Home center", "url": "https://example.com/store" },
+    "web": { "name": "Web shop", "online": true, "lead": 5 }
+  },
+  "materials": {
+    "stud": { "kind": "linear", "name": "Stud", "spec": "2x4 (1 1/2 x 3 1/2 in)", "section": [3.5, 1.5], "stock": [{ "length": 96, "price": 4.12 }, { "length": 120, "price": 5.98 }], "store": "home", "color": "#e3c79b" },
+    "ply": { "kind": "sheet", "name": "Plywood", "spec": "3/4 in sanded pine", "thick": 0.75, "grain": true, "stock": [{ "w": 96, "h": 48, "price": 54.98 }, { "w": 48, "h": 24, "price": 18.5 }], "store": "home", "color": "#e6cfa4" },
+    "screw": { "kind": "each", "name": "Deck screw", "spec": "#9 x 2 1/2 in", "pack": 75, "packName": "box of 75", "price": 9.97, "len": 2.5, "d": 0.17, "head": "flat", "store": "home", "color": "#8f959c" },
+    "stain": { "kind": "amount", "name": "Wood stain", "spec": "oil-based, walnut", "unit": "qt", "pack": 1, "packName": "1 qt can", "price": 14.98, "coverage": 100, "store": "web" }
+  },
+  "tools": [
+    { "id": "tape", "name": "Tape measure", "have": true },
+    { "id": "saw", "name": "Circular saw", "get": "rent", "days": 2, "price": 32, "store": "home", "power": true },
+    { "id": "drill", "name": "Cordless drill", "have": true, "power": true },
+    { "id": "clamps", "name": "Bar clamp", "qty": 2, "price": 11.98, "store": "home" },
+    { "id": "glasses", "name": "Safety glasses", "ppe": true, "price": 4.98, "store": "home" },
+    { "id": "gloves", "name": "Nitrile gloves", "ppe": true, "price": 5.98, "store": "web" }
+  ],
+  "parts": [
+    { "id": "L1", "label": "A", "name": "Leg", "material": "stud", "size": [1.5, 16, 3.5], "at": [2, 0, 0] },
+    { "id": "L2", "label": "A", "name": "Leg", "material": "stud", "size": [1.5, 16, 3.5], "at": [2, 0, 8.5] },
+    { "id": "L3", "label": "A", "name": "Leg", "material": "stud", "size": [1.5, 16, 3.5], "at": [32.5, 0, 0] },
+    { "id": "L4", "label": "A", "name": "Leg", "material": "stud", "size": [1.5, 16, 3.5], "at": [32.5, 0, 8.5] },
+    { "id": "R1", "label": "B", "name": "Rail", "material": "stud", "size": [29, 3.5, 1.5], "at": [3.5, 12.5, 0] },
+    { "id": "R2", "label": "B", "name": "Rail", "material": "stud", "size": [29, 3.5, 1.5], "at": [3.5, 12.5, 10.5] },
+    { "id": "T1", "label": "C", "name": "Top", "material": "ply", "size": [36, 0.75, 12], "at": [0, 16, 0] }
+  ],
+  "steps": [
+    {
+      "id": "cut", "phase": "Prepare", "title": "Cut the parts", "pose": "kit", "cuts": true, "minutes": 30,
+      "tools": ["tape", "saw", "glasses"], "teach": ["measure-mark", "cut-straight"],
+      "warn": [{ "type": "warning", "text": "Wear safety glasses. A circular saw throws chips at high speed." }],
+      "do": ["Mark each cut from the cut list.", "Cut each part on the waste side of the line."],
+      "check": "Make sure that you have four parts A, two parts B and one part C."
+    },
+    {
+      "id": "frame", "phase": "Build", "title": "Attach the rails to the legs", "parts": ["L1", "L2", "L3", "L4", "R1", "R2"], "minutes": 25,
+      "tools": ["drill", "clamps", "glasses"], "teach": ["pilot-hole"],
+      "fasteners": [
+        { "material": "screw", "at": [2, 14.25, 0.75], "dir": [1, 0, 0] },
+        { "material": "screw", "at": [2, 14.25, 11.25], "dir": [1, 0, 0] },
+        { "material": "screw", "at": [34, 14.25, 0.75], "dir": [-1, 0, 0] },
+        { "material": "screw", "at": [34, 14.25, 11.25], "dir": [-1, 0, 0] }
+      ],
+      "warn": [{ "type": "warning", "text": "When you drill, wear safety glasses. The bit can throw chips into your eyes." }],
+      "do": ["Clamp each rail between two legs.", "Install one screw through each leg into the rail."],
+      "check": "Make sure that the frame stands flat on the floor."
+    },
+    {
+      "id": "top", "phase": "Build", "title": "Attach the top", "parts": ["T1"], "minutes": 15,
+      "tools": ["drill", "glasses"],
+      "fasteners": [
+        { "material": "screw", "at": [2.75, 16.75, 1.75], "dir": [0, -1, 0], "repeat": { "count": 2, "step": [30.5, 0, 0] } },
+        { "material": "screw", "at": [2.75, 16.75, 10.25], "dir": [0, -1, 0], "repeat": { "count": 2, "step": [30.5, 0, 0] } }
+      ],
+      "warn": [{ "type": "warning", "text": "When you drill, wear safety glasses. The bit can throw chips into your eyes." }],
+      "do": ["Put the top on the frame.", "Install one screw through the top into each leg."],
+      "check": "Make sure that each screw head is flush with the top."
+    },
+    {
+      "id": "stain", "phase": "Finish", "title": "Apply the stain", "minutes": 20, "wait": 120,
+      "tools": ["gloves"], "finish": { "material": "stain" },
+      "warn": [{ "type": "warning", "text": "Wear nitrile gloves. The stain can hurt your skin." }, { "type": "warning", "text": "Open a window. Stain fumes can make you ill." }],
+      "do": ["Apply a thin coat of stain to all faces.", "Wipe off the extra stain after 10 minutes."],
+      "check": "Make sure that the stain is dry before you use the bench."
+    }
+  ]
+}

@@ -1,0 +1,235 @@
+{
+  "jig": 1,
+  "id": "pine-bookshelf",
+  "title": "Pine bookshelf",
+  "summary": "A floor bookshelf with four shelves. You cut six parts from two pine boards, attach them with screws and glue, and attach a thin back panel.",
+  "level": "new",
+  "units": "mm",
+  "currency": "USD",
+  "priceNote": "Example US prices (November 2026). Replace them with the prices at your store.",
+  "pricesAsOf": "2026-11-02",
+  "kerf": 3,
+  "contingency": 0.1,
+  "terms": ["trestles", "countersunk", "plasterboard"],
+
+  "stores": {
+    "lumber": { "name": "Timber yard", "note": "Pick straight boards. Look along each edge before you buy it." },
+    "hardware": { "name": "Hardware store" },
+    "online": { "name": "Online order", "online": true, "lead": 3, "note": "Order 3 days before you start." }
+  },
+
+  "materials": {
+    "pine-1x10": { "kind": "linear", "name": "Pine board", "spec": "19 × 235 mm (1×10)", "section": [235, 19], "stock": [{ "length": 2440, "price": 27.98 }, { "length": 1830, "price": 21.5 }, { "length": 1220, "price": 14.9 }], "store": "lumber", "color": "#d9b88a" },
+    "ply-6": { "kind": "sheet", "name": "Plywood", "spec": "6 mm birch", "thick": 6, "stock": [{ "w": 2440, "h": 1220, "price": 38 }, { "w": 1220, "h": 1220, "price": 24 }], "store": "lumber", "color": "#e6cfa4" },
+    "screw-4x50": { "kind": "each", "name": "Wood screw", "spec": "4 × 50 mm, countersunk", "pack": 50, "price": 8.98, "len": 50, "d": 4, "head": "flat", "store": "hardware", "color": "#8f959c" },
+    "screw-3x16": { "kind": "each", "name": "Wood screw", "spec": "3 × 16 mm, pan head", "pack": 100, "price": 6.5, "len": 16, "d": 3, "head": "pan", "store": "hardware", "color": "#8f959c" },
+    "glue": { "kind": "amount", "name": "Wood glue", "spec": "PVA, interior", "unit": "ml", "pack": 237, "packName": "237 ml bottle", "price": 5.97, "store": "hardware" },
+    "sand-120": { "kind": "each", "name": "Sandpaper", "spec": "120 grit", "unit": "sheets", "pack": 5, "price": 5.48, "store": "online" },
+    "sand-180": { "kind": "each", "name": "Sandpaper", "spec": "180 grit", "unit": "sheets", "pack": 5, "price": 5.48, "store": "online" },
+    "sand-240": { "kind": "each", "name": "Sandpaper", "spec": "240 grit", "unit": "sheets", "pack": 5, "price": 5.48, "store": "online" },
+    "poly": { "kind": "amount", "name": "Wipe-on polyurethane", "spec": "satin, water-based", "unit": "L", "pack": 0.946, "packName": "0.946 L can", "price": 16.98, "coverage": 11, "coats": 2, "group": "Finish", "store": "hardware" },
+    "rags": { "kind": "each", "name": "Lint-free cloth", "spec": "cotton", "unit": "cloth", "pack": 10, "packName": "pack of 10", "price": 6.49, "group": "Finish", "store": "online" },
+    "anti-tip": { "kind": "each", "name": "Anti-tip furniture kit", "spec": "2 brackets, strap, screws, wall plugs", "pack": 2, "packName": "kit", "price": 9.97, "store": "hardware", "color": "#9aa3ab", "role": "anchor" },
+    "kit-screw": { "kind": "each", "name": "Kit screw", "spec": "in the anti-tip kit", "included": true, "price": 0, "len": 30, "d": 4, "store": "hardware", "color": "#8f959c" }
+  },
+
+  "tools": [
+    { "id": "tape", "name": "Tape measure", "have": true },
+    { "id": "pencil", "name": "Pencil", "have": true },
+    { "id": "square", "name": "Speed square", "price": 9.98, "store": "hardware" },
+    { "id": "saw", "name": "Circular saw", "spec": "fine blade, 40 teeth or more", "get": "borrow", "power": true },
+    { "id": "trestles", "name": "Two trestles", "get": "borrow" },
+    { "id": "clamps", "name": "Bar clamp", "spec": "600 mm", "qty": 2, "price": 12.97, "store": "hardware" },
+    { "id": "drill", "name": "Cordless drill", "have": true, "power": true },
+    { "id": "bits", "name": "Drill bit set", "spec": "3 mm bit and countersink bit", "price": 8.97, "store": "hardware" },
+    { "id": "block", "name": "Sanding block", "price": 4.48, "store": "hardware" },
+    { "id": "glasses", "name": "Safety glasses", "ppe": true, "price": 6.97, "store": "hardware" },
+    { "id": "ears", "name": "Ear protection", "ppe": true, "price": 9.97, "store": "hardware" },
+    { "id": "mask", "name": "Dust mask", "spec": "N95", "ppe": true, "price": 7.48, "store": "hardware" },
+    { "id": "gloves", "name": "Nitrile gloves", "ppe": true, "price": 5.98, "store": "online" },
+    { "id": "finder", "name": "Stud finder", "spec": "with cable and pipe detection", "get": "borrow" },
+    { "id": "level", "name": "Spirit level", "have": true }
+  ],
+
+  "parts": [
+    { "id": "A1", "label": "A", "name": "Side", "material": "pine-1x10", "size": [19, 900, 235], "at": [0, 0, 0] },
+    { "id": "A2", "label": "A", "name": "Side", "material": "pine-1x10", "size": [19, 900, 235], "at": [781, 0, 0] },
+    { "id": "B1", "label": "B", "name": "Shelf", "material": "pine-1x10", "size": [762, 19, 235], "at": [19, 60, 0] },
+    { "id": "B2", "label": "B", "name": "Shelf", "material": "pine-1x10", "size": [762, 19, 235], "at": [19, 330, 0] },
+    { "id": "B3", "label": "B", "name": "Shelf", "material": "pine-1x10", "size": [762, 19, 235], "at": [19, 600, 0] },
+    { "id": "B4", "label": "B", "name": "Shelf", "material": "pine-1x10", "size": [762, 19, 235], "at": [19, 881, 0] },
+    { "id": "C1", "label": "C", "name": "Back panel", "material": "ply-6", "size": [800, 900, 6], "at": [0, 0, -6] },
+    { "id": "D1", "label": "D", "name": "Shelf bracket", "material": "anti-tip", "size": [40, 3, 30], "at": [380, 900, 0] },
+    { "id": "E1", "label": "E", "name": "Wall bracket", "material": "anti-tip", "size": [40, 30, 3], "at": [380, 920, -9] }
+  ],
+
+  "props": {
+    "wall": { "label": "Wall", "size": [2000, 1500, 60], "at": [-600, 0, -69], "color": "#e8e3da" }
+  },
+
+  "steps": [
+    {
+      "id": "cut", "phase": "Prepare", "title": "Cut the parts", "pose": "kit", "cuts": true, "minutes": 45,
+      "tools": ["tape", "pencil", "square", "saw", "trestles", "clamps", "glasses", "ears"],
+      "teach": ["measure-mark", "cut-straight"],
+      "do": [
+        "Put the boards on the two trestles.",
+        "Mark each cut from the cut list.",
+        { "t": "Measure each length two times before you cut.", "new": true },
+        "Cut each part on the waste side of the line.",
+        "Write the part letter on the back face of each part."
+      ],
+      "check": "Make sure that you have two parts A, four parts B and one part C.",
+      "why": "Parts with letters are easy to find. Two measurements stop most errors.",
+      "tip": "Cut the two long sides first. If you make an error, you can use the board for a shelf."
+    },
+    {
+      "id": "sand", "phase": "Prepare", "title": "Sand the parts", "pose": "kit", "focus": ["A1", "A2", "B1", "B2", "B3", "B4"], "minutes": 40,
+      "tools": ["block", "mask"], "uses": { "sand-120": 2, "sand-180": 2 }, "teach": ["sand"],
+      "do": [
+        "Sand the front faces and the front edges with 120 grit.",
+        "Sand the same faces with 180 grit.",
+        "Remove the dust with a dry cloth."
+      ],
+      "check": "Make sure that no saw marks show on the front edges.",
+      "why": "Flat parts are easier to sand than a box. The finish shows each scratch."
+    },
+    {
+      "id": "mark", "phase": "Prepare", "title": "Drill the sides", "pose": "kit", "focus": ["A1", "A2"], "minutes": 35,
+      "tools": ["tape", "pencil", "square", "drill", "bits", "glasses"], "teach": ["pilot-hole", "countersink"],
+      "do": [
+        "Put the two sides A next to each other with the bottom ends aligned.",
+        "Mark the shelf lines at 60, 330, 600 and 881 mm from the bottom end.",
+        "Draw each line across both sides with the square.",
+        "Mark three holes 10 mm above each line, at 40, 118 and 195 mm from the back edge.",
+        "Drill a 3 mm pilot hole at each mark.",
+        "Countersink each hole on the outer face."
+      ],
+      "check": "Make sure that each side has 12 holes and that the holes on the two sides align.",
+      "why": "Holes in the two sides at the same positions make the shelves level."
+    },
+    {
+      "id": "bottom", "phase": "Build", "title": "Attach the bottom shelf", "parts": ["A1", "B1"], "minutes": 20,
+      "tools": ["drill", "clamps", "glasses"], "uses": { "glue": 5 }, "teach": ["glue-joint", "clamp"],
+      "fasteners": [
+        { "material": "screw-4x50", "at": [0, 69.5, 40], "dir": [1, 0, 0], "repeat": { "count": 3, "step": [0, 0, 77.5] } }
+      ],
+      "warn": [{ "type": "warning", "text": "Wear safety glasses. The drill bit can throw chips into your eyes." }],
+      "do": [
+        "Stand side A on its bottom end.",
+        "Apply glue to one end of shelf B.",
+        "Align the bottom face of shelf B with the lowest line.",
+        "Clamp the shelf to the side.",
+        "Install three 50 mm screws through the side into the shelf."
+      ],
+      "check": "Make sure that the front edge of the shelf is flush with the front edge of the side.",
+      "why": "The glue makes the joint stiff. The screws hold it while the glue dries.",
+      "tip": "Drive the screws slowly. Stop when the head is flush with the face."
+    },
+    {
+      "id": "top", "phase": "Build", "title": "Attach the top shelf", "parts": ["B4"], "minutes": 15,
+      "tools": ["drill", "clamps", "glasses"], "uses": { "glue": 5 },
+      "fasteners": [
+        { "material": "screw-4x50", "at": [0, 890.5, 40], "dir": [1, 0, 0], "repeat": { "count": 3, "step": [0, 0, 77.5] } }
+      ],
+      "warn": [{ "type": "warning", "text": "Wear safety glasses. The drill bit can throw chips into your eyes." }],
+      "do": [
+        "Apply glue to one end of a second shelf B.",
+        "Align its top face with the top end of the side.",
+        "Install three 50 mm screws through the side into the shelf."
+      ],
+      "check": "Make sure that the top shelf is flush with the top end."
+    },
+    {
+      "id": "side", "phase": "Build", "title": "Attach the second side", "parts": ["A2"], "minutes": 20,
+      "tools": ["drill", "clamps", "glasses"], "uses": { "glue": 10 }, "teach": ["clamp"],
+      "fasteners": [
+        { "material": "screw-4x50", "at": [800, 69.5, 40], "dir": [-1, 0, 0], "repeat": { "count": 3, "step": [0, 0, 77.5] } },
+        { "material": "screw-4x50", "at": [800, 890.5, 40], "dir": [-1, 0, 0], "repeat": { "count": 3, "step": [0, 0, 77.5] } }
+      ],
+      "warn": [{ "type": "warning", "text": "Wear safety glasses. The drill bit can throw chips into your eyes." }],
+      "do": [
+        "Apply glue to the free ends of the two shelves.",
+        "Put the second side A on the shelf ends.",
+        "Align the holes with the shelf lines.",
+        "Install three screws into each shelf."
+      ],
+      "check": "Make sure that the frame stands flat on the floor."
+    },
+    {
+      "id": "middle", "phase": "Build", "title": "Install the middle shelves", "parts": ["B2", "B3"], "minutes": 25,
+      "tools": ["drill", "clamps", "glasses"], "uses": { "glue": 20 },
+      "fasteners": [
+        { "material": "screw-4x50", "at": [0, 339.5, 40], "dir": [1, 0, 0], "repeat": { "count": 3, "step": [0, 0, 77.5] } },
+        { "material": "screw-4x50", "at": [800, 339.5, 40], "dir": [-1, 0, 0], "repeat": { "count": 3, "step": [0, 0, 77.5] } },
+        { "material": "screw-4x50", "at": [0, 609.5, 40], "dir": [1, 0, 0], "repeat": { "count": 3, "step": [0, 0, 77.5] } },
+        { "material": "screw-4x50", "at": [800, 609.5, 40], "dir": [-1, 0, 0], "repeat": { "count": 3, "step": [0, 0, 77.5] } }
+      ],
+      "warn": [{ "type": "warning", "text": "Wear safety glasses. The drill bit can throw chips into your eyes." }],
+      "do": [
+        "Apply glue to the two ends of a shelf B.",
+        "Slide the shelf between the sides to its line.",
+        "Install three screws through each side into the shelf.",
+        "Do the same steps for the last shelf."
+      ],
+      "check": "Make sure that each shelf is level.",
+      "tip": "Put a scrap block under the shelf at the line height. The block holds the shelf while you drive the screws."
+    },
+    {
+      "id": "back", "phase": "Build", "title": "Attach the back panel", "parts": ["C1"], "minutes": 30,
+      "tools": ["tape", "drill", "clamps", "glasses"], "teach": ["square-diagonals"], "view": { "az": 205, "el": 24 },
+      "fasteners": [
+        { "material": "screw-3x16", "at": [9.5, 150, -6], "dir": [0, 0, 1], "repeat": { "count": 3, "step": [0, 300, 0] } },
+        { "material": "screw-3x16", "at": [790.5, 150, -6], "dir": [0, 0, 1], "repeat": { "count": 3, "step": [0, 300, 0] } },
+        { "material": "screw-3x16", "at": [200, 69.5, -6], "dir": [0, 0, 1], "repeat": { "count": 3, "step": [200, 0, 0] } },
+        { "material": "screw-3x16", "at": [200, 339.5, -6], "dir": [0, 0, 1], "repeat": { "count": 3, "step": [200, 0, 0] } },
+        { "material": "screw-3x16", "at": [200, 609.5, -6], "dir": [0, 0, 1], "repeat": { "count": 3, "step": [200, 0, 0] } },
+        { "material": "screw-3x16", "at": [200, 890.5, -6], "dir": [0, 0, 1], "repeat": { "count": 3, "step": [200, 0, 0] } }
+      ],
+      "warn": [{ "type": "warning", "text": "Wear safety glasses. The drill bit can throw chips into your eyes." }],
+      "do": [
+        "Stand the frame upright with the back toward you.",
+        "Measure the two diagonals of the frame.",
+        "Push the top of the frame to the side until the two diagonals are equal.",
+        "Clamp the back panel C to the frame with its edges aligned.",
+        "Install 18 short screws through the panel into the sides and the shelves."
+      ],
+      "check": "Make sure that the two diagonals are equal within 2 mm.",
+      "why": "The back panel locks the frame square. Without it, the shelf can lean to one side."
+    },
+    {
+      "id": "finish", "phase": "Finish", "title": "Apply the finish", "minutes": 60, "wait": 240,
+      "tools": ["gloves"], "uses": { "sand-240": 1, "rags": 2 }, "finish": { "material": "poly", "coats": 2 }, "teach": ["finish-wipe"],
+      "do": [
+        "Remove all dust with a dry cloth.",
+        "Apply the first coat to all faces.",
+        "Wait 2 hours.",
+        "Sand lightly with 240 grit.",
+        "Apply the second coat."
+      ],
+      "check": "Make sure that the finish is dry and smooth before you put books on the shelves."
+    },
+    {
+      "id": "wall", "phase": "Finish", "title": "Attach the shelf to the wall", "parts": ["D1", "E1"], "minutes": 20,
+      "tools": ["finder", "drill", "level", "pencil", "glasses"], "teach": ["find-stud"], "props": ["wall"], "view": { "az": 25, "el": 32, "zoom": 5 },
+      "fasteners": [
+        { "material": "kit-screw", "at": [392, 903, 15], "dir": [0, -1, 0], "len": 16, "repeat": { "count": 2, "step": [16, 0, 0] } },
+        { "material": "screw-4x50", "at": [392, 935, -6], "dir": [0, 0, -1], "repeat": { "count": 2, "step": [16, 0, 0] } }
+      ],
+      "warn": [
+        { "type": "warning", "text": "Attach the shelf to the wall before you load it. A free bookshelf can fall on a child." },
+        { "type": "warning", "text": "Do not drill above, below or beside a socket or a switch. Cables run there." },
+        { "type": "warning", "text": "Wear safety glasses. The drill bit can throw chips into your eyes." }
+      ],
+      "do": [
+        "Put the shelf against the wall in its final position.",
+        "Find a stud behind the top of the shelf.",
+        "Attach the shelf bracket D to the top shelf with two screws.",
+        "Attach the wall bracket E to the stud with two 50 mm screws.",
+        "Connect the two brackets with the strap."
+      ],
+      "check": "Pull the top of the shelf. Make sure that the shelf does not move.",
+      "why": "Most furniture falls forward when a child climbs it. The strap stops this."
+    }
+  ]
+}

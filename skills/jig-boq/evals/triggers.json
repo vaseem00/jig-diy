@@ -1,0 +1,22 @@
+[
+  { "query": "How much will it cost to build a 6 ft cedar planter box? Rough materials list with prices please.", "should_trigger": true },
+  { "query": "Can you make me a bill of materials for this bookshelf? Sides 900 x 235, four shelves 762 x 235, pine 1x10.", "should_trigger": true },
+  { "query": "Price this list in GBP with VAT: two sheets of 18mm ply, 40 screws and a bottle of wood glue.", "should_trigger": true },
+  { "query": "what's my budget for a 2x4 workbench with a plywood top, tax included", "should_trigger": true },
+  { "query": "How many litres of varnish do I need for a 1200 x 600 table top, two coats, and what will that cost?", "should_trigger": true },
+  { "query": "Give me a BOQ for a raised garden bed 2400 x 1200 x 300 made from sleepers.", "should_trigger": true },
+  { "query": "Estimate the material cost for a simple wall shelf on two brackets, in euros.", "should_trigger": true },
+  { "query": "Turn this project.json into a cost estimate table I can paste into Excel.", "should_trigger": true },
+  { "query": "how many boxes of screws and how much wood glue do I need for the bench project", "should_trigger": true },
+  { "query": "Is it cheaper to make the cabinet from MDF or plywood? Here are the parts and sizes.", "should_trigger": true },
+  { "query": "Give me a cutting diagram for these shelves from one 2440 x 1220 MDF sheet.", "should_trigger": false },
+  { "query": "I start building on Saturday. What should I order online today and what do I pick up at the hardware store?", "should_trigger": false },
+  { "query": "Write step-by-step instructions I can print for building a step stool.", "should_trigger": false },
+  { "query": "Build me a full interactive build guide with 3D for a pine bookshelf.", "should_trigger": false },
+  { "query": "Show me in 3D how this bed frame goes together, part by part.", "should_trigger": false },
+  { "query": "Rewrite these assembly instructions in Simplified Technical English.", "should_trigger": false },
+  { "query": "Check my workbench guide for missing warnings and tip-over risk.", "should_trigger": false },
+  { "query": "How much does an electrician usually charge to add a new circuit in a garage?", "should_trigger": false },
+  { "query": "Make a monthly household budget spreadsheet for groceries, rent and bills.", "should_trigger": false },
+  { "query": "Which is the better buy, a ready-made flat-pack bookcase or a solid wood one from a furniture store?", "should_trigger": false }
+]

@@ -1,0 +1,15 @@
+# Text files use LF on every platform, so engine copies and built pages stay byte-identical.
+* text=auto eol=lf
+
+# Built example pages: hide them from diffs and language stats.
+examples/**/*.html linguist-generated=true
+
+# Images and fonts are binary.
+*.webp binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary

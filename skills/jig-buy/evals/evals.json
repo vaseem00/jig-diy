@@ -1,0 +1,66 @@
+{
+  "skill_name": "jig-buy",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm building two cedar planter boxes and I start on Saturday, November 14, 2026. I need 1x6 cedar boards (6 ft), 2x2 corner posts, 1 5/8 in exterior screws and a quart of exterior stain. The lumber yard delivers in 3 days, the stain ships from an online store in 6 days, and I'll grab the screws at the hardware store. When do I need to order each thing?",
+      "expected_output": "A project in inches with actual board sizes (cedar 1x6 at about 3/4 x 5 1/2 in or the store's stated size, 2x2 at 1 1/2 x 1 1/2 in), stated assumptions for the planter size, stores with lead times (online stain 6 days, lumber yard 3 days, hardware store none) and the stain as a finish with coverage. The engine's buy command runs with --start 2026-11-14. The reply leads with what to order first: the stain by 2026-11-08 and the lumber by 2026-11-11, then shows the checklist with the online trip first, trip subtotals and estimate marks.",
+      "files": [],
+      "expectations": [
+        "The project sets units to in and uses actual sizes for the 1x6 and 2x2 stock, not 1 x 6 and 2 x 2",
+        "The engine's buy command runs with --start 2026-11-14",
+        "The reply gives 2026-11-08 (or 8 November) as the order-by date for the stain",
+        "The reply gives 2026-11-11 (or 11 November) as the order-by date for the lumber yard",
+        "The online order comes before the walk-in hardware store trip in the plan",
+        "The reply lists the planter size it assumed",
+        "The reply marks the prices as estimates",
+        "Safety gear, such as safety glasses or gloves for the stain, is on the list or named in the reply"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I'm in Melbourne making a 1500 mm hardwood outdoor bench from 42 x 90 merbau decking and 70 x 70 posts for the legs. I don't own a mitre saw: the hardware store hires one at 49 AUD a day, or I could buy a cheap one for 199 AUD. My neighbour can lend me clamps and I own a drill. Plan the shopping, and tell me if hiring the saw is worth it.",
+      "expected_output": "A project in mm with currency AUD and GST 0.1 included, merbau and post materials at actual sections, stores for each item, and tools: the drill have true (not on the list), the clamps get borrow (on the Borrow trip at no cost), and the mitre saw get rent with days 1 and price 49 marked as the user's price. The engine's buy command makes the trips. The reply compares rent and buy with numbers (199 is about 4 day rates, so hiring for one day costs less unless the user will use the saw again), adds safety glasses and ear protection, and gives a WARNING or tells the user to ask the store to show how the saw works.",
+      "files": [],
+      "expectations": [
+        "The project sets currency AUD and a GST tax entry with rate 0.1 and included true",
+        "The drill has have true and does not appear on any trip",
+        "The clamps have get borrow and appear on the Borrow trip",
+        "The mitre saw has get rent, days 1 and price 49, and that price is not marked as an estimate",
+        "The trips come from running node with engine/jig.mjs buy",
+        "The reply compares hiring and buying the saw with the two prices",
+        "Safety glasses and ear protection are on the list",
+        "The reply gives a WARNING before any saw instruction, or tells the user to ask the store to show how the saw works"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "This weekend I'm putting up a floating shelf in the kitchen and swapping the old ceiling light for a new pendant. Make me a shopping list for both jobs.",
+      "expected_output": "The reply says first that replacing the ceiling light is mains electrical work for a licensed electrician, puts it in handoff, writes no wiring steps, and lists the pendant only as an item the electrician may ask the user to buy. The shelf part is a normal purchase plan from the engine's buy command: the shelf, a concealed bracket, fixings for the wall type (screws into studs or plugs for masonry), a stud finder or a level if the user has none, and safety glasses for drilling, with estimate marks.",
+      "files": [],
+      "expectations": [
+        "The reply says that a licensed electrician does the ceiling light work",
+        "The reply contains no instructions for wiring the pendant or switching the light",
+        "The project has a handoff entry for mains electrical work",
+        "The shelf materials and its wall fixings are on the list from the engine's buy command",
+        "The reply asks about the wall type or gives fixings for both stud and masonry walls",
+        "Safety glasses for drilling are on the list or named in the reply",
+        "The prices are marked as estimates"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Make me the full shopping list for building a 3 x 4 m garden shed: floor, walls, roof, door, felt, everything.",
+      "expected_output": "The reply names the job as Big and does not produce the whole list at once. It proposes a purchase plan for one sub-assembly (for example the shed floor and base), lists what the full plan adds (walls, roof, door, felt), and says that a shed of this size can need a permit and that roof work above 2 m goes to a professional. If the user then chooses the floor, the plan comes from the engine's buy command with estimate marks.",
+      "files": [],
+      "expectations": [
+        "The reply names the project as Big, or says it is too large to plan in one pass",
+        "The reply does not give a full shopping list for floor, walls, roof and door in one answer",
+        "The reply proposes one sub-assembly, such as the floor, as the first plan",
+        "The reply lists what the full plan adds",
+        "The reply says to check whether the shed needs a permit or planning approval",
+        "The reply says that roof work or work above 2 m needs a professional or the correct access equipment"
+      ]
+    }
+  ]
+}

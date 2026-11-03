@@ -1,0 +1,9 @@
+interface:
+  display_name: "Jig Cut"
+  short_description: "Optimise cut lists for boards and sheets, drawn to scale"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  brand_color: "#C9531A"
+  default_prompt: "Use $jig-cut to make a cut list for these shelves from 2440 x 1220 plywood sheets."
+policy:
+  allow_implicit_invocation: true

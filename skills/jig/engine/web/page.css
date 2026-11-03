@@ -1,0 +1,251 @@
+/* jig guide page. Light tokens on :root; dark under prefers-color-scheme and [data-theme="dark"]. Text pairs >= 4.5:1, --control >= 3:1. */
+:root{--page:#f3f0e8;--card:#fbfaf6;--ink:#1d1b18;--text:#2f2c27;--muted:#67625a;--line:#d8d2c5;--control:#8a8275;--faint:#ebe6db;--accent:#b04510;--accent-ink:#ffffff;--warn:#a3261b;--warn-bg:#fbe8e4;--caution:#7d5300;--caution-bg:#fbf0d6;--ok:#2f7a3d;--wood-ink:#1d1b18;
+--v-ink:#3b352d;--v-accent:#ec6a1c;--v-grid:#d3cbbc;--v-prop:1;--display:"Archivo",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"JetBrains Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--page:#131210;--card:#1b1a17;--ink:#f4f0e8;--text:#d9d4ca;--muted:#9d978d;--line:#35322c;--control:#716b61;--faint:#24221e;--accent:#ff8a4c;--accent-ink:#1b1a17;--warn:#ff9a8b;--warn-bg:#3a1713;--caution:#f3c46a;--caution-bg:#33270e;--ok:#7fd18b;--v-ink:#2a2620;--v-accent:#ff7a2e;--v-grid:#3a3731;--v-prop:.42;color-scheme:dark}}
+:root[data-theme="dark"]{--page:#131210;--card:#1b1a17;--ink:#f4f0e8;--text:#d9d4ca;--muted:#9d978d;--line:#35322c;--control:#716b61;--faint:#24221e;--accent:#ff8a4c;--accent-ink:#1b1a17;--warn:#ff9a8b;--warn-bg:#3a1713;--caution:#f3c46a;--caution-bg:#33270e;--ok:#7fd18b;--v-ink:#2a2620;--v-accent:#ff7a2e;--v-grid:#3a3731;--v-prop:.42;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--page)}
+/* the sticky tab bar covers the top 64px: focus and scrollIntoView keep what they show below it (WCAG 2.4.11); no bar with one tab */
+html{scroll-padding-top:64px}
+html:has(.jig[data-single]){scroll-padding-top:0}
+body{margin:0;color:var(--text);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.jig{max-width:1180px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-right)) 80px max(16px,env(safe-area-inset-left))}
+h1,h2,h3{font-family:var(--display);color:var(--ink);letter-spacing:-.01em;margin:0;overflow-wrap:anywhere}
+h1{font-size:clamp(30px,5.6vw,46px);line-height:1.04;font-weight:700}
+h2{font-size:24px;line-height:1.15}
+h3{font-size:16px}
+h2[tabindex]{scroll-margin-top:8px}
+h2[tabindex]:focus{outline:none}
+h2[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+a{color:var(--accent)}
+.eyebrow{font:500 11px/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:17px;max-width:62ch;margin:10px 0 0}
+.lede.sm{font-size:14px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+button{font:500 12px/1 var(--mono);letter-spacing:.04em;color:var(--text);background:var(--card);border:1px solid var(--control);padding:9px 12px;border-radius:7px;cursor:pointer;min-height:32px}
+button:hover{border-color:var(--ink);color:var(--ink)}
+button:disabled,button[aria-disabled="true"]{opacity:.55;cursor:default}
+button[aria-pressed="true"]{background:var(--ink);color:var(--card);border-color:var(--ink)}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input[type="checkbox"]{accent-color:var(--ok)}
+
+/* top bar and tabs */
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:16px 24px;margin-bottom:18px}
+.level{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.level .eyebrow{margin-right:6px}
+.tabs{position:sticky;top:0;z-index:5;display:flex;gap:4px;overflow-x:auto;padding:10px 4px;margin:0 -4px 18px;background:var(--page);border-bottom:1px solid var(--line)}
+.tabs [role="tab"]{border-radius:999px;white-space:nowrap}
+.tabs [role="tab"][aria-selected="true"]{background:var(--ink);color:var(--card);border-color:var(--ink)}
+[data-panel][hidden]{display:none}
+[role="tabpanel"]:focus-visible{outline-offset:6px;border-radius:6px}
+
+/* cards and grids */
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;min-width:0}
+.grid2{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:0}
+.stats div{background:var(--card);padding:12px 14px;min-width:0}
+.stats b{display:block;font:700 22px/1.1 var(--display);color:var(--ink);overflow-wrap:anywhere}
+.stats span{font-size:12px;color:var(--muted)}
+.stack{display:grid;gap:18px;min-width:0}
+
+/* viewer: pan-y lets a finger scroll the page; a tap on the view turns on one-finger orbit */
+.viewer{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:radial-gradient(120% 90% at 50% 20%,var(--card),var(--faint));aspect-ratio:16/11;min-height:280px;touch-action:pan-y}
+.viewer [data-canvas]{position:absolute;inset:0}
+.viewer canvas{width:100%!important;height:100%!important;display:block;touch-action:pan-y}
+.viewer[data-active] canvas{touch-action:none}
+.viewer canvas:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+.viewer [data-tags]{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.tag{position:absolute;left:0;top:0;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:var(--card);border:1.5px solid var(--accent);color:var(--ink);font:700 12px/19px var(--mono);text-align:center;box-shadow:0 1px 3px #0003}
+.pin{position:absolute;left:0;top:0;width:15px;height:15px;border-radius:50%;border:2px solid var(--accent);background:color-mix(in srgb,var(--accent) 18%,transparent);box-shadow:0 0 0 2px color-mix(in srgb,var(--card) 70%,transparent)}
+/* from 360 px wide the buttons stay on one row (on a narrower screen they can go on two rows): a readout that does not
+   fit beside them goes above them (wrap-reverse) on one line, and only a readout wider than the whole bar ends in "…"
+   (app.js puts the full text in its title). A phone (520 px or less) has no readout. */
+.vbar{position:absolute;left:10px;right:10px;bottom:10px;display:flex;flex-wrap:wrap-reverse;justify-content:space-between;align-items:end;gap:4px 8px;pointer-events:none}
+.vbar>*{pointer-events:auto}
+.vtools{display:flex;gap:4px;flex-wrap:wrap}
+.viewer:not([data-ready]) .vtools{visibility:hidden}
+.vtools button{padding:7px 9px;font-size:11px;background:color-mix(in srgb,var(--card) 92%,transparent)}
+.vtools button[aria-pressed="true"]{background:var(--ink)}
+.readout{font:500 11px/1.3 var(--mono);color:var(--muted);background:color-mix(in srgb,var(--card) 90%,transparent);padding:6px 8px;border-radius:6px;text-align:right;margin-left:auto;min-width:0;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hint{position:absolute;left:10px;top:10px;margin:0;max-width:calc(100% - 20px);padding:4px 7px;border-radius:6px;background:color-mix(in srgb,var(--card) 90%,transparent);font:500 11px/1.3 var(--mono);color:var(--muted);pointer-events:none}
+.hint .h-touch,.hint .h-on{display:none}
+@media (pointer:coarse){.hint .h-mouse{display:none}.hint .h-touch{display:inline}.viewer[data-active] .hint .h-touch{display:none}.viewer[data-active] .hint .h-on{display:inline}}
+.viewer[data-user]:not([data-active]) .hint{opacity:0}
+.vmsg{position:absolute;inset:0;display:grid;place-items:center;margin:0;padding:24px;text-align:center;font:500 13px/1.5 var(--mono);color:var(--muted)}
+.fig{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;font:500 11px/1.3 var(--mono);color:var(--muted);margin:8px 2px 0}
+/* a long word in the title breaks inside the word in the Fig 1 caption too, so the Plan tab fits a 320 px screen */
+.fig span{min-width:0;overflow-wrap:anywhere}
+/* a step's view note sits under the 3D view; with no picture (still loading, or no 3D) it has nothing to tell */
+.vnote{margin:8px 2px 0;font-size:13px;line-height:1.45;color:var(--muted);overflow-wrap:anywhere}
+.viewer:not([data-ready])+.vnote{display:none}
+
+/* plan */
+.phases{display:flex;flex-wrap:wrap;gap:12px 6px;margin:14px 0 6px}
+.phase{min-width:min(5.5rem,100%)}
+.phase .bar{height:10px;border-radius:5px;background:var(--faint);border:1px solid var(--line)}
+.phase:nth-child(3n+2) .bar{background:color-mix(in srgb,var(--accent) 35%,var(--faint))}
+.phase:nth-child(3n+3) .bar{background:color-mix(in srgb,var(--accent) 70%,var(--faint))}
+.phase .nm{font:600 13px/1.3 var(--display);color:var(--ink);margin-top:6px;overflow-wrap:anywhere}
+.phase .tm{font:400 11px/1.3 var(--mono);color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.chips button{padding:5px 6px;font-size:11px;min-height:28px;min-width:28px}
+ul.plain{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px}
+ul.plain li{display:flex;gap:8px;align-items:baseline;min-width:0}
+ul.plain li>span:last-child{min-width:0;overflow-wrap:anywhere}
+ul.plain li>.pill{flex:0 0 auto}
+
+/* pills and badges */
+.pill{display:inline-flex;align-items:center;gap:5px;font:500 11px/1.25 var(--mono);padding:5px 7px;border:1px solid var(--line);border-radius:999px;color:var(--text);background:var(--card);max-width:100%;overflow-wrap:anywhere}
+.pill.ppe{border-color:var(--caution);color:var(--caution)}
+.pill.part{border-color:var(--accent);color:var(--ink)}
+.pill.part b{color:var(--accent)}
+.est{font:500 11px/1 var(--mono);padding:2px 4px;border:1px dashed var(--muted);border-radius:4px;color:var(--muted);margin-left:4px;vertical-align:1px;white-space:nowrap}
+
+/* build */
+.build{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:20px;align-items:start}
+.build .stage{position:sticky;top:64px}
+.jig[data-single] .build .stage{top:16px}
+.rail{display:flex;gap:4px;overflow-x:auto;padding:4px 4px 10px;margin:-2px -4px 12px}
+.rail button{min-width:38px;padding:8px 0;position:relative;flex:0 0 auto}
+.rail button[data-done]::after{content:"";position:absolute;right:3px;top:3px;width:6px;height:6px;border-radius:3px;background:var(--ok)}
+.rail button[aria-current="step"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.rail .sep{flex:0 0 1px;background:var(--line);margin:4px 3px}
+.meta{display:flex;flex-wrap:wrap;gap:5px;margin:12px 0}
+.alert{border-radius:8px;padding:10px 12px;margin:10px 0;font-size:14px;border-left:4px solid;color:var(--ink)}
+.alert b{display:block;font:700 11px/1.4 var(--mono);letter-spacing:.1em}
+.alert.warning{background:var(--warn-bg);border-color:var(--warn)}
+.alert.warning b{color:var(--warn)}
+.alert.caution{background:var(--caution-bg);border-color:var(--caution)}
+.alert.caution b{color:var(--caution)}
+ol.do{margin:14px 0;padding:0;list-style:none;counter-reset:n;display:grid;gap:8px}
+ol.do li{counter-increment:n;display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px;font-size:15.5px;color:var(--ink)}
+ol.do li::before{content:counter(n);font:700 12px/22px var(--mono);text-align:center;height:22px;border-radius:11px;background:var(--faint);color:var(--text)}
+ol.do li.new{color:var(--text);counter-increment:none}
+ol.do li.new::before{content:"+";background:none;border:1px dashed var(--control)}
+details.tech{border:1px solid var(--line);border-radius:8px;margin:8px 0;background:var(--page)}
+details.tech summary{cursor:pointer;padding:9px 12px;font:600 13px/1.3 var(--display);color:var(--ink);list-style:none;display:flex;justify-content:space-between;gap:12px}
+details.tech summary::-webkit-details-marker{display:none}
+details.tech summary::after{content:"How to";font:500 11px/1.5 var(--mono);color:var(--muted);text-transform:uppercase;white-space:nowrap}
+details.tech[open] summary::after{content:"Close"}
+details.tech summary .see{font:500 11px/1.5 var(--mono);color:var(--muted);margin-left:auto}
+details.tech .in{padding:0 12px 10px}
+details.tech ol{margin:4px 0;padding-left:20px;font-size:14px}
+details.tech .tl{font-size:13px;color:var(--muted);margin:6px 0 0}
+.check{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--line);border-radius:8px;margin:14px 0 10px;background:var(--page)}
+.check input{width:18px;height:18px;margin-top:2px;flex:0 0 auto}
+.why,.tip{font-size:14px;color:var(--text);margin:8px 0 0;padding-left:12px;border-left:2px solid var(--line)}
+/* the step heading keeps its focus ring (2px + 2px offset) clear of the "Step n of N" line above it */
+article.step .eyebrow+h2{margin-top:6px}
+/* a long word in a step (an instruction, the check, a note, a card) breaks inside the word, so the card never runs past
+   a 320 px screen; .check is a flex row, so its text also needs min-width 0 */
+ol.do li,.check span,article.step .eyebrow,.why,.tip,.alert,details.tech{overflow-wrap:anywhere}
+.check span{min-width:0}
+.why b,.tip b{font:600 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-right:6px}
+.nav{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:16px}
+.empty{color:var(--muted);font-size:14px}
+
+/* levels: First time sees all; Some experience hides first-time lines and "why"; Experienced also hides tips */
+[data-level="some"] .only-new,[data-level="pro"] .only-new,[data-level="pro"] .not-pro{display:none}
+
+/* shop */
+.trips{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:14px}
+.trip h3{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px 8px}
+.trip .note{font-size:13px;color:var(--muted);margin:4px 0 8px;overflow-wrap:anywhere}
+.trip label{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:8px;padding:7px 0;border-top:1px solid var(--faint);font-size:14px;align-items:start}
+.trip label small{display:block;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+.trip input{margin-top:3px}
+.trip label:has(input:checked) .it{text-decoration:line-through;color:var(--muted)}
+.trip .n{text-align:right;font:500 12px/1.4 var(--mono);white-space:nowrap}
+.trip .n .pill{margin-top:3px}
+.trip .sum{display:flex;justify-content:space-between;font:600 13px/1 var(--mono);padding-top:10px;border-top:1px solid var(--line);margin-top:4px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--faint);vertical-align:top}
+th{font:500 11px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-bottom:1px solid var(--line)}
+td.n,th.n{text-align:right;font-family:var(--mono);white-space:nowrap}
+td small{color:var(--muted)}
+tr.grp td{font:600 12px/1.3 var(--display);color:var(--ink);background:var(--page);padding-top:12px}
+tfoot td{font-weight:600;color:var(--ink);border-bottom:0}
+tfoot tr.total td{font-size:16px;border-top:2px solid var(--ink)}
+tfoot td.inc{white-space:normal}
+code.c{font:500 11px/1 var(--mono);color:var(--muted)}
+.notes{margin:12px 0 0;padding-left:18px;font-size:13px;color:var(--text)}
+.notes li{margin:4px 0}
+
+/* cut list: wood fill is a light tint of the material colour, so the dark label always reads */
+.cutplan h3{margin:18px 0 6px}
+.board{margin:10px 0 16px}
+.board .t{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px;font:500 12px/1.3 var(--mono);color:var(--muted);margin-bottom:4px}
+.board svg{width:100%;height:auto;display:block}
+.board .bar{position:relative;height:46px;border:1px dashed var(--muted);border-radius:3px;background:repeating-linear-gradient(45deg,var(--faint) 0 4px,var(--line) 4px 5.5px)}
+.board .seg{position:absolute;top:3px;bottom:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap;border:1px solid #5c4a30;border-radius:2px;color:var(--wood-ink);font:700 13px/1.15 var(--mono)}
+.board .seg small{font-weight:500;font-size:11px}
+.board svg .wood{stroke:#5c4a30;stroke-width:1}
+.board svg .waste{fill:url(#jig-hatch);stroke:var(--line)}
+.board svg text{font:700 26px var(--mono);fill:var(--wood-ink)}
+.board svg text.dim{font-weight:500;font-size:19px}
+.board svg.sheet{max-width:440px}.board svg.sheet text{font-size:52px}.board svg.sheet text.dim{font-size:38px}
+.board svg .stock{fill:none;stroke:var(--muted);stroke-dasharray:4 3}
+.board .note{margin:6px 0 0;font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.defs{position:absolute;width:0;height:0}
+
+/* noscript copy */
+.jig:empty{display:none}
+.noscript{max-width:820px;margin:0 auto;padding:28px 16px}
+
+/* print: every step once, in order, no 3D, light colours */
+.print-only{display:none}
+@media print{
+:root:root:root{--page:#fff;--card:#fff;--ink:#000;--text:#1d1b18;--muted:#4a463f;--line:#999;--control:#777;--faint:#eee;--accent:#8f3609;--accent-ink:#fff;--warn:#8a1d13;--warn-bg:#fff;--caution:#5c3d00;--caution-bg:#fff;--ok:#1f5a2a;color-scheme:light}
+.tabs,.top .level,.viewer,.vbar,.fig,.vnote,.rail,.build,.nav,.chips,[data-live]{display:none!important}
+[data-panel]{display:block!important;margin-bottom:24px}
+.print-only{display:block}
+.grid2{display:block}
+.card{break-inside:avoid;margin:12px 0}
+.jig{padding:0}
+details.tech summary::after,details.tech[open] summary::after{content:none}
+/* fitBoq() measures the screen, not the paper: in print an item with a word of 20 letters or more may break in it */
+.boq td[data-long]{overflow-wrap:anywhere}
+}
+.pm{display:none}
+/* a long word in the summary or a trip item breaks rather than run under the amount or past the screen (the BOQ item
+   too, on narrow screens, where its row is a grid; in a table it would shrink the column and break short words, so
+   there app.js fitBoq() sets data-break only on the item cells that make the table scroll sideways) */
+.lede,.trip label .it{overflow-wrap:anywhere}
+.boq td[data-break]{overflow-wrap:anywhere}
+/* the Parts table: cut sizes stay on one line; app.js sets data-fit only when the table would scroll sideways, one
+   stage at a time: "stack" (the material goes under the name), "wrap" (sizes wrap after a ×), "mat" (a long material
+   name breaks inside the word), "break" (a long part name breaks too) */
+.parts[data-fit~="stack"] .pmat{display:none}
+.parts[data-fit~="stack"] .pm{display:block;color:var(--muted);font-size:12px}
+.parts[data-fit~="wrap"] th:nth-child(4),.parts[data-fit~="wrap"] td:nth-child(4){white-space:normal}
+.parts[data-fit~="mat"] .pm,.parts[data-fit~="mat"] td.pmat{overflow-wrap:anywhere}
+.parts[data-fit~="break"] td:nth-child(2),.parts[data-fit~="break"] td.pmat{overflow-wrap:anywhere}
+/* the Plan tiles: 3 to a row need about 120 px for each tile, so that an amount ("SEK 25,416.60") breaks only at its
+   space; in the narrow column of the 2-column Plan layout, 2 to a row (and on a phone, see max-width:520px) */
+@media (min-width:861px) and (max-width:1100px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* one column: a step change scrolls the view to the top, just below the sticky tab bar (html scroll-padding-top) */
+@media (max-width:860px){.grid2,.build{grid-template-columns:1fr}.build .stage{position:static;scroll-margin-top:0}.jig[data-single] .build .stage{scroll-margin-top:16px}}
+/* narrow screens: each BOQ row stacks (item and amount, need and rate, buy); the parts table puts the material under the name */
+@media (max-width:600px){
+.boq thead,.parts .pmat{display:none}
+.pm{display:block;color:var(--muted);font-size:12px}
+.boq,.boq tbody,.boq tfoot{display:block}
+.boq tr{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:2px 8px;padding:8px 0;border-bottom:1px solid var(--faint)}
+.boq td{border:0;padding:0}
+.boq tbody td:nth-child(1){grid-row:1/4}
+.boq tbody td:nth-child(2){grid-column:2;grid-row:1;overflow-wrap:anywhere}
+.boq tbody td:nth-child(3){grid-column:2;grid-row:2}
+.boq tbody td:nth-child(4){grid-column:2;grid-row:3;text-align:left;white-space:normal;font-family:inherit}
+.boq tbody td:nth-child(5){grid-column:3;grid-row:2;color:var(--muted)}
+.boq tbody td:nth-child(6){grid-column:3;grid-row:1;font-weight:600;color:var(--ink)}
+.boq td[data-l]::before{content:attr(data-l) ": ";color:var(--muted)}
+.boq tr.grp{display:block;padding:0;border:0}
+.boq tr.grp td{display:block;padding:10px 8px 6px}
+.boq tfoot tr{grid-template-columns:minmax(0,1fr) auto}
+.boq tfoot tr.total td{border-top:0;padding-top:4px}
+.boq tfoot tr.total{border-top:2px solid var(--ink);border-bottom:0}
+}
+@media (max-width:520px){.viewer{aspect-ratio:1/1}.readout{display:none}.vtools{gap:3px}.vtools button{padding:6px 5px;font-size:10.5px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stats b{font-size:19px}.stats div{padding:10px}h2{font-size:21px}.card{padding:16px 14px}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}

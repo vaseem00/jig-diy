@@ -1,0 +1,9 @@
+interface:
+  display_name: "Jig"
+  short_description: "Turn a DIY project into a 3D build guide with costs"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  brand_color: "#C9531A"
+  default_prompt: "Use $jig to make a build guide for a pine bookshelf, 800 mm wide and 900 mm tall."
+policy:
+  allow_implicit_invocation: true

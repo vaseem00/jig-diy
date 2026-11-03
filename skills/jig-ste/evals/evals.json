@@ -1,0 +1,65 @@
+{
+  "skill_name": "jig-ste",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Our maintenance team has a lot of non-native English speakers and they keep misreading this task card. Can you rewrite it in Simplified Technical English?\n\nTask 4.2 Conveyor drive belt tension\nBefore starting, ensure the conveyor has been isolated and locked out at the local isolator. Remove the guard by undoing the six M6 screws, taking care not to lose the spacers. The belt tension should be checked by pressing down midway between the pulleys - deflection should be approximately 8 mm with a 30 N force. If adjustment is required, loosen the four motor mounting bolts and turn the tensioning screw clockwise to tighten, then retighten the mounting bolts to 22 Nm. Refit the guard before restoring power.",
+      "expected_output": "A Small rewrite in STE style for trained technicians. The lock-out is a WARNING before the first instruction, the spacers become a CAUTION, and the work becomes a numbered list with one action per line and the condition first (If the deflection is not about 8 mm, ...). Every value stays: 6 M6 screws, about 8 mm at 30 N, 4 mounting bolts, clockwise, 22 N·m. The lint command runs on the original and on the rewrite, and the rewrite ends at 0 findings. The reply gives the counts before and after, the term list, and says the text is STE-style, not certified STE.",
+      "files": [],
+      "expectations": [
+        "The jig engine lint command ran on the rewritten text, and its last run reported 0 STE findings.",
+        "The rewrite keeps the values M6, 6 screws, 8 mm, 30 N, 4 mounting bolts and 22 N·m (or 22 Nm).",
+        "The isolation and lock-out instruction is a WARNING placed before the first numbered instruction.",
+        "The instruction about the spacers is a CAUTION placed before the instruction that removes the guard screws or the guard.",
+        "Each numbered instruction holds one action and starts with a command verb or with a condition followed by a comma.",
+        "The rewrite adds no value that is not in the original, such as a new torque, time or deflection.",
+        "The reply gives the number of STE findings before and after the rewrite.",
+        "The reply says the text is STE-style and not certified STE."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We sell a flat-pack garden bench in the US and customers keep getting step 3 wrong. Please clean up these instructions so they're easier to follow. Keep it in inches.\n\nSTEP 3: Attaching the seat\nUsing the 1-1/4\" screws (bag C), attach the seat slats (part D) to the frame. Make sure to leave a 1/4\" gap between each slat - the spacer card included can be used for this. Pre-drilling isn't required but is recommended near the ends to avoid splitting. Tighten all screws firmly but don't overtighten as the heads can strip.",
+      "expected_output": "A short rewrite in inches. The title becomes a command (Attach the seat slats). The slats keep one name with their letter (slat D) and the screws keep their bag letter. The gap uses the spacer card. The pre-drill advice becomes a condition-first instruction for holes near an end, with no invented distance. The overtightening risk becomes a CAUTION before the tighten instruction, with no invented torque. Because the text asks the reader to drill, a WARNING about safety glasses comes before the drill instruction, and the reply says it added it. The rewrite lints to 0 findings.",
+      "files": [],
+      "expectations": [
+        "Every length in the rewrite stays in inches (1 1/4 in screws, 1/4 in gap). No length is given only in millimetres.",
+        "The title of the step is a command, for example Attach the seat slats.",
+        "The slats have one name throughout the rewrite, with the letter D.",
+        "The pre-drill advice is an instruction with the condition first, for example If the hole is near an end of a slat, drill a pilot hole.",
+        "The overtightening risk is a CAUTION placed before the instruction that tightens the screws, and it gives no torque value that the original does not give.",
+        "A WARNING about eye protection comes before the drill instruction, and the reply says that the WARNING was added.",
+        "The jig engine lint command reported 0 STE findings on the rewrite."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Can you put our café closing checklist into STE? Half our staff are still learning English.\n\nClosing the café\n- The coffee machine needs to be backflushed with the cleaning tablet and switched off at the wall.\n- All milk jugs should be washed and left upside down to dry.\n- Count the till; the float of £100 stays in, anything over that goes in the safe. If you're more than £5 out, let the manager know before leaving.\n- Floors to be mopped last, put the wet floor sign out!",
+      "expected_output": "A list of one-action commands, in the order of work, with the money values unchanged in pounds. Passives (needs to be backflushed, should be washed, to be mopped) become commands. The till line splits into count, leave the GBP 100 float, put the rest in the safe, and a condition-first line for a difference of more than GBP 5. The wet floor sign goes out before the mopping. The trade verb backflush is added with --verbs (or the line is rewritten without it). The rewrite lints to 0 findings, and the reply says STE-style, not certified.",
+      "files": [],
+      "expectations": [
+        "The amounts stay in pounds: 100 for the float and 5 for the difference (written as £100 and £5 or GBP 100 and GBP 5). No other currency appears.",
+        "The instruction to put out the wet floor sign comes before the instruction to mop the floor.",
+        "The rewrite has no passive phrase such as needs to be backflushed, should be washed or to be mopped.",
+        "The instruction about a difference in the till starts with the condition, for example If the difference is more than £5, call the manager.",
+        "Each line of the rewrite holds one action.",
+        "The jig engine lint command reported 0 STE findings on the rewrite.",
+        "The reply says the text is STE-style and not certified STE."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Tidy up these steps from my blog post for building a lit bookshelf. My readers are complete beginners.\n\n\"Rip the 2x10s down to 9 inches on your table saw. Then cut the shelves to 30\" with the circular saw. Assemble the carcass with glue and screws. For the lighting, run the cable to the nearest junction box and wire it in with Wagos, it's easy if you switch the breaker off first. Finally stand it up against the wall, it's 7 foot tall so get a friend to help.\"",
+      "expected_output": "The reply screens the text first. Wiring the light into a junction box is mains work, so the reply flags it for a licensed electrician, writes no steps for it, and can offer a plug-in light instead. The saw steps get a WARNING before each. The bookshelf is 7 ft (84 in) tall and about 9 in deep, more than twice as tall as deep, so the reply says it needs a wall-fixing step with a WARNING about tipping, and adds or recommends that step. The safe steps are rewritten in STE style in inches and lint to 0 findings.",
+      "files": [],
+      "expectations": [
+        "The reply says that connecting the light to the junction box is mains electrical work for a licensed electrician.",
+        "No instruction in the rewrite tells the reader to connect wires to the junction box, use Wago connectors on mains cable, or switch off the breaker to do wiring.",
+        "Each instruction that uses the table saw or the circular saw has a WARNING placed before it.",
+        "The reply says the bookshelf must be attached to the wall because it is tall and shallow, and the rewrite has a wall-fixing instruction with a WARNING, or the reply recommends one.",
+        "The lengths stay in inches (9 in, 30 in, 7 ft or 84 in).",
+        "The jig engine lint command reported 0 STE findings on the rewritten steps."
+      ]
+    }
+  ]
+}

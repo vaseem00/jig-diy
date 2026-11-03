@@ -1,0 +1,49 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "jig",
+  "version": "1.0.0",
+  "description": "Makes DIY build guides: a step-by-step plan, a bill of quantities, a shopping plan, a cut list and a 3D assembly viewer. Every number comes from one project file, and the instructions follow ASD-STE100 writing rules.",
+  "author": {
+    "name": "vaseem00",
+    "url": "https://github.com/vaseem00"
+  },
+  "homepage": "https://github.com/vaseem00/jig-diy",
+  "repository": "https://github.com/vaseem00/jig-diy",
+  "license": "MIT",
+  "keywords": [
+    "diy",
+    "woodworking",
+    "build-guide",
+    "assembly-instructions",
+    "bill-of-quantities",
+    "cut-list",
+    "shopping-list",
+    "3d",
+    "simplified-technical-english",
+    "furniture"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Jig",
+        "shortDescription": "DIY build guides with 3D steps",
+        "longDescription": "Jig turns a DIY project into one build guide. It works for furniture, shelving, planters, workbenches, storage, simple outdoor builds and small furniture repairs.\n\nYou describe the object. The agent writes a small project file with the parts, the materials and the steps. The jig engine then computes every number from that file: quantities, boards and sheets, cut positions, cost, time and the 3D model.\n\nNine skills share one engine:\n- jig: the full interactive guide page with the plan, the shopping list, the cut list, the 3D build steps and a level switch.\n- jig-plan: a printable step-by-step plan.\n- jig-boq: a bill of quantities and a cost estimate.\n- jig-buy: a purchase plan with one trip for each store.\n- jig-cut: a cut list for boards and sheets, with drawings to scale.\n- jig-3d: the 3D assembly viewer only.\n- jig-ste: write and check procedures in ASD-STE100 style.\n- jig-safety: a safety review with warnings, protective equipment and tip-over checks.\n- jig-verify: a check of a built guide page before you share it.\n\nJig is for people who build things at home, from first-timers to experienced makers.\n\nLimits: The engine needs Node.js 22 or later. When the guide page opens, it loads three.js 0.160.0 from cdn.jsdelivr.net and fonts from Google Fonts. The page keeps your progress in the local storage of the browser. Jig writes no steps for gas, mains wiring, structural or load-bearing changes, roofs or work above 2 m, permit work, asbestos or lead paint. It names the professional who does that work. Prices are estimates unless you give them.",
+        "developerName": "vaseem00",
+        "category": "Productivity",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "websiteURL": "https://github.com/vaseem00/jig-diy",
+        "defaultPrompt": [
+          "Make a build guide with 3D steps for a pine bookshelf, 1800 x 800 x 300 mm.",
+          "Price the materials for a 2x4 workbench with a plywood top, with sales tax.",
+          "Make a cut list for four shelves from one 2440 x 1220 plywood sheet."
+        ],
+        "brandColor": "#C9531A",
+        "composerIcon": "./assets/icon.svg",
+        "logo": "./assets/logo.svg"
+      }
+    }
+  }
+}

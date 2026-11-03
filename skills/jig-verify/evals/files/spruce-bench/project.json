@@ -1,0 +1,124 @@
+{
+  "jig": 1,
+  "id": "spruce-bench",
+  "title": "Spruce bench",
+  "summary": "A low bench for two people. You cut four parts from two boards and attach them with glue and screws.",
+  "level": "new",
+  "units": "mm",
+  "currency": "EUR",
+  "tax": { "rate": 0.19, "label": "VAT", "included": true },
+  "priceNote": "Example prices from a German DIY store. Replace them with the prices at your store.",
+  "pricesAsOf": "2026-11-01",
+  "kerf": 3,
+  "trim": 10,
+  "terms": ["trestles"],
+  "stores": {
+    "diy": { "name": "DIY store", "note": "Pick straight boards. Look along each edge before you buy it." },
+    "online": { "name": "Online order", "online": true, "lead": 3 }
+  },
+  "materials": {
+    "board": { "kind": "linear", "name": "Spruce board", "spec": "38 x 235 mm, planed", "section": [235, 38], "stock": [{ "length": 2000, "price": 21.9 }, { "length": 2500, "price": 26.9 }], "store": "diy", "color": "#e3c79b" },
+    "batten": { "kind": "linear", "name": "Spruce batten", "spec": "38 x 89 mm, planed", "section": [89, 38], "perLength": { "price": 3.2, "per": 1000, "max": 3000, "step": 500 }, "store": "diy", "color": "#e3c79b" },
+    "screw-5x80": { "kind": "each", "name": "Wood screw", "spec": "5 x 80 mm, countersunk", "pack": 50, "packName": "box of 50", "price": 7.49, "len": 80, "d": 5, "head": "flat", "store": "diy", "color": "#8f959c" },
+    "glue": { "kind": "amount", "name": "Wood glue", "spec": "PVA, D3", "unit": "ml", "pack": 250, "packName": "250 ml bottle", "price": 6.99, "store": "diy" },
+    "sand-120": { "kind": "each", "name": "Sandpaper", "spec": "120 grit", "unit": "sheet", "pack": 10, "price": 4.99, "store": "online" },
+    "oil": { "kind": "amount", "name": "Hardwax oil", "spec": "clear, satin", "unit": "L", "pack": 0.375, "packName": "0.375 L tin", "price": 14.95, "coverage": 24, "coats": 2, "store": "online" },
+    "cloths": { "kind": "each", "name": "Lint-free cloth", "pack": 10, "price": 3.99, "group": "Finish", "store": "online" }
+  },
+  "tools": [
+    { "id": "tape", "name": "Tape measure", "have": true },
+    { "id": "pencil", "name": "Pencil", "have": true },
+    { "id": "square", "name": "Try square", "price": 8.99, "store": "diy" },
+    { "id": "saw", "name": "Circular saw", "spec": "fine blade, 40 teeth or more", "get": "borrow", "power": true },
+    { "id": "trestles", "name": "Two trestles", "get": "borrow" },
+    { "id": "clamps", "name": "Bar clamp", "spec": "600 mm", "qty": 2, "price": 11.99, "store": "diy" },
+    { "id": "drill", "name": "Cordless drill", "have": true, "power": true },
+    { "id": "bits", "name": "Drill bit set", "spec": "3 mm bit and countersink bit", "price": 9.99, "store": "diy" },
+    { "id": "block", "name": "Sanding block", "price": 3.49, "store": "diy" },
+    { "id": "glasses", "name": "Safety glasses", "ppe": true, "price": 5.99, "store": "diy" },
+    { "id": "ears", "name": "Ear protection", "ppe": true, "price": 8.99, "store": "diy" },
+    { "id": "mask", "name": "Dust mask", "spec": "FFP2", "ppe": true, "price": 6.99, "store": "diy" },
+    { "id": "gloves", "name": "Nitrile gloves", "ppe": true, "price": 4.99, "store": "online" }
+  ],
+  "parts": [
+    { "id": "A1", "label": "A", "name": "Top", "material": "board", "size": [800, 38, 235], "at": [0, 412, 0] },
+    { "id": "B1", "label": "B", "name": "Leg", "material": "board", "size": [38, 412, 235], "at": [60, 0, 0] },
+    { "id": "B2", "label": "B", "name": "Leg", "material": "board", "size": [38, 412, 235], "at": [702, 0, 0] },
+    { "id": "C1", "label": "C", "name": "Rail", "material": "batten", "size": [604, 89, 38], "at": [98, 323, 98.5] }
+  ],
+  "steps": [
+    {
+      "id": "cut", "phase": "Prepare", "title": "Cut the parts", "pose": "kit", "cuts": true, "minutes": 30,
+      "tools": ["tape", "pencil", "square", "saw", "trestles", "clamps", "glasses", "ears"],
+      "teach": ["measure-mark", "cut-straight"],
+      "do": [
+        "Put the board on the two trestles.",
+        "Mark each cut from the cut list.",
+        { "t": "Measure each length two times before you cut.", "new": true },
+        "Cut each part on the waste side of the line.",
+        "Write the part letter on the bottom face of each part."
+      ],
+      "check": "Make sure that you have one part A, two parts B and one part C.",
+      "why": "Parts with letters are easy to find. Two measurements stop most errors."
+    },
+    {
+      "id": "sand", "phase": "Prepare", "title": "Sand the parts", "pose": "kit", "minutes": 25,
+      "tools": ["block", "mask"], "uses": { "sand-120": 3 }, "teach": ["sand"],
+      "do": ["Sand all faces and edges with 120 grit.", "Remove the dust with a dry cloth."],
+      "check": "Make sure that no saw marks show on the edges."
+    },
+    {
+      "id": "frame", "phase": "Build", "title": "Attach the rail to the legs", "parts": ["B1", "B2", "C1"], "minutes": 25,
+      "tools": ["drill", "bits", "clamps", "glasses"], "uses": { "glue": 10 }, "teach": ["pilot-hole", "countersink", "glue-joint"],
+      "fasteners": [
+        { "material": "screw-5x80", "at": [60, 345, 117.5], "dir": [1, 0, 0], "repeat": { "count": 2, "step": [0, 45, 0] } },
+        { "material": "screw-5x80", "at": [740, 345, 117.5], "dir": [-1, 0, 0], "repeat": { "count": 2, "step": [0, 45, 0] } }
+      ],
+      "warn": [{ "type": "warning", "text": "Wear safety glasses. The drill bit can throw chips into your eyes." }],
+      "do": [
+        "Apply glue to the two ends of rail C.",
+        "Put the rail between the two legs B.",
+        "Align the top edge of the rail with the top ends of the legs.",
+        "Clamp the legs to the rail.",
+        "Drill two pilot holes through each leg into the rail.",
+        "Install two screws through each leg."
+      ],
+      "check": "Make sure that the frame stands flat on the floor.",
+      "why": "The glue makes the joint stiff. The screws hold the joint while the glue dries."
+    },
+    {
+      "id": "top", "phase": "Build", "title": "Attach the top", "parts": ["A1"], "minutes": 20,
+      "from": [0, 300, 0], "view": { "az": 20, "el": 45 },
+      "tools": ["tape", "pencil", "drill", "bits", "glasses"], "uses": { "glue": 15 },
+      "fasteners": [
+        { "material": "screw-5x80", "at": [79, 450, 40], "dir": [0, -1, 0], "repeat": { "count": 3, "step": [0, 0, 77.5] } },
+        { "material": "screw-5x80", "at": [721, 450, 40], "dir": [0, -1, 0], "repeat": { "count": 3, "step": [0, 0, 77.5] } }
+      ],
+      "warn": [
+        { "type": "warning", "text": "Wear safety glasses. The drill bit can throw chips into your eyes." },
+        { "type": "warning", "text": "Do not stand on the bench. The bench can tip." }
+      ],
+      "do": [
+        "Apply glue to the top ends of the legs and the rail.",
+        "Put top A on the frame with 60 mm of overhang at each end.",
+        "Draw a line across the top above the center of each leg.",
+        "Drill three pilot holes on each line.",
+        "Countersink each hole.",
+        "Install three screws on each line."
+      ],
+      "check": "Make sure that each screw head is flush with the top or a little below it."
+    },
+    {
+      "id": "finish", "phase": "Finish", "title": "Apply the oil", "minutes": 30, "wait": 720,
+      "tools": ["gloves"], "uses": { "cloths": 2 }, "finish": { "material": "oil", "coats": 2 }, "teach": ["finish-wipe"],
+      "do": [
+        "Remove all dust with a dry cloth.",
+        "Apply a thin coat of oil to all faces.",
+        "After 20 minutes, wipe off the extra oil.",
+        "Wait 12 hours.",
+        "Apply the second coat."
+      ],
+      "check": "When the oil is dry, put your full weight on the bench slowly. Make sure that no joint moves."
+    }
+  ]
+}

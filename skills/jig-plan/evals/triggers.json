@@ -1,0 +1,22 @@
+[
+  { "query": "Write me step-by-step instructions I can print to build a step stool", "should_trigger": true },
+  { "query": "I need a printable plan for building a raised garden bed", "should_trigger": true },
+  { "query": "Give me the build steps in order for a simple bookshelf, as a document I can print", "should_trigger": true },
+  { "query": "Can you write the assembly instructions for my workbench project file? Just the steps.", "should_trigger": true },
+  { "query": "Make a numbered list of steps to build a cedar planter, beginner level", "should_trigger": true },
+  { "query": "Turn my project.json into a printable step-by-step plan for an experienced builder", "should_trigger": true },
+  { "query": "What order should I assemble my bed frame in? Write the steps out for me.", "should_trigger": true },
+  { "query": "Write the build instructions for a wooden toy box as markdown", "should_trigger": true },
+  { "query": "Plan out the steps to make a coat rack, with the time for each step", "should_trigger": true },
+  { "query": "Step list for building a 2x4 sawhorse, print-friendly please", "should_trigger": true },
+  { "query": "Make me a full interactive build guide for a bookshelf with 3D and a shopping list", "should_trigger": false },
+  { "query": "Show me in 3D how the bench goes together", "should_trigger": false },
+  { "query": "How much will the materials for my workbench cost?", "should_trigger": false },
+  { "query": "What's the best way to cut these pieces out of 8 ft boards with the least waste?", "should_trigger": false },
+  { "query": "Rewrite this paragraph of assembly instructions in STE", "should_trigger": false },
+  { "query": "Plan my store trips for the deck materials and tell me when to order online", "should_trigger": false },
+  { "query": "Write a project plan with milestones for our website redesign", "should_trigger": false },
+  { "query": "Plan my weekend: I want to do some gardening and see friends", "should_trigger": false },
+  { "query": "Check the guide page I built for a broken layout on phones", "should_trigger": false },
+  { "query": "Is my shelf design safe for a child's room? Review the warnings.", "should_trigger": false }
+]

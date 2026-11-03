@@ -1,0 +1,283 @@
+{
+  "jig": 1,
+  "id": "plywood-storage-cube",
+  "title": "Plywood storage cube",
+  "summary": "A storage cube of 18 mm birch plywood, 400 mm on each side. You cut five parts with a jigsaw, join them with glue and screws, and nail on a thin back.",
+  "level": "new",
+  "units": "mm",
+  "currency": "EUR",
+  "tax": { "rate": 0.21, "label": "VAT", "included": true },
+  "priceNote": "Example prices from a Dutch DIY store and timber merchant, with 21% VAT. Replace them with the prices at your store.",
+  "pricesAsOf": "2026-11-02",
+  "kerf": 3,
+  "contingency": 0.1,
+  "terms": ["trestles", "countersunk", "plies", "pendulum"],
+
+  "stores": {
+    "timber": { "name": "Timber merchant", "note": "Ask for birch plywood, grade BB/BB. Look at the two faces before you buy a sheet." },
+    "diy": { "name": "DIY store" },
+    "online": { "name": "Online order", "online": true, "lead": 3, "note": "Order 3 days before you start." }
+  },
+
+  "materials": {
+    "ply-18": { "kind": "sheet", "name": "Birch plywood 18 mm", "spec": "grade BB/BB", "thick": 18, "grain": true, "stock": [{ "w": 2500, "h": 1250, "price": 124.95 }, { "w": 1220, "h": 610, "price": 34.95 }], "store": "timber", "color": "#e4cca2" },
+    "ply-6": { "kind": "sheet", "name": "Birch plywood 6 mm", "spec": "grade BB/BB", "thick": 6, "stock": [{ "w": 1220, "h": 610, "price": 13.95 }], "store": "timber", "color": "#ead6b0" },
+    "screw-4x40": { "kind": "each", "name": "Wood screw", "spec": "4 × 40 mm, countersunk", "pack": 50, "packName": "box of 50", "price": 4.79, "len": 40, "d": 4, "head": "flat", "store": "diy", "color": "#8f959c" },
+    "pins": { "kind": "each", "name": "Panel pin", "spec": "1.6 × 25 mm, steel", "unit": "pin", "pack": 200, "packName": "box of 200", "price": 2.49, "len": 25, "d": 1.6, "head": "flat", "store": "diy", "color": "#7d838a" },
+    "glue": { "kind": "amount", "name": "Wood glue", "spec": "PVA, D3", "unit": "ml", "pack": 250, "packName": "250 ml bottle", "price": 6.99, "store": "diy" },
+    "pads": { "kind": "each", "name": "Felt pad", "spec": "25 mm round, 5 mm thick, self-adhesive", "unit": "pad", "pack": 16, "packName": "pack of 16", "price": 3.49, "store": "online", "color": "#6f747b" },
+    "sand-120": { "kind": "each", "name": "Sandpaper", "spec": "120 grit", "unit": "sheet", "pack": 5, "packName": "pack of 5", "price": 3.49, "store": "online" },
+    "sand-180": { "kind": "each", "name": "Sandpaper", "spec": "180 grit", "unit": "sheet", "pack": 5, "packName": "pack of 5", "price": 3.49, "store": "online" },
+    "sand-240": { "kind": "each", "name": "Sandpaper", "spec": "240 grit", "unit": "sheet", "pack": 5, "packName": "pack of 5", "price": 3.49, "store": "online" },
+    "varnish": { "kind": "amount", "name": "Water-based varnish", "spec": "clear, matt, interior", "unit": "L", "pack": 0.375, "packName": "0.375 L can", "price": 12.95, "coverage": 10, "store": "online" },
+    "cloths": { "kind": "each", "name": "Lint-free cloth", "spec": "cotton", "unit": "cloth", "pack": 10, "packName": "pack of 10", "price": 3.99, "group": "Finish", "store": "online" }
+  },
+
+  "tools": [
+    { "id": "tape", "name": "Tape measure", "have": true },
+    { "id": "pencil", "name": "Pencil", "have": true },
+    { "id": "square", "name": "Try square", "spec": "300 mm", "price": 9.99, "store": "diy" },
+    { "id": "guide", "name": "Straightedge", "spec": "aluminium, 1000 mm", "price": 12.99, "store": "diy" },
+    { "id": "fclamps", "name": "F-clamp", "spec": "300 mm", "qty": 2, "price": 8.99, "store": "diy" },
+    { "id": "trestles", "name": "Two trestles", "get": "borrow" },
+    { "id": "jigsaw", "name": "Jigsaw", "spec": "with a pendulum setting of 0", "get": "borrow", "power": true },
+    { "id": "blades", "name": "Jigsaw blades", "spec": "clean cut for wood (T101B), pack of 5", "price": 6.99, "store": "diy" },
+    { "id": "drill", "name": "Cordless drill", "have": true, "power": true },
+    { "id": "bits", "name": "Drill bit set", "spec": "2.5 mm and 4 mm wood bits, countersink bit", "price": 9.99, "store": "diy" },
+    { "id": "cclamps", "name": "Corner clamp", "spec": "90°, opens to 20 mm or more", "qty": 2, "price": 9.99, "store": "diy" },
+    { "id": "hammer", "name": "Hammer", "spec": "pin hammer or small claw hammer", "have": true },
+    { "id": "block", "name": "Sanding block", "price": 3.99, "store": "diy" },
+    { "id": "brush", "name": "Synthetic brush", "spec": "50 mm, for water-based finish", "price": 5.49, "store": "diy" },
+    { "id": "glasses", "name": "Safety glasses", "spec": "EN 166", "ppe": true, "price": 4.99, "store": "diy" },
+    { "id": "ears", "name": "Ear protection", "ppe": true, "price": 7.99, "store": "diy" },
+    { "id": "mask", "name": "Dust mask", "spec": "FFP2", "ppe": true, "price": 5.99, "store": "diy" },
+    { "id": "gloves", "name": "Nitrile gloves", "ppe": true, "price": 4.99, "store": "online" }
+  ],
+
+  "parts": [
+    { "id": "A1", "label": "A", "name": "Side", "material": "ply-18", "size": [18, 400, 394], "at": [0, 5, 6] },
+    { "id": "A2", "label": "A", "name": "Side", "material": "ply-18", "size": [18, 400, 394], "at": [382, 5, 6] },
+    { "id": "B1", "label": "B", "name": "Bottom", "material": "ply-18", "size": [364, 18, 394], "at": [18, 5, 6], "grain": "across" },
+    { "id": "C1", "label": "C", "name": "Top", "material": "ply-18", "size": [364, 18, 394], "at": [18, 387, 6], "grain": "across" },
+    { "id": "D1", "label": "D", "name": "Back", "material": "ply-6", "size": [400, 400, 6], "at": [0, 5, 0] },
+    { "id": "E1", "label": "E", "name": "Felt pad", "material": "pads", "shape": "cylinder", "size": [25, 5, 25], "at": [5, 0, 370] },
+    { "id": "E2", "label": "E", "name": "Felt pad", "material": "pads", "shape": "cylinder", "size": [25, 5, 25], "at": [370, 0, 370] },
+    { "id": "E3", "label": "E", "name": "Felt pad", "material": "pads", "shape": "cylinder", "size": [25, 5, 25], "at": [5, 0, 5] },
+    { "id": "E4", "label": "E", "name": "Felt pad", "material": "pads", "shape": "cylinder", "size": [25, 5, 25], "at": [370, 0, 5] }
+  ],
+
+  "techniques": {
+    "jigsaw-guide": {
+      "name": "Cut along a guide with a jigsaw",
+      "why": "A jigsaw blade bends in thick plywood. A clamped guide and a slow push keep the cut straight.",
+      "warn": [{ "type": "warning", "text": "Keep your hands away from the area under the sheet. The blade comes out below the sheet." }],
+      "do": [
+        "Set the pendulum action of the jigsaw to 0.",
+        "Measure from the edge of the base plate to the near side of the blade.",
+        "Clamp the straightedge on the part side of the line, at that distance.",
+        "Put the base plate against the straightedge with the blade clear of the sheet.",
+        "Start the jigsaw.",
+        "When the blade is at full speed, push the jigsaw slowly along the straightedge.",
+        "Keep the base plate flat on the sheet until the cut is complete."
+      ],
+      "tools": ["Jigsaw", "Straightedge", "F-clamps"]
+    },
+    "corner-clamp": {
+      "name": "Hold a corner with corner clamps",
+      "why": "A corner clamp holds two parts at 90°. Your two hands are then free for the drill.",
+      "do": [
+        "Open the two jaws of the clamp wider than the parts.",
+        "Put the corner of the joint into the clamp.",
+        "Tighten the jaw on the first part.",
+        "Align the edges of the second part with the edges of the first part.",
+        "Tighten the jaw on the second part."
+      ],
+      "tools": ["Corner clamps"]
+    },
+    "finish-brush": {
+      "name": "Brush a water-based finish",
+      "why": "Thin coats dry fast and do not run. A thick coat stays soft and shows brush marks.",
+      "warn": [
+        { "type": "warning", "text": "Wear gloves. The finish can irritate your skin." },
+        { "type": "caution", "text": "Do not shake the can. Air bubbles from the can stay in the dry finish." }
+      ],
+      "do": [
+        "Stir the finish for 1 minute.",
+        "Put one third of the brush hairs into the finish.",
+        "Brush a thin coat along the grain.",
+        "Brush each face from one end to the other in long strokes.",
+        "Remove runs at the edges with the brush.",
+        "Wait for the time on the can before the next coat."
+      ],
+      "tools": ["Synthetic brush", "Gloves"]
+    }
+  },
+
+  "steps": [
+    {
+      "id": "cut", "phase": "Prepare", "title": "Cut the parts", "pose": "kit", "cuts": true, "minutes": 60,
+      "tools": ["tape", "pencil", "square", "guide", "fclamps", "trestles", "jigsaw", "blades", "glasses", "ears"],
+      "teach": ["measure-mark", "jigsaw-guide"],
+      "warn": [
+        { "type": "warning", "text": "Wear safety glasses. The jigsaw can throw chips into your eyes." },
+        { "type": "warning", "text": "Wear ear protection. A loud jigsaw can hurt your ears." },
+        { "type": "warning", "text": "Keep your hands away from the area under the sheet. The blade comes out below the sheet." },
+        { "type": "warning", "text": "Unplug the jigsaw before you change the blade. A saw that starts can cut you." },
+        { "type": "caution", "text": "Put the sheet on the trestles with the good face down. The jigsaw splits the top face." }
+      ],
+      "do": [
+        "Put the 18 mm sheet on the two trestles with the good face down.",
+        "Mark each part from the cut list on the top face.",
+        { "t": "Measure each line two times before you cut.", "new": true },
+        "Cut across the sheet first, at the end of each part.",
+        "Cut each piece to a width of 394 mm.",
+        "Cut back D from the 6 mm sheet the same way.",
+        "Write the part letter on the top face of each part."
+      ],
+      "check": "Make sure that you have two parts A and one each of parts B, C and D.",
+      "why": "A jigsaw cuts on the up stroke, so the bottom face stays clean. The face with the letter goes on the inside of the cube.",
+      "tip": "Keep the offcuts. They make good scrap blocks for the clamps and the drill."
+    },
+    {
+      "id": "sand", "phase": "Prepare", "title": "Sand the parts", "pose": "kit", "focus": ["A1", "A2", "B1", "C1", "D1"], "minutes": 40,
+      "tools": ["block", "mask"], "uses": { "sand-120": 2, "sand-180": 2 }, "teach": ["sand"],
+      "do": [
+        "Sand each cut edge to the line with 120 grit.",
+        "Sand the faces of each part with 120 grit.",
+        "Sand each sharp edge to a 1 mm round.",
+        "Sand all faces and edges again with 180 grit.",
+        "Remove the dust with a dry cloth."
+      ],
+      "check": "Make sure that the edges are straight and that no splinters show on the faces.",
+      "why": "Plywood edges show the plies. A smooth, round edge looks clean and does not splinter.",
+      "tip": "Keep the block flat on the edge. A tilted block makes the edge uneven."
+    },
+    {
+      "id": "drill", "phase": "Prepare", "title": "Drill the sides", "pose": "kit", "focus": ["A1", "A2"], "minutes": 25,
+      "tools": ["tape", "pencil", "square", "drill", "bits", "glasses"], "teach": ["countersink"],
+      "warn": [{ "type": "caution", "text": "Put a scrap block under the side. The bit can split the face when it comes out." }],
+      "do": [
+        "Put the two sides A on the bench with the letters down.",
+        "Draw a line 9 mm from each short edge of each side.",
+        "Mark three holes on each line, at 40, 197 and 354 mm from a long edge.",
+        "Drill a 4 mm hole through the side at each mark.",
+        "Countersink each hole on the top face."
+      ],
+      "check": "Make sure that each side has six holes, 9 mm from the short edges.",
+      "why": "The line at 9 mm is the center of the 18 mm edge of the top and the bottom. Each screw then goes into the middle of the edge."
+    },
+    {
+      "id": "bottom", "phase": "Build", "title": "Attach the bottom to a side", "parts": ["A1", "B1"], "minutes": 20,
+      "tools": ["drill", "bits", "cclamps", "glasses"], "uses": { "glue": 8 }, "teach": ["glue-joint", "corner-clamp", "pilot-hole"],
+      "fasteners": [
+        { "material": "screw-4x40", "at": [0, 14, 46], "dir": [1, 0, 0], "repeat": { "count": 3, "step": [0, 0, 157] } }
+      ],
+      "warn": [{ "type": "caution", "text": "Drill a pilot hole before you install each screw. A screw with no pilot hole splits the plies." }],
+      "do": [
+        { "t": "Put bottom B flat on the bench with the letter up.", "new": true },
+        "Apply glue to one 394 mm edge of bottom B.",
+        "Put a side A against the glued edge, with its letter on the inside.",
+        "Align the holes in the side with the center of the edge.",
+        "Clamp the corner with the two corner clamps.",
+        "Drill a 2.5 mm pilot hole 25 mm into the edge through each hole.",
+        "Install three 40 mm screws through the side into the bottom."
+      ],
+      "check": "Make sure that the front edges of the side and the bottom are flush.",
+      "why": "The glue makes the joint strong. The screws pull the joint tight while the glue dries."
+    },
+    {
+      "id": "top", "phase": "Build", "title": "Attach the top to the side", "parts": ["C1"], "minutes": 15,
+      "view": { "note": "The picture shows the cube upright, as it stands at the end." },
+      "tools": ["drill", "bits", "cclamps", "glasses"], "uses": { "glue": 8 },
+      "fasteners": [
+        { "material": "screw-4x40", "at": [0, 396, 46], "dir": [1, 0, 0], "repeat": { "count": 3, "step": [0, 0, 157] } }
+      ],
+      "warn": [
+        { "type": "warning", "text": "When you drill, wear safety glasses. The bit can throw chips into your eyes." },
+        { "type": "caution", "text": "Drill a pilot hole before you install each screw. A screw with no pilot hole splits the plies." }
+      ],
+      "do": [
+        "Turn the assembly upside down on the bench.",
+        "Apply glue to one 394 mm edge of top C.",
+        "Put top C flat on the bench with the letter up and the glued edge against side A.",
+        "Clamp the corner with the two corner clamps.",
+        "Drill a 2.5 mm pilot hole 25 mm into the edge through each hole.",
+        "Install three 40 mm screws through the side into the top."
+      ],
+      "check": "Make sure that the gap between the top and the bottom is 364 mm at the front and the back."
+    },
+    {
+      "id": "side", "phase": "Build", "title": "Attach the second side", "parts": ["A2"], "minutes": 20, "from": [260, 0, 0],
+      "view": { "note": "The picture shows the cube upright." },
+      "tools": ["drill", "bits", "glasses"], "uses": { "glue": 16 },
+      "fasteners": [
+        { "material": "screw-4x40", "at": [400, 14, 46], "dir": [-1, 0, 0], "repeat": { "count": 3, "step": [0, 0, 157] } },
+        { "material": "screw-4x40", "at": [400, 396, 46], "dir": [-1, 0, 0], "repeat": { "count": 3, "step": [0, 0, 157] } }
+      ],
+      "warn": [
+        { "type": "warning", "text": "When you drill, wear safety glasses. The bit can throw chips into your eyes." },
+        { "type": "caution", "text": "Drill a pilot hole before you install each screw. A screw with no pilot hole splits the plies." }
+      ],
+      "do": [
+        "Put the assembly on the bench with side A down.",
+        "Apply glue to the free edges of the top and the bottom.",
+        "Put the second side A on the glued edges, with its letter on the inside.",
+        "Align the holes with the centers of the edges.",
+        "Drill a 2.5 mm pilot hole 25 mm into the edge through each hole.",
+        "Install six 40 mm screws through the side."
+      ],
+      "check": "Make sure that the front edges of the two sides, the top and the bottom are flush.",
+      "tip": "The weight of the side holds the joint, so you do not need the clamps."
+    },
+    {
+      "id": "back", "phase": "Build", "title": "Attach the back", "parts": ["D1"], "minutes": 25, "from": [0, 0, -260],
+      "view": { "az": 205, "el": 26, "note": "The picture shows the cube upright, from the back." },
+      "tools": ["tape", "pencil", "hammer", "glasses"], "uses": { "glue": 10 }, "teach": ["square-diagonals"],
+      "fasteners": [
+        { "material": "pins", "at": [9, 55, 0], "dir": [0, 0, 1], "repeat": { "count": 4, "step": [0, 100, 0] } },
+        { "material": "pins", "at": [391, 55, 0], "dir": [0, 0, 1], "repeat": { "count": 4, "step": [0, 100, 0] } },
+        { "material": "pins", "at": [100, 14, 0], "dir": [0, 0, 1], "repeat": { "count": 3, "step": [100, 0, 0] } },
+        { "material": "pins", "at": [100, 396, 0], "dir": [0, 0, 1], "repeat": { "count": 3, "step": [100, 0, 0] } }
+      ],
+      "warn": [{ "type": "warning", "text": "Wear safety glasses. A pin can fly out of the wood when you hit it." }],
+      "do": [
+        "Put the cube on the bench with the front down.",
+        "Square the cube with the two diagonals.",
+        "Apply a thin line of glue to the back edges of the cube.",
+        "Put back D on the cube with the letter down and its edges flush with the outer faces.",
+        "Draw a line on back D, 9 mm from each edge.",
+        "Nail the back along the lines with 14 panel pins, about 100 mm apart."
+      ],
+      "check": "Make sure that no pin comes out of an inner or outer face of the cube.",
+      "why": "The back holds the cube square. The lines put each pin in the center of an 18 mm edge."
+    },
+    {
+      "id": "finish", "phase": "Finish", "title": "Apply the finish", "minutes": 50, "wait": 240,
+      "tools": ["brush", "gloves"], "uses": { "sand-240": 1, "cloths": 2 }, "finish": { "material": "varnish", "coats": 2 }, "teach": ["finish-brush"],
+      "warn": [{ "type": "warning", "text": "Open a window or work outdoors. Finish fumes in a closed room can give you a headache." }],
+      "do": [
+        "Remove the dust from all faces with a damp cloth.",
+        "Brush the first coat on all faces, inside and outside.",
+        "Wait 2 hours.",
+        "Sand all faces lightly with 240 grit.",
+        "Remove the dust with a damp cloth.",
+        "Brush the second coat."
+      ],
+      "check": "Make sure that the finish is dry and smooth before you put items in the cube.",
+      "why": "Water lifts the wood fibres in the first coat. The light sand removes them, so the second coat is smooth."
+    },
+    {
+      "id": "pads", "phase": "Finish", "title": "Attach the felt pads", "parts": ["E1", "E2", "E3", "E4"], "minutes": 5, "from": [0, -40, 0],
+      "view": { "az": 30, "el": 3, "note": "The picture shows the cube upright, so you can see where each pad goes." },
+      "do": [
+        "Put the cube upside down on a soft cloth.",
+        "Clean each corner of the bottom with a dry cloth.",
+        "Remove the paper from a felt pad.",
+        "Press the pad on a corner, 5 mm from each outer edge.",
+        "Attach the other three pads the same way."
+      ],
+      "check": "Make sure that the cube stands flat on the floor and does not rock.",
+      "why": "The pads keep the cube off the floor. They stop scratches on the floor and on the finish."
+    }
+  ]
+}

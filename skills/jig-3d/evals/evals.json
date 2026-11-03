@@ -1,0 +1,62 @@
+{
+  "skill_name": "jig-3d",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Show me in 3D how a simple plywood bedside table goes together: 450 mm wide, 550 mm tall, 400 mm deep, 18 mm birch plywood, a top, two sides, a fixed shelf in the middle and a back. No drawer. I'm in Bristol, if that matters for the sheet sizes.",
+      "expected_output": "A Small 3D-only page, <id>-3d.html, built with build --tabs build --strict from a project.json in the user's folder. The project is in mm with the plywood at 18 mm thick on 2440 x 1220 mm sheets, priced in GBP or set to 0 with a priceNote. Every part has an at computed from a neighbour, every step adds 1 to 4 parts with positional screws, and the check reports 0 errors and no geometry warnings. The back-panel step sets a view from behind. Captures of the steps were taken and read.",
+      "files": [],
+      "expectations": [
+        "A file whose name ends in -3d.html exists next to project.json in the working directory.",
+        "The build command used --tabs build.",
+        "The project's units are mm and the plywood material has thick 18.",
+        "Every part in project.json has an at.",
+        "The check or build report shows 0 errors and no W_FLOATING, W_FASTENER or E_GEOMETRY problems.",
+        "No step installs more than 4 parts.",
+        "The step that installs the back panel sets a view with az between 150 and 230.",
+        "At least one capture of a build step was made with the capture command."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Animate the assembly of a 2x4 sawhorse, 32 inches tall and 36 inches long, with the legs splayed out at the bottom. I want to see each leg go on.",
+      "expected_output": "A 3D-only page in inches. The 2x4s use the actual 1 1/2 x 3 1/2 in section. The splayed legs use rotate, and any real overlap at the joint is listed in joins. Each leg arrives in its own step or in pairs, with its screws drawn on the face where they go in. The check reports 0 errors.",
+      "files": [],
+      "expectations": [
+        "The project sets units to in.",
+        "The 2x4 material has section [3.5, 1.5].",
+        "At least one leg part has a rotate value.",
+        "The build command used --tabs build.",
+        "The build report shows 0 errors.",
+        "Each step that installs a leg has positional fasteners with at and dir."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Use the pine bookshelf example and make me just the 3D step viewer, so I can embed it in my blog post. It has to work even when the CDN is blocked.",
+      "expected_output": "The example project is copied from the skill's examples folder into the user's folder (never built inside the skill folder) and built with build --tabs build --offline --strict, giving pine-bookshelf-3d.html with three.js inlined. The reply gives the path and how to embed it, and says the file is larger because three.js is inside it.",
+      "files": [],
+      "expectations": [
+        "The project file used for the build is outside the skill folder.",
+        "The build command used --tabs build and --offline.",
+        "A file named pine-bookshelf-3d.html exists in the working directory.",
+        "The page has no Shop or Cut list tab.",
+        "The reply says that the offline page is larger because it contains three.js."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Show me in 3D how to assemble a wardrobe I'm building: 2 m tall, 1 m wide, 55 cm deep, 18 mm MDF, two doors on hinges and a hanging rail.",
+      "expected_output": "A Standard 3D-only page. The wardrobe is tall and shallow (ratio about 3.6), so the project has an anti-tip part or material with role anchor, a wall prop, and a final wall-fixing step with a WARNING about children. The hinges are each parts, the rail is a cylinder, and the doors arrive in their own steps. The check reports 0 errors, so E_TIP_OVER does not appear.",
+      "files": [],
+      "expectations": [
+        "The project has a part or material with role anchor.",
+        "A step shows a wall prop and has a WARNING that mentions children or tipping.",
+        "The hanging rail part has shape cylinder.",
+        "The hinges are parts of an each material.",
+        "The build report shows 0 errors and no E_TIP_OVER.",
+        "The reply names the size as Standard."
+      ]
+    }
+  ]
+}

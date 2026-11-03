@@ -1,0 +1,82 @@
+# CI for jig-diy: the node:test suite, the engine-copy and repo-layout checks, a rebuild of every example with a
+# golden-file diff gate, on three systems and three Node.js versions, plus `claude plugin validate` on Linux.
+# The Node.js versions are explicit majors (22 is the minimum), never `current` or `lts/*`: a floating version could
+# bring new ICU data and change the golden pages with no change in the repo.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test (${{ matrix.os }}, Node.js ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: [22, 24, 26]
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Unit, CLI, golden and repo tests
+        run: node --test "tests/**/*.test.mjs"
+
+      - name: Engine copies match engine/
+        run: node scripts/sync-engine.mjs --check
+
+      - name: Repo layout and directory limits
+        run: node scripts/check-repo.mjs
+
+      - name: Rebuild every example
+        run: node scripts/build-examples.mjs
+
+      - name: Committed pages are unchanged
+        shell: bash
+        run: |
+          git status --short
+          git diff --stat --exit-code
+          test -z "$(git status --porcelain)"
+
+  validate:
+    name: Claude Code plugin validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+
+      # validate only reads the repo: it needs no sign-in and no API key, so this job uses no secrets.
+      # Pin the CLI so a new release cannot change the verdict; raise the pin on purpose.
+      - name: claude plugin validate . --strict
+        env:
+          CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1"
+        run: |
+          npx -y @anthropic-ai/claude-code@2.1.316 --version
+          npx -y @anthropic-ai/claude-code@2.1.316 plugin validate . --strict

@@ -1,0 +1,22 @@
+[
+  { "query": "Show me in 3D how this bookshelf goes together", "should_trigger": true },
+  { "query": "Can you animate the assembly of my workbench, step by step?", "should_trigger": true },
+  { "query": "Make an exploded 3D view of a simple bedside table", "should_trigger": true },
+  { "query": "I want an interactive 3D model of the bench I'm building, part by part", "should_trigger": true },
+  { "query": "Visualize how the parts of my planter box fit together", "should_trigger": true },
+  { "query": "Turn my jig project.json into just the 3D build viewer", "should_trigger": true },
+  { "query": "3D step-by-step assembly animation of a wooden toy box, to embed in my blog", "should_trigger": true },
+  { "query": "Show me how the legs and rails of a sawhorse go together in 3D", "should_trigger": true },
+  { "query": "Make a 3D viewer of the pine bookshelf example that works offline", "should_trigger": true },
+  { "query": "I can't picture how the shelves slot into the sides of this cabinet. Show me in 3D.", "should_trigger": true },
+  { "query": "Make me a complete build guide with a shopping list, a cut list and 3D for a desk", "should_trigger": false },
+  { "query": "Write printable step-by-step instructions for a bookshelf", "should_trigger": false },
+  { "query": "Make a 3D model of my house for a real estate listing", "should_trigger": false },
+  { "query": "Build me a three.js scene with a rotating cube", "should_trigger": false },
+  { "query": "Draw an isometric diagram that explains how a cache works", "should_trigger": false },
+  { "query": "What will the materials for my bench cost?", "should_trigger": false },
+  { "query": "Give me a cut list for my plywood cabinet", "should_trigger": false },
+  { "query": "Export my bookshelf design to an STL file for 3D printing", "should_trigger": false },
+  { "query": "Check the 3D guide page I built for console errors", "should_trigger": false },
+  { "query": "Model a chair in Blender for me", "should_trigger": false }
+]

@@ -1,0 +1,55 @@
+{
+  "jig": 1,
+  "id": "pine-stand",
+  "title": "Pine stand",
+  "summary": "This starter is a small stand: a pine top on two legs. Replace its materials, parts and steps with your project.",
+  "level": "some",
+  "units": "mm",
+  "currency": "USD",
+  "priceNote": "Example prices. Replace them with the prices at your store.",
+  "materials": {
+    "pine": {
+      "kind": "linear", "name": "Pine board", "spec": "planed, straight grain", "section": [140, 19],
+      "stock": [{ "length": 1200, "price": 9.5 }, { "length": 2400, "price": 16 }], "color": "#d9b88a"
+    },
+    "screw": {
+      "kind": "each", "name": "Wood screw", "spec": "countersunk head", "pack": 20, "price": 4.5, "len": 50, "d": 4, "head": "flat",
+      "color": "#8f959c"
+    }
+  },
+  "tools": [
+    { "id": "saw", "name": "Hand saw", "have": true },
+    { "id": "driver", "name": "Screwdriver", "have": true }
+  ],
+  "parts": [
+    { "id": "A", "name": "Top", "material": "pine", "size": [500, 19, 140], "at": [0, 120, 0] },
+    { "id": "B1", "label": "B", "name": "Leg", "material": "pine", "size": [19, 120, 140], "at": [40, 0, 0] },
+    { "id": "B2", "label": "B", "name": "Leg", "material": "pine", "size": [19, 120, 140], "at": [441, 0, 0] }
+  ],
+  "steps": [
+    {
+      "id": "cut", "phase": "Prepare", "title": "Cut the parts", "pose": "kit", "cuts": true, "minutes": 15, "tools": ["saw"],
+      "warn": [{ "type": "warning", "text": "Keep your free hand away from the saw. The teeth can cut your hand." }],
+      "do": [
+        "Mark one top A and two legs B on the board.",
+        "Cut each part on the waste side of the line.",
+        "Write the part letter on each part."
+      ],
+      "check": "Make sure that the two legs B have the same length."
+    },
+    {
+      "id": "assemble", "phase": "Build", "title": "Attach the top to the legs", "parts": ["B1", "B2", "A"], "minutes": 15,
+      "tools": ["driver"],
+      "fasteners": [
+        { "material": "screw", "at": [49.5, 139, 35], "dir": [0, -1, 0], "repeat": { "count": 2, "step": [0, 0, 70] } },
+        { "material": "screw", "at": [450.5, 139, 35], "dir": [0, -1, 0], "repeat": { "count": 2, "step": [0, 0, 70] } }
+      ],
+      "do": [
+        "Stand the two legs B on a flat surface.",
+        "Put the top A on the legs with equal overhangs at the two ends.",
+        "Install two screws through the top into each leg."
+      ],
+      "check": "Make sure that the top does not rock on a flat floor."
+    }
+  ]
+}

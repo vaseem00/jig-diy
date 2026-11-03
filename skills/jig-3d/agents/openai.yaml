@@ -1,0 +1,9 @@
+interface:
+  display_name: "Jig 3D"
+  short_description: "Show how a DIY build goes together, step by step in 3D"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  brand_color: "#C9531A"
+  default_prompt: "Use $jig-3d to show in 3D how a plywood bedside table goes together."
+policy:
+  allow_implicit_invocation: true

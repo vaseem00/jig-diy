@@ -1,0 +1,1400 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "jig project",
+  "description": "A DIY build: materials, tools, parts and steps. Lengths use the project units (mm or in).",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "materials",
+    "parts"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Path or URL of this schema, for editor help. The engine ignores it."
+    },
+    "jig": {
+      "type": "integer",
+      "description": "Format version. This engine reads format 1.",
+      "enum": [
+        1
+      ],
+      "default": 1
+    },
+    "id": {
+      "type": "string",
+      "description": "Output file name and browser storage key. Lower-case letters, digits and single hyphens.",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "title": {
+      "type": "string",
+      "description": "The object, for example \"Pine bookshelf\".",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string",
+      "description": "One or two STE descriptive sentences about the object.",
+      "default": ""
+    },
+    "level": {
+      "enum": [
+        "new",
+        "some",
+        "pro"
+      ],
+      "default": "some",
+      "description": "Level the page opens at: new (first time), some (some experience) or pro."
+    },
+    "units": {
+      "enum": [
+        "mm",
+        "in"
+      ],
+      "default": "mm",
+      "description": "Unit of every length in this file: sizes, positions, stock, kerf, trim, fasteners."
+    },
+    "currency": {
+      "type": "string",
+      "description": "ISO 4217 currency code, for example USD, EUR, INR.",
+      "pattern": "^[A-Z]{3}$",
+      "default": "USD"
+    },
+    "tax": {
+      "type": "object",
+      "description": "Sales tax or VAT.",
+      "required": [
+        "rate"
+      ],
+      "properties": {
+        "rate": {
+          "type": "number",
+          "description": "Tax rate as a share from 0 to 1: 7% is 0.07, 20% is 0.2.",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "label": {
+          "type": "string",
+          "description": "Name of the tax, for example \"VAT\".",
+          "minLength": 1,
+          "default": "Tax"
+        },
+        "included": {
+          "type": "boolean",
+          "description": "true: prices include the tax. false: the tax is added to the total.",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "priceNote": {
+      "type": "string",
+      "description": "Where the prices come from.",
+      "default": ""
+    },
+    "pricesAsOf": {
+      "type": "string",
+      "description": "Date of the prices, YYYY-MM-DD.",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$"
+    },
+    "estimate": {
+      "type": "boolean",
+      "description": "true: rates show an est badge unless a material or tool sets est to false.",
+      "default": true
+    },
+    "kerf": {
+      "type": "number",
+      "description": "Saw cut width, at most 10 mm. Default: 3 mm, or 1/8 in when units is in.",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "trim": {
+      "type": "number",
+      "description": "Waste cut from the start of each board to square the factory end. The first piece starts at trim.",
+      "minimum": 0,
+      "maximum": 1000000,
+      "default": 0
+    },
+    "contingency": {
+      "type": "number",
+      "description": "Spare budget as a share from 0 to 0.5: 10% is 0.1.",
+      "minimum": 0,
+      "maximum": 0.5,
+      "default": 0.1
+    },
+    "terms": {
+      "type": "array",
+      "description": "Technical names the STE linter accepts.",
+      "items": {
+        "type": "string",
+        "description": "A technical name.",
+        "minLength": 1
+      },
+      "default": []
+    },
+    "verbs": {
+      "type": "array",
+      "description": "Extra command verbs the STE linter accepts (trade verbs).",
+      "items": {
+        "type": "string",
+        "description": "A command verb.",
+        "minLength": 1
+      },
+      "default": []
+    },
+    "stores": {
+      "type": "object",
+      "description": "Where to buy. Key: store id.",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/store"
+      }
+    },
+    "materials": {
+      "type": "object",
+      "description": "What is bought and used. Key: material id.",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/material"
+      }
+    },
+    "tools": {
+      "type": "array",
+      "description": "Tools the steps use.",
+      "items": {
+        "$ref": "#/$defs/tool"
+      }
+    },
+    "parts": {
+      "type": "array",
+      "description": "What is cut, made or installed.",
+      "items": {
+        "$ref": "#/$defs/part"
+      }
+    },
+    "props": {
+      "type": "object",
+      "description": "Context boxes (wall, bench, floor). Shown in 3D, never bought. Key: prop id.",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/prop"
+      }
+    },
+    "techniques": {
+      "type": "object",
+      "description": "Extra technique cards, or cards that replace a built-in card. Key: technique id.",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/technique"
+      }
+    },
+    "steps": {
+      "type": "array",
+      "description": "The build sequence. The plan, check and build commands need it.",
+      "items": {
+        "$ref": "#/$defs/step"
+      }
+    },
+    "uses": {
+      "$ref": "#/$defs/uses",
+      "description": "Project-wide consumables not tied to a step: { materialId: amount }."
+    },
+    "finish": {
+      "type": "array",
+      "description": "Project-wide finishes not tied to a step.",
+      "items": {
+        "$ref": "#/$defs/finish"
+      }
+    },
+    "handoff": {
+      "type": "array",
+      "description": "Work this guide leaves to a professional.",
+      "items": {
+        "type": "object",
+        "description": "Work this guide leaves to a professional.",
+        "required": [
+          "topic",
+          "text"
+        ],
+        "properties": {
+          "topic": {
+            "type": "string",
+            "description": "The hand-off topic id: gas, mains, structural, height, permit, asbestos or lead-paint, for example \"mains\". Common names such as \"mains wiring\" also match.",
+            "minLength": 1
+          },
+          "text": {
+            "type": "string",
+            "description": "What the professional does, in STE descriptive sentences.",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "safety": {
+      "type": "object",
+      "description": "Safety settings.",
+      "properties": {
+        "tipRatio": {
+          "type": "number",
+          "description": "Height-to-depth ratio above which an object 600 mm (24 in) tall or more needs an anchor step. A smaller object gets the warning W_TIP_SMALL.",
+          "exclusiveMinimum": 0,
+          "maximum": 1000000,
+          "default": 2
+        },
+        "cleared": {
+          "type": "array",
+          "description": "Hits of the hand-off screen that are not hand-off work. An entry turns the E_HANDOFF of its topic into the info I_HANDOFF_CLEARED, and the safety review lists each hit. Never use it for real hand-off work.",
+          "items": {
+            "type": "object",
+            "description": "A hit of the hand-off screen that is not hand-off work.",
+            "required": [
+              "topic",
+              "why"
+            ],
+            "properties": {
+              "topic": {
+                "type": "string",
+                "description": "The hand-off topic id of the hit: gas, mains, structural, height, permit, asbestos or lead-paint. Common names such as \"mains wiring\" also match.",
+                "minLength": 1
+              },
+              "why": {
+                "type": "string",
+                "description": "Why the hit is not that work, in STE descriptive sentences, 10 to 240 characters. For lead-paint, give the age of the paint.",
+                "minLength": 10,
+                "maxLength": 240
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": {
+      "type": "string",
+      "description": "An id: letters, digits, '.', '_' or '-', 64 characters or fewer.",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+    },
+    "color": {
+      "type": "string",
+      "description": "Hex color #rrggbb.",
+      "pattern": "^#[0-9a-fA-F]{6}$"
+    },
+    "vec3": {
+      "type": "array",
+      "description": "[x, y, z].",
+      "items": {
+        "type": "number",
+        "description": "A value.",
+        "minimum": -1000000,
+        "maximum": 1000000
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "size3": {
+      "type": "array",
+      "description": "Box size [x, y, z] in project units.",
+      "items": {
+        "type": "number",
+        "description": "A length more than 0.",
+        "exclusiveMinimum": 0,
+        "maximum": 1000000
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "uses": {
+      "type": "object",
+      "description": "Consumables: { materialId: amount }.",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "type": "number",
+        "description": "Amount in the material's unit (pieces for each materials).",
+        "exclusiveMinimum": 0,
+        "maximum": 1000000
+      }
+    },
+    "warn": {
+      "type": "object",
+      "description": "A WARNING (risk of injury) or CAUTION (risk of damage), shown before the instructions.",
+      "required": [
+        "type",
+        "text"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "warning",
+            "caution"
+          ],
+          "description": "warning: risk of injury. caution: risk of damage."
+        },
+        "text": {
+          "type": "string",
+          "description": "The warning in STE: the command first, then the risk.",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "store": {
+      "type": "object",
+      "description": "A store.",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Store name, for example \"Timber yard\".",
+          "minLength": 1
+        },
+        "online": {
+          "type": "boolean",
+          "description": "true: an online order, put first in the purchase plan.",
+          "default": false
+        },
+        "lead": {
+          "type": "number",
+          "description": "Delivery time in days.",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "note": {
+          "type": "string",
+          "description": "Note for this trip."
+        },
+        "url": {
+          "type": "string",
+          "description": "Store web address.",
+          "pattern": "^https?://\\S+$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "material": {
+      "description": "A material. kind sets the other fields: linear, sheet, each or amount.",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/linear"
+        },
+        {
+          "$ref": "#/$defs/sheet"
+        },
+        {
+          "$ref": "#/$defs/each"
+        },
+        {
+          "$ref": "#/$defs/amount"
+        }
+      ]
+    },
+    "linear": {
+      "type": "object",
+      "description": "A material sold by length (boards, battens, rods). Give stock (board lengths) or perLength (cut-to-size price).",
+      "required": [
+        "name",
+        "kind",
+        "section"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name in the BOQ and the shopping list, for example \"Pine board\".",
+          "minLength": 1
+        },
+        "kind": {
+          "const": "linear",
+          "description": "linear: sold by length (boards, battens, rods)."
+        },
+        "spec": {
+          "type": "string",
+          "description": "Size or grade as the store writes it, for example \"19 x 235 mm (1x10)\"."
+        },
+        "store": {
+          "$ref": "#/$defs/id",
+          "description": "Id of the store in stores where you buy it."
+        },
+        "color": {
+          "$ref": "#/$defs/color",
+          "description": "Color in the 3D view and the cut drawings."
+        },
+        "group": {
+          "type": "string",
+          "description": "BOQ group name. Default: from the kind (Timber and sheet, Hardware, Consumables, Finish).",
+          "minLength": 1
+        },
+        "est": {
+          "type": "boolean",
+          "description": "Set false when the price is a real quote. Default: the project estimate value."
+        },
+        "note": {
+          "type": "string",
+          "description": "Note shown next to the item in the shopping list."
+        },
+        "role": {
+          "enum": [
+            "anchor"
+          ],
+          "description": "anchor: wall fixings. A tall object needs one to pass the tip-over check."
+        },
+        "section": {
+          "type": "array",
+          "description": "Section [width, thickness] in project units.",
+          "items": {
+            "type": "number",
+            "description": "A length more than 0.",
+            "exclusiveMinimum": 0,
+            "maximum": 1000000
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "profile": {
+          "enum": [
+            "rect",
+            "round"
+          ],
+          "default": "rect",
+          "description": "Section shape: rect or round (dowel, rod, pipe)."
+        },
+        "stock": {
+          "type": "array",
+          "description": "Stock lengths the store sells.",
+          "items": {
+            "type": "object",
+            "description": "A stock length.",
+            "required": [
+              "length",
+              "price"
+            ],
+            "properties": {
+              "length": {
+                "type": "number",
+                "description": "Board length in project units.",
+                "exclusiveMinimum": 0,
+                "maximum": 1000000
+              },
+              "price": {
+                "type": "number",
+                "description": "Price of one board.",
+                "minimum": 0,
+                "maximum": 1000000000
+              }
+            },
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "perLength": {
+          "type": "object",
+          "description": "Cut-to-size pricing: price per length, boards up to max.",
+          "required": [
+            "price",
+            "per",
+            "max"
+          ],
+          "properties": {
+            "price": {
+              "type": "number",
+              "description": "Price for each per length.",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "per": {
+              "type": "number",
+              "description": "Length the price is for, in project units.",
+              "exclusiveMinimum": 0,
+              "maximum": 1000000
+            },
+            "max": {
+              "type": "number",
+              "description": "Longest board the store cuts, in project units.",
+              "exclusiveMinimum": 0,
+              "maximum": 1000000
+            },
+            "step": {
+              "type": "number",
+              "description": "Lengths are sold in steps of this size. Default: per.",
+              "exclusiveMinimum": 0,
+              "maximum": 1000000
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "stock"
+          ]
+        },
+        {
+          "required": [
+            "perLength"
+          ]
+        }
+      ]
+    },
+    "sheet": {
+      "type": "object",
+      "description": "A material sold as sheets: plywood, MDF, board.",
+      "required": [
+        "name",
+        "kind",
+        "thick",
+        "stock"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name in the BOQ and the shopping list, for example \"Pine board\".",
+          "minLength": 1
+        },
+        "kind": {
+          "const": "sheet",
+          "description": "sheet: sold as sheets (plywood, MDF)."
+        },
+        "spec": {
+          "type": "string",
+          "description": "Size or grade as the store writes it, for example \"19 x 235 mm (1x10)\"."
+        },
+        "store": {
+          "$ref": "#/$defs/id",
+          "description": "Id of the store in stores where you buy it."
+        },
+        "color": {
+          "$ref": "#/$defs/color",
+          "description": "Color in the 3D view and the cut drawings."
+        },
+        "group": {
+          "type": "string",
+          "description": "BOQ group name. Default: from the kind (Timber and sheet, Hardware, Consumables, Finish).",
+          "minLength": 1
+        },
+        "est": {
+          "type": "boolean",
+          "description": "Set false when the price is a real quote. Default: the project estimate value."
+        },
+        "note": {
+          "type": "string",
+          "description": "Note shown next to the item in the shopping list."
+        },
+        "role": {
+          "enum": [
+            "anchor"
+          ],
+          "description": "anchor: wall fixings. A tall object needs one to pass the tip-over check."
+        },
+        "thick": {
+          "type": "number",
+          "description": "Sheet thickness in project units.",
+          "exclusiveMinimum": 0,
+          "maximum": 1000000
+        },
+        "stock": {
+          "type": "array",
+          "description": "Sheet sizes the store sells.",
+          "items": {
+            "type": "object",
+            "description": "A sheet size.",
+            "required": [
+              "w",
+              "h",
+              "price"
+            ],
+            "properties": {
+              "w": {
+                "type": "number",
+                "description": "Sheet width.",
+                "exclusiveMinimum": 0,
+                "maximum": 1000000
+              },
+              "h": {
+                "type": "number",
+                "description": "Sheet height.",
+                "exclusiveMinimum": 0,
+                "maximum": 1000000
+              },
+              "price": {
+                "type": "number",
+                "description": "Price of one sheet.",
+                "minimum": 0,
+                "maximum": 1000000000
+              }
+            },
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "grain": {
+          "type": "boolean",
+          "description": "true: pieces keep their long side along the sheet's long side.",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "each": {
+      "type": "object",
+      "description": "A material counted in pieces: screws, hinges, brackets.",
+      "required": [
+        "name",
+        "kind"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name in the BOQ and the shopping list, for example \"Pine board\".",
+          "minLength": 1
+        },
+        "kind": {
+          "const": "each",
+          "description": "each: counted in pieces (screws, hinges, brackets)."
+        },
+        "spec": {
+          "type": "string",
+          "description": "Size or grade as the store writes it, for example \"19 x 235 mm (1x10)\"."
+        },
+        "store": {
+          "$ref": "#/$defs/id",
+          "description": "Id of the store in stores where you buy it."
+        },
+        "color": {
+          "$ref": "#/$defs/color",
+          "description": "Color in the 3D view and the cut drawings."
+        },
+        "group": {
+          "type": "string",
+          "description": "BOQ group name. Default: from the kind (Timber and sheet, Hardware, Consumables, Finish).",
+          "minLength": 1
+        },
+        "est": {
+          "type": "boolean",
+          "description": "Set false when the price is a real quote. Default: the project estimate value."
+        },
+        "note": {
+          "type": "string",
+          "description": "Note shown next to the item in the shopping list."
+        },
+        "role": {
+          "enum": [
+            "anchor"
+          ],
+          "description": "anchor: wall fixings. A tall object needs one to pass the tip-over check."
+        },
+        "pack": {
+          "type": "number",
+          "description": "Pieces in one pack.",
+          "exclusiveMinimum": 0,
+          "maximum": 1000000,
+          "default": 1
+        },
+        "packName": {
+          "type": "string",
+          "description": "Name of one pack, for example \"237 ml bottle\".",
+          "minLength": 1
+        },
+        "price": {
+          "type": "number",
+          "description": "Price of one pack in the project currency.",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "unit": {
+          "type": "string",
+          "description": "Word for one piece, for example \"piece\" or \"sheet\".",
+          "minLength": 1,
+          "default": "piece"
+        },
+        "spare": {
+          "type": "number",
+          "description": "Spare share from 0 to 1. Default: 0.1 for fasteners, else 0.",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "len": {
+          "type": "number",
+          "description": "Fastener length in project units.",
+          "exclusiveMinimum": 0,
+          "maximum": 1000000
+        },
+        "d": {
+          "type": "number",
+          "description": "Fastener diameter in project units.",
+          "exclusiveMinimum": 0,
+          "maximum": 1000000
+        },
+        "head": {
+          "enum": [
+            "flat",
+            "pan",
+            "hex"
+          ],
+          "description": "Fastener head: flat (countersunk), pan or hex."
+        },
+        "included": {
+          "type": "boolean",
+          "description": "true: comes in a kit, listed as \"in the kit\" and not bought.",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "amount": {
+      "type": "object",
+      "description": "A material measured by amount: glue, finish, sandpaper by the sheet.",
+      "required": [
+        "name",
+        "kind",
+        "unit"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name in the BOQ and the shopping list, for example \"Pine board\".",
+          "minLength": 1
+        },
+        "kind": {
+          "const": "amount",
+          "description": "amount: measured in a unit (L, ml, kg, g, m, roll)."
+        },
+        "spec": {
+          "type": "string",
+          "description": "Size or grade as the store writes it, for example \"19 x 235 mm (1x10)\"."
+        },
+        "store": {
+          "$ref": "#/$defs/id",
+          "description": "Id of the store in stores where you buy it."
+        },
+        "color": {
+          "$ref": "#/$defs/color",
+          "description": "Color in the 3D view and the cut drawings."
+        },
+        "group": {
+          "type": "string",
+          "description": "BOQ group name. Default: from the kind (Timber and sheet, Hardware, Consumables, Finish).",
+          "minLength": 1
+        },
+        "est": {
+          "type": "boolean",
+          "description": "Set false when the price is a real quote. Default: the project estimate value."
+        },
+        "note": {
+          "type": "string",
+          "description": "Note shown next to the item in the shopping list."
+        },
+        "role": {
+          "enum": [
+            "anchor"
+          ],
+          "description": "anchor: wall fixings. A tall object needs one to pass the tip-over check."
+        },
+        "pack": {
+          "type": "number",
+          "description": "Amount in one pack, in unit.",
+          "exclusiveMinimum": 0,
+          "maximum": 1000000,
+          "default": 1
+        },
+        "packName": {
+          "type": "string",
+          "description": "Name of one pack, for example \"237 ml bottle\".",
+          "minLength": 1
+        },
+        "price": {
+          "type": "number",
+          "description": "Price of one pack in the project currency.",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit of the amount: L, ml, kg, g, sheet, m, roll.",
+          "minLength": 1
+        },
+        "coverage": {
+          "type": "number",
+          "description": "Area one unit covers: m² for mm projects, ft² for in projects. Required for a finish.",
+          "exclusiveMinimum": 0,
+          "maximum": 1000000
+        },
+        "coats": {
+          "type": "integer",
+          "description": "Coats to apply.",
+          "minimum": 1,
+          "default": 1
+        },
+        "spare": {
+          "type": "number",
+          "description": "Spare share from 0 to 1. Default: 0.1 for finishes, else 0.",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "tool": {
+      "type": "object",
+      "description": "A tool a step uses.",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id",
+          "description": "Tool id, used in steps[].tools."
+        },
+        "name": {
+          "type": "string",
+          "description": "Tool name, for example \"Circular saw\".",
+          "minLength": 1
+        },
+        "spec": {
+          "type": "string",
+          "description": "Size or type, for example \"fine blade, 40 teeth\"."
+        },
+        "have": {
+          "type": "boolean",
+          "description": "true: you have it. It shows in the plan only.",
+          "default": false
+        },
+        "get": {
+          "enum": [
+            "buy",
+            "rent",
+            "borrow"
+          ],
+          "default": "buy",
+          "description": "How to get it when you do not have it."
+        },
+        "price": {
+          "type": "number",
+          "description": "Price to buy, or price for one day to rent.",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "days": {
+          "type": "number",
+          "description": "Rental days.",
+          "exclusiveMinimum": 0,
+          "maximum": 1000000,
+          "default": 1
+        },
+        "qty": {
+          "type": "integer",
+          "description": "How many.",
+          "minimum": 1,
+          "default": 1
+        },
+        "store": {
+          "$ref": "#/$defs/id",
+          "description": "Id of the store in stores."
+        },
+        "power": {
+          "type": "boolean",
+          "description": "true: a power tool. Each step that uses it needs a WARNING.",
+          "default": false
+        },
+        "ppe": {
+          "type": "boolean",
+          "description": "true: protective equipment, listed in the Safety group.",
+          "default": false
+        },
+        "est": {
+          "type": "boolean",
+          "description": "Set false when the price is a real quote."
+        }
+      },
+      "additionalProperties": false
+    },
+    "part": {
+      "type": "object",
+      "description": "A part: one piece that is cut, made or installed.",
+      "required": [
+        "id",
+        "name",
+        "material",
+        "size"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id",
+          "description": "Unique part id, for example \"A1\"."
+        },
+        "label": {
+          "type": "string",
+          "description": "Letter the reader sees, shared by identical parts. Default: the id.",
+          "minLength": 1,
+          "maxLength": 16
+        },
+        "name": {
+          "type": "string",
+          "description": "One word used for the part everywhere, for example \"Side\".",
+          "minLength": 1
+        },
+        "material": {
+          "$ref": "#/$defs/id",
+          "description": "Id of its material in materials."
+        },
+        "size": {
+          "$ref": "#/$defs/size3",
+          "description": "Box size [x, y, z] in project units, before rotation."
+        },
+        "at": {
+          "$ref": "#/$defs/vec3",
+          "description": "Minimum corner [x, y, z] of the box before rotation. The guide needs it."
+        },
+        "shape": {
+          "enum": [
+            "box",
+            "cylinder"
+          ],
+          "default": "box",
+          "description": "box, or cylinder (two equal sides are the diameter)."
+        },
+        "rotate": {
+          "$ref": "#/$defs/vec3",
+          "description": "Rotation in degrees about the box centre, x then y then z."
+        },
+        "color": {
+          "$ref": "#/$defs/color",
+          "description": "Color in 3D. Default: the material color."
+        },
+        "rip": {
+          "type": "boolean",
+          "description": "true: the part may be narrower than the board width (a rip cut)."
+        },
+        "grain": {
+          "enum": [
+            "along",
+            "across",
+            "any"
+          ],
+          "description": "Grain on a sheet with grain: along (default), across or any."
+        },
+        "role": {
+          "enum": [
+            "anchor"
+          ],
+          "description": "anchor: a wall fixing for the tip-over check."
+        },
+        "finish": {
+          "type": "boolean",
+          "description": "false: leave the part out of the finished area."
+        },
+        "joins": {
+          "type": "array",
+          "description": "Parts this part may overlap on purpose (a shelf in a dado).",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "prop": {
+      "type": "object",
+      "description": "A context box (wall, bench, floor). Never bought.",
+      "required": [
+        "size"
+      ],
+      "properties": {
+        "size": {
+          "$ref": "#/$defs/size3",
+          "description": "Box size [x, y, z] in project units."
+        },
+        "at": {
+          "$ref": "#/$defs/vec3",
+          "description": "Minimum corner [x, y, z]. The guide needs it."
+        },
+        "color": {
+          "$ref": "#/$defs/color",
+          "description": "Color in 3D."
+        },
+        "shape": {
+          "enum": [
+            "box",
+            "cylinder"
+          ],
+          "default": "box",
+          "description": "box or cylinder."
+        },
+        "rotate": {
+          "$ref": "#/$defs/vec3",
+          "description": "Rotation in degrees, x then y then z."
+        },
+        "hero": {
+          "type": "boolean",
+          "description": "true: shown in the Plan view.",
+          "default": true
+        },
+        "label": {
+          "type": "string",
+          "description": "Name shown in 3D.",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "technique": {
+      "type": "object",
+      "description": "A technique card.",
+      "required": [
+        "name",
+        "do"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Card title, for example \"Cut on the line\".",
+          "minLength": 1
+        },
+        "why": {
+          "type": "string",
+          "description": "Why the technique works, in STE descriptive sentences."
+        },
+        "warn": {
+          "type": "array",
+          "description": "Warnings shown on the card.",
+          "items": {
+            "$ref": "#/$defs/warn"
+          }
+        },
+        "do": {
+          "type": "array",
+          "description": "Instructions in STE.",
+          "items": {
+            "type": "string",
+            "description": "One instruction. Text may use {kerf}.",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "tools": {
+          "type": "array",
+          "description": "Tools the technique needs.",
+          "items": {
+            "type": "string",
+            "description": "A tool name.",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "fastener": {
+      "description": "A fastener: positional { material, at, dir } (drawn in 3D) or counted { material, count } (not drawn).",
+      "anyOf": [
+        {
+          "type": "object",
+          "description": "A positional fastener, drawn in 3D.",
+          "required": [
+            "material",
+            "at",
+            "dir"
+          ],
+          "properties": {
+            "material": {
+              "$ref": "#/$defs/id",
+              "description": "Id of an each material."
+            },
+            "at": {
+              "$ref": "#/$defs/vec3",
+              "description": "Head position [x, y, z]."
+            },
+            "dir": {
+              "$ref": "#/$defs/vec3",
+              "description": "Direction the fastener travels [dx, dy, dz]."
+            },
+            "len": {
+              "type": "number",
+              "description": "Length. Default: the material len.",
+              "exclusiveMinimum": 0,
+              "maximum": 1000000
+            },
+            "d": {
+              "type": "number",
+              "description": "Diameter. Default: the material d.",
+              "exclusiveMinimum": 0,
+              "maximum": 1000000
+            },
+            "repeat": {
+              "type": "object",
+              "description": "Repeat the fastener: count copies, each moved by step.",
+              "required": [
+                "count",
+                "step"
+              ],
+              "properties": {
+                "count": {
+                  "type": "integer",
+                  "description": "Number of fasteners, the first one included.",
+                  "minimum": 1,
+                  "maximum": 500
+                },
+                "step": {
+                  "$ref": "#/$defs/vec3",
+                  "description": "Offset [dx, dy, dz] from one fastener to the next."
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "A counted fastener, not drawn.",
+          "required": [
+            "material",
+            "count"
+          ],
+          "properties": {
+            "material": {
+              "$ref": "#/$defs/id",
+              "description": "Id of an each material."
+            },
+            "count": {
+              "type": "integer",
+              "description": "Number of fasteners.",
+              "minimum": 1,
+              "maximum": 1000000
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "finish": {
+      "type": "object",
+      "description": "A finish: coats of an amount material on parts.",
+      "required": [
+        "material"
+      ],
+      "properties": {
+        "material": {
+          "$ref": "#/$defs/id",
+          "description": "Id of an amount material with coverage."
+        },
+        "coats": {
+          "type": "integer",
+          "description": "Coats. Default: the material coats.",
+          "minimum": 1
+        },
+        "parts": {
+          "type": "array",
+          "description": "Parts to finish. Default: every part not made of an each material, except finish: false.",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "step": {
+      "type": "object",
+      "description": "One build step: one visible change.",
+      "required": [
+        "id",
+        "title"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id",
+          "description": "Unique step id."
+        },
+        "title": {
+          "type": "string",
+          "description": "A command, for example \"Attach the top shelf\".",
+          "minLength": 1
+        },
+        "phase": {
+          "type": "string",
+          "description": "Phase name. Consecutive steps with one name form a phase.",
+          "minLength": 1
+        },
+        "minutes": {
+          "type": "number",
+          "description": "Work time for an experienced person, in minutes.",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "wait": {
+          "type": "number",
+          "description": "Waiting time (glue, finish), in minutes.",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "parts": {
+          "type": "array",
+          "description": "Parts installed in this step. Each part is installed in exactly one step.",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "fasteners": {
+          "type": "array",
+          "description": "Fasteners installed in this step.",
+          "items": {
+            "$ref": "#/$defs/fastener"
+          }
+        },
+        "uses": {
+          "$ref": "#/$defs/uses",
+          "description": "Consumables used in this step: { materialId: amount }."
+        },
+        "finish": {
+          "$ref": "#/$defs/finish",
+          "description": "Finish applied in this step."
+        },
+        "cuts": {
+          "type": [
+            "boolean",
+            "array"
+          ],
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "description": "true, or material ids: stock is cut in this step."
+        },
+        "tools": {
+          "type": "array",
+          "description": "Tool ids.",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "teach": {
+          "type": "array",
+          "description": "Technique card ids.",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "warn": {
+          "type": "array",
+          "description": "Warnings shown before the instructions.",
+          "items": {
+            "$ref": "#/$defs/warn"
+          }
+        },
+        "do": {
+          "type": "array",
+          "description": "Instructions in STE, one action each.",
+          "items": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "minLength": 1,
+            "required": [
+              "t"
+            ],
+            "additionalProperties": false,
+            "description": "An instruction, or { t, new: true } for a line shown only at First time.",
+            "properties": {
+              "t": {
+                "type": "string",
+                "description": "The instruction.",
+                "minLength": 1
+              },
+              "new": {
+                "type": "boolean",
+                "description": "true: show the line only at First time."
+              }
+            }
+          }
+        },
+        "check": {
+          "type": "string",
+          "description": "The inspection that ends the step.",
+          "minLength": 1
+        },
+        "why": {
+          "type": "string",
+          "description": "Why, in STE descriptive sentences. Shown at First time."
+        },
+        "tip": {
+          "type": "string",
+          "description": "A tip. Shown at First time and Some experience."
+        },
+        "pose": {
+          "enum": [
+            "kit"
+          ],
+          "description": "kit: lay the cut parts flat on the floor."
+        },
+        "focus": {
+          "type": "array",
+          "description": "Parts lit in the kit pose.",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "from": {
+          "$ref": "#/$defs/vec3",
+          "description": "Path [dx, dy, dz] the new parts arrive along."
+        },
+        "view": {
+          "type": "object",
+          "description": "Camera.",
+          "properties": {
+            "az": {
+              "type": "number",
+              "description": "Azimuth in degrees: 0 front, 90 right side, 180 back.",
+              "minimum": -360,
+              "maximum": 360
+            },
+            "el": {
+              "type": "number",
+              "description": "Elevation in degrees.",
+              "minimum": -90,
+              "maximum": 90
+            },
+            "zoom": {
+              "type": "number",
+              "description": "Zoom. More than 1 is closer.",
+              "exclusiveMinimum": 0,
+              "maximum": 1000000
+            },
+            "note": {
+              "type": "string",
+              "description": "A short note under the 3D view, shown at every level; never in print, plan.md or the no-script copy. For example \"The picture shows the cube upright.\"",
+              "minLength": 1,
+              "maxLength": 120
+            }
+          },
+          "additionalProperties": false
+        },
+        "props": {
+          "type": "array",
+          "description": "Prop ids shown in this step.",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

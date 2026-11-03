@@ -1,0 +1,22 @@
+[
+  { "query": "Check my jig guide page before I send it to my brother", "should_trigger": true },
+  { "query": "Take screenshots of every step of my bookshelf build guide and tell me what looks wrong", "should_trigger": true },
+  { "query": "The 3D view in my build guide shows the screws on the wrong side, can you check it?", "should_trigger": true },
+  { "query": "QA the guide page at pine-bookshelf/pine-bookshelf.html on a phone and in dark mode", "should_trigger": true },
+  { "query": "Does my jig build guide have console errors, or does it scroll sideways on mobile?", "should_trigger": true },
+  { "query": "Review the built bench guide like a critic and list what to fix in the project", "should_trigger": true },
+  { "query": "Verify that my guide HTML still matches project.json and nobody edited it by hand", "should_trigger": true },
+  { "query": "My workbench build guide looks broken in dark mode, check it", "should_trigger": true },
+  { "query": "Capture the Shop and Cut list tabs of my DIY guide and check the totals add up", "should_trigger": true },
+  { "query": "Is my planter build guide ready to share? Check every step", "should_trigger": true },
+  { "query": "Make me a build guide for a bookshelf with a cost estimate", "should_trigger": false },
+  { "query": "Show me in 3D how the bedside table goes together", "should_trigger": false },
+  { "query": "Is my bookshelf design safe for a child's room?", "should_trigger": false },
+  { "query": "Rewrite the instructions in my guide in simplified technical English", "should_trigger": false },
+  { "query": "Write printable step-by-step instructions for my step stool", "should_trigger": false },
+  { "query": "Make a cut list for my wardrobe from 2440 x 1220 sheets", "should_trigger": false },
+  { "query": "How much will the lumber for my deck cost?", "should_trigger": false },
+  { "query": "Take a screenshot of our company landing page and check it on mobile", "should_trigger": false },
+  { "query": "Check my React app for console errors", "should_trigger": false },
+  { "query": "Run the unit tests for my web project", "should_trigger": false }
+]

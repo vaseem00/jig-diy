@@ -1,0 +1,1541 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Plywood storage cube guide</title>
+<meta name="description" content="A storage cube of 18 mm birch plywood, 400 mm on each side. You cut five parts with a jigsaw, join them with glue and screws, and nail on a thin back.">
+<meta name="generator" content="jig 1.0.0">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap">
+<style>
+/* jig guide page. Light tokens on :root; dark under prefers-color-scheme and [data-theme="dark"]. Text pairs >= 4.5:1, --control >= 3:1. */
+:root{--page:#f3f0e8;--card:#fbfaf6;--ink:#1d1b18;--text:#2f2c27;--muted:#67625a;--line:#d8d2c5;--control:#8a8275;--faint:#ebe6db;--accent:#b04510;--accent-ink:#ffffff;--warn:#a3261b;--warn-bg:#fbe8e4;--caution:#7d5300;--caution-bg:#fbf0d6;--ok:#2f7a3d;--wood-ink:#1d1b18;
+--v-ink:#3b352d;--v-accent:#ec6a1c;--v-grid:#d3cbbc;--v-prop:1;--display:"Archivo",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"JetBrains Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--page:#131210;--card:#1b1a17;--ink:#f4f0e8;--text:#d9d4ca;--muted:#9d978d;--line:#35322c;--control:#716b61;--faint:#24221e;--accent:#ff8a4c;--accent-ink:#1b1a17;--warn:#ff9a8b;--warn-bg:#3a1713;--caution:#f3c46a;--caution-bg:#33270e;--ok:#7fd18b;--v-ink:#2a2620;--v-accent:#ff7a2e;--v-grid:#3a3731;--v-prop:.42;color-scheme:dark}}
+:root[data-theme="dark"]{--page:#131210;--card:#1b1a17;--ink:#f4f0e8;--text:#d9d4ca;--muted:#9d978d;--line:#35322c;--control:#716b61;--faint:#24221e;--accent:#ff8a4c;--accent-ink:#1b1a17;--warn:#ff9a8b;--warn-bg:#3a1713;--caution:#f3c46a;--caution-bg:#33270e;--ok:#7fd18b;--v-ink:#2a2620;--v-accent:#ff7a2e;--v-grid:#3a3731;--v-prop:.42;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--page)}
+/* the sticky tab bar covers the top 64px: focus and scrollIntoView keep what they show below it (WCAG 2.4.11); no bar with one tab */
+html{scroll-padding-top:64px}
+html:has(.jig[data-single]){scroll-padding-top:0}
+body{margin:0;color:var(--text);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.jig{max-width:1180px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-right)) 80px max(16px,env(safe-area-inset-left))}
+h1,h2,h3{font-family:var(--display);color:var(--ink);letter-spacing:-.01em;margin:0;overflow-wrap:anywhere}
+h1{font-size:clamp(30px,5.6vw,46px);line-height:1.04;font-weight:700}
+h2{font-size:24px;line-height:1.15}
+h3{font-size:16px}
+h2[tabindex]{scroll-margin-top:8px}
+h2[tabindex]:focus{outline:none}
+h2[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+a{color:var(--accent)}
+.eyebrow{font:500 11px/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:17px;max-width:62ch;margin:10px 0 0}
+.lede.sm{font-size:14px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+button{font:500 12px/1 var(--mono);letter-spacing:.04em;color:var(--text);background:var(--card);border:1px solid var(--control);padding:9px 12px;border-radius:7px;cursor:pointer;min-height:32px}
+button:hover{border-color:var(--ink);color:var(--ink)}
+button:disabled,button[aria-disabled="true"]{opacity:.55;cursor:default}
+button[aria-pressed="true"]{background:var(--ink);color:var(--card);border-color:var(--ink)}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input[type="checkbox"]{accent-color:var(--ok)}
+
+/* top bar and tabs */
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:16px 24px;margin-bottom:18px}
+.level{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.level .eyebrow{margin-right:6px}
+.tabs{position:sticky;top:0;z-index:5;display:flex;gap:4px;overflow-x:auto;padding:10px 4px;margin:0 -4px 18px;background:var(--page);border-bottom:1px solid var(--line)}
+.tabs [role="tab"]{border-radius:999px;white-space:nowrap}
+.tabs [role="tab"][aria-selected="true"]{background:var(--ink);color:var(--card);border-color:var(--ink)}
+[data-panel][hidden]{display:none}
+[role="tabpanel"]:focus-visible{outline-offset:6px;border-radius:6px}
+
+/* cards and grids */
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;min-width:0}
+.grid2{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:0}
+.stats div{background:var(--card);padding:12px 14px;min-width:0}
+.stats b{display:block;font:700 22px/1.1 var(--display);color:var(--ink);overflow-wrap:anywhere}
+.stats span{font-size:12px;color:var(--muted)}
+.stack{display:grid;gap:18px;min-width:0}
+
+/* viewer: pan-y lets a finger scroll the page; a tap on the view turns on one-finger orbit */
+.viewer{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:radial-gradient(120% 90% at 50% 20%,var(--card),var(--faint));aspect-ratio:16/11;min-height:280px;touch-action:pan-y}
+.viewer [data-canvas]{position:absolute;inset:0}
+.viewer canvas{width:100%!important;height:100%!important;display:block;touch-action:pan-y}
+.viewer[data-active] canvas{touch-action:none}
+.viewer canvas:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+.viewer [data-tags]{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.tag{position:absolute;left:0;top:0;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:var(--card);border:1.5px solid var(--accent);color:var(--ink);font:700 12px/19px var(--mono);text-align:center;box-shadow:0 1px 3px #0003}
+.pin{position:absolute;left:0;top:0;width:15px;height:15px;border-radius:50%;border:2px solid var(--accent);background:color-mix(in srgb,var(--accent) 18%,transparent);box-shadow:0 0 0 2px color-mix(in srgb,var(--card) 70%,transparent)}
+/* from 360 px wide the buttons stay on one row (on a narrower screen they can go on two rows): a readout that does not
+   fit beside them goes above them (wrap-reverse) on one line, and only a readout wider than the whole bar ends in "…"
+   (app.js puts the full text in its title). A phone (520 px or less) has no readout. */
+.vbar{position:absolute;left:10px;right:10px;bottom:10px;display:flex;flex-wrap:wrap-reverse;justify-content:space-between;align-items:end;gap:4px 8px;pointer-events:none}
+.vbar>*{pointer-events:auto}
+.vtools{display:flex;gap:4px;flex-wrap:wrap}
+.viewer:not([data-ready]) .vtools{visibility:hidden}
+.vtools button{padding:7px 9px;font-size:11px;background:color-mix(in srgb,var(--card) 92%,transparent)}
+.vtools button[aria-pressed="true"]{background:var(--ink)}
+.readout{font:500 11px/1.3 var(--mono);color:var(--muted);background:color-mix(in srgb,var(--card) 90%,transparent);padding:6px 8px;border-radius:6px;text-align:right;margin-left:auto;min-width:0;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hint{position:absolute;left:10px;top:10px;margin:0;max-width:calc(100% - 20px);padding:4px 7px;border-radius:6px;background:color-mix(in srgb,var(--card) 90%,transparent);font:500 11px/1.3 var(--mono);color:var(--muted);pointer-events:none}
+.hint .h-touch,.hint .h-on{display:none}
+@media (pointer:coarse){.hint .h-mouse{display:none}.hint .h-touch{display:inline}.viewer[data-active] .hint .h-touch{display:none}.viewer[data-active] .hint .h-on{display:inline}}
+.viewer[data-user]:not([data-active]) .hint{opacity:0}
+.vmsg{position:absolute;inset:0;display:grid;place-items:center;margin:0;padding:24px;text-align:center;font:500 13px/1.5 var(--mono);color:var(--muted)}
+.fig{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;font:500 11px/1.3 var(--mono);color:var(--muted);margin:8px 2px 0}
+/* a long word in the title breaks inside the word in the Fig 1 caption too, so the Plan tab fits a 320 px screen */
+.fig span{min-width:0;overflow-wrap:anywhere}
+/* a step's view note sits under the 3D view; with no picture (still loading, or no 3D) it has nothing to tell */
+.vnote{margin:8px 2px 0;font-size:13px;line-height:1.45;color:var(--muted);overflow-wrap:anywhere}
+.viewer:not([data-ready])+.vnote{display:none}
+
+/* plan */
+.phases{display:flex;flex-wrap:wrap;gap:12px 6px;margin:14px 0 6px}
+.phase{min-width:min(5.5rem,100%)}
+.phase .bar{height:10px;border-radius:5px;background:var(--faint);border:1px solid var(--line)}
+.phase:nth-child(3n+2) .bar{background:color-mix(in srgb,var(--accent) 35%,var(--faint))}
+.phase:nth-child(3n+3) .bar{background:color-mix(in srgb,var(--accent) 70%,var(--faint))}
+.phase .nm{font:600 13px/1.3 var(--display);color:var(--ink);margin-top:6px;overflow-wrap:anywhere}
+.phase .tm{font:400 11px/1.3 var(--mono);color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.chips button{padding:5px 6px;font-size:11px;min-height:28px;min-width:28px}
+ul.plain{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px}
+ul.plain li{display:flex;gap:8px;align-items:baseline;min-width:0}
+ul.plain li>span:last-child{min-width:0;overflow-wrap:anywhere}
+ul.plain li>.pill{flex:0 0 auto}
+
+/* pills and badges */
+.pill{display:inline-flex;align-items:center;gap:5px;font:500 11px/1.25 var(--mono);padding:5px 7px;border:1px solid var(--line);border-radius:999px;color:var(--text);background:var(--card);max-width:100%;overflow-wrap:anywhere}
+.pill.ppe{border-color:var(--caution);color:var(--caution)}
+.pill.part{border-color:var(--accent);color:var(--ink)}
+.pill.part b{color:var(--accent)}
+.est{font:500 11px/1 var(--mono);padding:2px 4px;border:1px dashed var(--muted);border-radius:4px;color:var(--muted);margin-left:4px;vertical-align:1px;white-space:nowrap}
+
+/* build */
+.build{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:20px;align-items:start}
+.build .stage{position:sticky;top:64px}
+.jig[data-single] .build .stage{top:16px}
+.rail{display:flex;gap:4px;overflow-x:auto;padding:4px 4px 10px;margin:-2px -4px 12px}
+.rail button{min-width:38px;padding:8px 0;position:relative;flex:0 0 auto}
+.rail button[data-done]::after{content:"";position:absolute;right:3px;top:3px;width:6px;height:6px;border-radius:3px;background:var(--ok)}
+.rail button[aria-current="step"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.rail .sep{flex:0 0 1px;background:var(--line);margin:4px 3px}
+.meta{display:flex;flex-wrap:wrap;gap:5px;margin:12px 0}
+.alert{border-radius:8px;padding:10px 12px;margin:10px 0;font-size:14px;border-left:4px solid;color:var(--ink)}
+.alert b{display:block;font:700 11px/1.4 var(--mono);letter-spacing:.1em}
+.alert.warning{background:var(--warn-bg);border-color:var(--warn)}
+.alert.warning b{color:var(--warn)}
+.alert.caution{background:var(--caution-bg);border-color:var(--caution)}
+.alert.caution b{color:var(--caution)}
+ol.do{margin:14px 0;padding:0;list-style:none;counter-reset:n;display:grid;gap:8px}
+ol.do li{counter-increment:n;display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px;font-size:15.5px;color:var(--ink)}
+ol.do li::before{content:counter(n);font:700 12px/22px var(--mono);text-align:center;height:22px;border-radius:11px;background:var(--faint);color:var(--text)}
+ol.do li.new{color:var(--text);counter-increment:none}
+ol.do li.new::before{content:"+";background:none;border:1px dashed var(--control)}
+details.tech{border:1px solid var(--line);border-radius:8px;margin:8px 0;background:var(--page)}
+details.tech summary{cursor:pointer;padding:9px 12px;font:600 13px/1.3 var(--display);color:var(--ink);list-style:none;display:flex;justify-content:space-between;gap:12px}
+details.tech summary::-webkit-details-marker{display:none}
+details.tech summary::after{content:"How to";font:500 11px/1.5 var(--mono);color:var(--muted);text-transform:uppercase;white-space:nowrap}
+details.tech[open] summary::after{content:"Close"}
+details.tech summary .see{font:500 11px/1.5 var(--mono);color:var(--muted);margin-left:auto}
+details.tech .in{padding:0 12px 10px}
+details.tech ol{margin:4px 0;padding-left:20px;font-size:14px}
+details.tech .tl{font-size:13px;color:var(--muted);margin:6px 0 0}
+.check{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--line);border-radius:8px;margin:14px 0 10px;background:var(--page)}
+.check input{width:18px;height:18px;margin-top:2px;flex:0 0 auto}
+.why,.tip{font-size:14px;color:var(--text);margin:8px 0 0;padding-left:12px;border-left:2px solid var(--line)}
+/* the step heading keeps its focus ring (2px + 2px offset) clear of the "Step n of N" line above it */
+article.step .eyebrow+h2{margin-top:6px}
+/* a long word in a step (an instruction, the check, a note, a card) breaks inside the word, so the card never runs past
+   a 320 px screen; .check is a flex row, so its text also needs min-width 0 */
+ol.do li,.check span,article.step .eyebrow,.why,.tip,.alert,details.tech{overflow-wrap:anywhere}
+.check span{min-width:0}
+.why b,.tip b{font:600 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-right:6px}
+.nav{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:16px}
+.empty{color:var(--muted);font-size:14px}
+
+/* levels: First time sees all; Some experience hides first-time lines and "why"; Experienced also hides tips */
+[data-level="some"] .only-new,[data-level="pro"] .only-new,[data-level="pro"] .not-pro{display:none}
+
+/* shop */
+.trips{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:14px}
+.trip h3{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px 8px}
+.trip .note{font-size:13px;color:var(--muted);margin:4px 0 8px;overflow-wrap:anywhere}
+.trip label{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:8px;padding:7px 0;border-top:1px solid var(--faint);font-size:14px;align-items:start}
+.trip label small{display:block;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+.trip input{margin-top:3px}
+.trip label:has(input:checked) .it{text-decoration:line-through;color:var(--muted)}
+.trip .n{text-align:right;font:500 12px/1.4 var(--mono);white-space:nowrap}
+.trip .n .pill{margin-top:3px}
+.trip .sum{display:flex;justify-content:space-between;font:600 13px/1 var(--mono);padding-top:10px;border-top:1px solid var(--line);margin-top:4px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--faint);vertical-align:top}
+th{font:500 11px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-bottom:1px solid var(--line)}
+td.n,th.n{text-align:right;font-family:var(--mono);white-space:nowrap}
+td small{color:var(--muted)}
+tr.grp td{font:600 12px/1.3 var(--display);color:var(--ink);background:var(--page);padding-top:12px}
+tfoot td{font-weight:600;color:var(--ink);border-bottom:0}
+tfoot tr.total td{font-size:16px;border-top:2px solid var(--ink)}
+tfoot td.inc{white-space:normal}
+code.c{font:500 11px/1 var(--mono);color:var(--muted)}
+.notes{margin:12px 0 0;padding-left:18px;font-size:13px;color:var(--text)}
+.notes li{margin:4px 0}
+
+/* cut list: wood fill is a light tint of the material colour, so the dark label always reads */
+.cutplan h3{margin:18px 0 6px}
+.board{margin:10px 0 16px}
+.board .t{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px;font:500 12px/1.3 var(--mono);color:var(--muted);margin-bottom:4px}
+.board svg{width:100%;height:auto;display:block}
+.board .bar{position:relative;height:46px;border:1px dashed var(--muted);border-radius:3px;background:repeating-linear-gradient(45deg,var(--faint) 0 4px,var(--line) 4px 5.5px)}
+.board .seg{position:absolute;top:3px;bottom:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap;border:1px solid #5c4a30;border-radius:2px;color:var(--wood-ink);font:700 13px/1.15 var(--mono)}
+.board .seg small{font-weight:500;font-size:11px}
+.board svg .wood{stroke:#5c4a30;stroke-width:1}
+.board svg .waste{fill:url(#jig-hatch);stroke:var(--line)}
+.board svg text{font:700 26px var(--mono);fill:var(--wood-ink)}
+.board svg text.dim{font-weight:500;font-size:19px}
+.board svg.sheet{max-width:440px}.board svg.sheet text{font-size:52px}.board svg.sheet text.dim{font-size:38px}
+.board svg .stock{fill:none;stroke:var(--muted);stroke-dasharray:4 3}
+.board .note{margin:6px 0 0;font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.defs{position:absolute;width:0;height:0}
+
+/* noscript copy */
+.jig:empty{display:none}
+.noscript{max-width:820px;margin:0 auto;padding:28px 16px}
+
+/* print: every step once, in order, no 3D, light colours */
+.print-only{display:none}
+@media print{
+:root:root:root{--page:#fff;--card:#fff;--ink:#000;--text:#1d1b18;--muted:#4a463f;--line:#999;--control:#777;--faint:#eee;--accent:#8f3609;--accent-ink:#fff;--warn:#8a1d13;--warn-bg:#fff;--caution:#5c3d00;--caution-bg:#fff;--ok:#1f5a2a;color-scheme:light}
+.tabs,.top .level,.viewer,.vbar,.fig,.vnote,.rail,.build,.nav,.chips,[data-live]{display:none!important}
+[data-panel]{display:block!important;margin-bottom:24px}
+.print-only{display:block}
+.grid2{display:block}
+.card{break-inside:avoid;margin:12px 0}
+.jig{padding:0}
+details.tech summary::after,details.tech[open] summary::after{content:none}
+/* fitBoq() measures the screen, not the paper: in print an item with a word of 20 letters or more may break in it */
+.boq td[data-long]{overflow-wrap:anywhere}
+}
+.pm{display:none}
+/* a long word in the summary or a trip item breaks rather than run under the amount or past the screen (the BOQ item
+   too, on narrow screens, where its row is a grid; in a table it would shrink the column and break short words, so
+   there app.js fitBoq() sets data-break only on the item cells that make the table scroll sideways) */
+.lede,.trip label .it{overflow-wrap:anywhere}
+.boq td[data-break]{overflow-wrap:anywhere}
+/* the Parts table: cut sizes stay on one line; app.js sets data-fit only when the table would scroll sideways, one
+   stage at a time: "stack" (the material goes under the name), "wrap" (sizes wrap after a ×), "mat" (a long material
+   name breaks inside the word), "break" (a long part name breaks too) */
+.parts[data-fit~="stack"] .pmat{display:none}
+.parts[data-fit~="stack"] .pm{display:block;color:var(--muted);font-size:12px}
+.parts[data-fit~="wrap"] th:nth-child(4),.parts[data-fit~="wrap"] td:nth-child(4){white-space:normal}
+.parts[data-fit~="mat"] .pm,.parts[data-fit~="mat"] td.pmat{overflow-wrap:anywhere}
+.parts[data-fit~="break"] td:nth-child(2),.parts[data-fit~="break"] td.pmat{overflow-wrap:anywhere}
+/* the Plan tiles: 3 to a row need about 120 px for each tile, so that an amount ("SEK 25,416.60") breaks only at its
+   space; in the narrow column of the 2-column Plan layout, 2 to a row (and on a phone, see max-width:520px) */
+@media (min-width:861px) and (max-width:1100px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* one column: a step change scrolls the view to the top, just below the sticky tab bar (html scroll-padding-top) */
+@media (max-width:860px){.grid2,.build{grid-template-columns:1fr}.build .stage{position:static;scroll-margin-top:0}.jig[data-single] .build .stage{scroll-margin-top:16px}}
+/* narrow screens: each BOQ row stacks (item and amount, need and rate, buy); the parts table puts the material under the name */
+@media (max-width:600px){
+.boq thead,.parts .pmat{display:none}
+.pm{display:block;color:var(--muted);font-size:12px}
+.boq,.boq tbody,.boq tfoot{display:block}
+.boq tr{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:2px 8px;padding:8px 0;border-bottom:1px solid var(--faint)}
+.boq td{border:0;padding:0}
+.boq tbody td:nth-child(1){grid-row:1/4}
+.boq tbody td:nth-child(2){grid-column:2;grid-row:1;overflow-wrap:anywhere}
+.boq tbody td:nth-child(3){grid-column:2;grid-row:2}
+.boq tbody td:nth-child(4){grid-column:2;grid-row:3;text-align:left;white-space:normal;font-family:inherit}
+.boq tbody td:nth-child(5){grid-column:3;grid-row:2;color:var(--muted)}
+.boq tbody td:nth-child(6){grid-column:3;grid-row:1;font-weight:600;color:var(--ink)}
+.boq td[data-l]::before{content:attr(data-l) ": ";color:var(--muted)}
+.boq tr.grp{display:block;padding:0;border:0}
+.boq tr.grp td{display:block;padding:10px 8px 6px}
+.boq tfoot tr{grid-template-columns:minmax(0,1fr) auto}
+.boq tfoot tr.total td{border-top:0;padding-top:4px}
+.boq tfoot tr.total{border-top:2px solid var(--ink);border-bottom:0}
+}
+@media (max-width:520px){.viewer{aspect-ratio:1/1}.readout{display:none}.vtools{gap:3px}.vtools button{padding:6px 5px;font-size:10.5px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stats b{font-size:19px}.stats div{padding:10px}h2{font-size:21px}.card{padding:16px 14px}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main class="jig" id="jig" data-tabs="plan,shop,cut,build"></main>
+<noscript><div class="noscript"><h1>Plywood storage cube</h1>
+<p>A storage cube of 18 mm birch plywood, 400 mm on each side. You cut five parts with a jigsaw, join them with glue and screws, and nail on a thin back.</p>
+<p>Size: 400 × 405 × 400 mm (width × height × depth). Time: 6 h 30 min of work and 4 h of waiting. Cost: €264.42, an estimate.</p>
+<p>Level: First time.</p>
+<p>Turn on JavaScript to see the 3D view, the level switch and the tick boxes.</p>
+<h2>Plan</h2>
+<ol><li>Prepare: steps 1, 2, 3, 3 h 10 min</li><li>Build: steps 4, 5, 6, 7, 2 h</li><li>Finish: steps 8, 9, 1 h 25 min + 4 h wait</li></ol>
+<h3>Tools</h3>
+<ul><li>Tape measure (you have it)</li><li>Pencil (you have it)</li><li>Try square, 300 mm (buy)</li><li>Straightedge, aluminium, 1000 mm (buy)</li><li>F-clamp, 300 mm × 2 (buy)</li><li>Two trestles (borrow)</li><li>Jigsaw, with a pendulum setting of 0 (borrow)</li><li>Jigsaw blades, clean cut for wood (T101B), pack of 5 (buy)</li><li>Cordless drill (you have it)</li><li>Drill bit set, 2.5 mm and 4 mm wood bits, countersink bit (buy)</li><li>Corner clamp, 90°, opens to 20 mm or more × 2 (buy)</li><li>Hammer, pin hammer or small claw hammer (you have it)</li><li>Sanding block (buy)</li><li>Synthetic brush, 50 mm, for water-based finish (buy)</li><li>Safety glasses, EN 166 (buy)</li><li>Ear protection (buy)</li><li>Dust mask, FFP2 (buy)</li><li>Nitrile gloves (buy)</li></ul>
+<h2>Shopping list</h2>
+<h3>1. Online order</h3>
+<p>Order 3 days before you start.</p>
+<ul><li>1 × pack of 5: Sandpaper, 120 grit, €3.49</li><li>1 × pack of 5: Sandpaper, 180 grit, €3.49</li><li>1 × pack of 5: Sandpaper, 240 grit, €3.49</li><li>1 × 0.375 L can: Water-based varnish, clear, matt, interior, €12.95</li><li>1 × pack of 10: Lint-free cloth, cotton, €3.99</li><li>1 × Nitrile gloves, €4.99</li><li>1 × pack of 16: Felt pad, 25 mm round, 5 mm thick, self-adhesive, €3.49</li></ul>
+<h3>2. DIY store</h3>
+<ul><li>1 × Safety glasses, EN 166, €4.99</li><li>1 × Ear protection, €7.99</li><li>1 × Try square, 300 mm, €9.99</li><li>1 × Straightedge, aluminium, 1000 mm, €12.99</li><li>2 × F-clamp, 300 mm, €17.98</li><li>1 × Jigsaw blades, clean cut for wood (T101B), pack of 5, €6.99</li><li>1 × Dust mask, FFP2, €5.99</li><li>1 × Sanding block, €3.99</li><li>1 × Drill bit set, 2.5 mm and 4 mm wood bits, countersink bit, €9.99</li><li>1 × box of 50: Wood screw, 4 × 40 mm, countersunk, €4.79</li><li>1 × 250 ml bottle: Wood glue, PVA, D3, €6.99</li><li>2 × Corner clamp, 90°, opens to 20 mm or more, €19.98</li><li>1 × box of 200: Panel pin, 1.6 × 25 mm, steel, €2.49</li><li>1 × Synthetic brush, 50 mm, for water-based finish, €5.49</li></ul>
+<h3>3. Timber merchant</h3>
+<p>Ask for birch plywood, grade BB/BB. Look at the two faces before you buy a sheet.</p>
+<ul><li>2 × sheet: Birch plywood 18 mm, grade BB/BB, 1220 × 610 mm, €69.90</li><li>1 × sheet: Birch plywood 6 mm, grade BB/BB, 1220 × 610 mm, €13.95</li></ul>
+<h3>4. Borrow</h3>
+<p>Ask a friend, a neighbour or a tool library.</p>
+<ul><li>Two trestles</li><li>Jigsaw</li></ul>
+<p>Total: €264.42, with 10% contingency.</p>
+<h2>Steps</h2>
+<ol>
+<li><h3>Cut the parts</h3>
+<p><strong>WARNING:</strong> Wear safety glasses. The jigsaw can throw chips into your eyes.</p>
+<p><strong>WARNING:</strong> Wear ear protection. A loud jigsaw can hurt your ears.</p>
+<p><strong>WARNING:</strong> Keep your hands away from the area under the sheet. The blade comes out below the sheet.</p>
+<p><strong>WARNING:</strong> Unplug the jigsaw before you change the blade. A saw that starts can cut you.</p>
+<p><strong>CAUTION:</strong> Put the sheet on the trestles with the good face down. The jigsaw splits the top face.</p>
+<ol><li>Put the 18 mm sheet on the two trestles with the good face down.</li><li>Mark each part from the cut list on the top face.</li><li>Measure each line two times before you cut. (first time)</li><li>Cut across the sheet first, at the end of each part.</li><li>Cut each piece to a width of 394 mm.</li><li>Cut back D from the 6 mm sheet the same way.</li><li>Write the part letter on the top face of each part.</li></ol>
+<p><strong>Check:</strong> Make sure that you have two parts A and one each of parts B, C and D.</p>
+<p><strong>Why:</strong> A jigsaw cuts on the up stroke, so the bottom face stays clean. The face with the letter goes on the inside of the cube.</p>
+<p><strong>Tip:</strong> Keep the offcuts. They make good scrap blocks for the clamps and the drill.</p>
+</li>
+<li><h3>Sand the parts</h3>
+<p><strong>WARNING:</strong> Wear a dust mask. Fine dust can hurt your lungs.</p>
+<p><strong>CAUTION:</strong> Do not sand across the grain. Cross scratches show through the finish.</p>
+<ol><li>Sand each cut edge to the line with 120 grit.</li><li>Sand the faces of each part with 120 grit.</li><li>Sand each sharp edge to a 1 mm round.</li><li>Sand all faces and edges again with 180 grit.</li><li>Remove the dust with a dry cloth.</li></ol>
+<p><strong>Check:</strong> Make sure that the edges are straight and that no splinters show on the faces.</p>
+<p><strong>Why:</strong> Plywood edges show the plies. A smooth, round edge looks clean and does not splinter.</p>
+<p><strong>Tip:</strong> Keep the block flat on the edge. A tilted block makes the edge uneven.</p>
+</li>
+<li><h3>Drill the sides</h3>
+<p><strong>CAUTION:</strong> Put a scrap block under the side. The bit can split the face when it comes out.</p>
+<p><strong>WARNING:</strong> Wear safety glasses. The drill bit can throw chips into your eyes.</p>
+<ol><li>Put the two sides A on the bench with the letters down.</li><li>Draw a line 9 mm from each short edge of each side.</li><li>Mark three holes on each line, at 40, 197 and 354 mm from a long edge.</li><li>Drill a 4 mm hole through the side at each mark.</li><li>Countersink each hole on the top face.</li></ol>
+<p><strong>Check:</strong> Make sure that each side has six holes, 9 mm from the short edges.</p>
+<p><strong>Why:</strong> The line at 9 mm is the center of the 18 mm edge of the top and the bottom. Each screw then goes into the middle of the edge.</p>
+</li>
+<li><h3>Attach the bottom to a side</h3>
+<p><strong>CAUTION:</strong> Drill a pilot hole before you install each screw. A screw with no pilot hole splits the plies.</p>
+<p><strong>WARNING:</strong> Wear safety glasses. The drill bit can throw chips into your eyes.</p>
+<ol><li>Put bottom B flat on the bench with the letter up. (first time)</li><li>Apply glue to one 394 mm edge of bottom B.</li><li>Put a side A against the glued edge, with its letter on the inside.</li><li>Align the holes in the side with the center of the edge.</li><li>Clamp the corner with the two corner clamps.</li><li>Drill a 2.5 mm pilot hole 25 mm into the edge through each hole.</li><li>Install three 40 mm screws through the side into the bottom.</li></ol>
+<p><strong>Check:</strong> Make sure that the front edges of the side and the bottom are flush.</p>
+<p><strong>Why:</strong> The glue makes the joint strong. The screws pull the joint tight while the glue dries.</p>
+</li>
+<li><h3>Attach the top to the side</h3>
+<p><strong>WARNING:</strong> When you drill, wear safety glasses. The bit can throw chips into your eyes.</p>
+<p><strong>CAUTION:</strong> Drill a pilot hole before you install each screw. A screw with no pilot hole splits the plies.</p>
+<ol><li>Turn the assembly upside down on the bench.</li><li>Apply glue to one 394 mm edge of top C.</li><li>Put top C flat on the bench with the letter up and the glued edge against side A.</li><li>Clamp the corner with the two corner clamps.</li><li>Drill a 2.5 mm pilot hole 25 mm into the edge through each hole.</li><li>Install three 40 mm screws through the side into the top.</li></ol>
+<p><strong>Check:</strong> Make sure that the gap between the top and the bottom is 364 mm at the front and the back.</p>
+</li>
+<li><h3>Attach the second side</h3>
+<p><strong>WARNING:</strong> When you drill, wear safety glasses. The bit can throw chips into your eyes.</p>
+<p><strong>CAUTION:</strong> Drill a pilot hole before you install each screw. A screw with no pilot hole splits the plies.</p>
+<ol><li>Put the assembly on the bench with side A down.</li><li>Apply glue to the free edges of the top and the bottom.</li><li>Put the second side A on the glued edges, with its letter on the inside.</li><li>Align the holes with the centers of the edges.</li><li>Drill a 2.5 mm pilot hole 25 mm into the edge through each hole.</li><li>Install six 40 mm screws through the side.</li></ol>
+<p><strong>Check:</strong> Make sure that the front edges of the two sides, the top and the bottom are flush.</p>
+<p><strong>Tip:</strong> The weight of the side holds the joint, so you do not need the clamps.</p>
+</li>
+<li><h3>Attach the back</h3>
+<p><strong>WARNING:</strong> Wear safety glasses. A pin can fly out of the wood when you hit it.</p>
+<ol><li>Put the cube on the bench with the front down.</li><li>Square the cube with the two diagonals.</li><li>Apply a thin line of glue to the back edges of the cube.</li><li>Put back D on the cube with the letter down and its edges flush with the outer faces.</li><li>Draw a line on back D, 9 mm from each edge.</li><li>Nail the back along the lines with 14 panel pins, about 100 mm apart.</li></ol>
+<p><strong>Check:</strong> Make sure that no pin comes out of an inner or outer face of the cube.</p>
+<p><strong>Why:</strong> The back holds the cube square. The lines put each pin in the center of an 18 mm edge.</p>
+</li>
+<li><h3>Apply the finish</h3>
+<p><strong>WARNING:</strong> Open a window or work outdoors. Finish fumes in a closed room can give you a headache.</p>
+<p><strong>WARNING:</strong> Wear gloves. The finish can irritate your skin.</p>
+<p><strong>CAUTION:</strong> Do not shake the can. Air bubbles from the can stay in the dry finish.</p>
+<ol><li>Remove the dust from all faces with a damp cloth.</li><li>Brush the first coat on all faces, inside and outside.</li><li>Wait 2 hours.</li><li>Sand all faces lightly with 240 grit.</li><li>Remove the dust with a damp cloth.</li><li>Brush the second coat.</li></ol>
+<p><strong>Check:</strong> Make sure that the finish is dry and smooth before you put items in the cube.</p>
+<p><strong>Why:</strong> Water lifts the wood fibres in the first coat. The light sand removes them, so the second coat is smooth.</p>
+</li>
+<li><h3>Attach the felt pads</h3>
+<ol><li>Put the cube upside down on a soft cloth.</li><li>Clean each corner of the bottom with a dry cloth.</li><li>Remove the paper from a felt pad.</li><li>Press the pad on a corner, 5 mm from each outer edge.</li><li>Attach the other three pads the same way.</li></ol>
+<p><strong>Check:</strong> Make sure that the cube stands flat on the floor and does not rock.</p>
+<p><strong>Why:</strong> The pads keep the cube off the floor. They stop scratches on the floor and on the finish.</p>
+</li>
+</ol></div></noscript>
+<script type="application/json" id="jig-data">{"engine":"1.0.0","format":1,"mode":"guide","meta":{"id":"plywood-storage-cube","title":"Plywood storage cube","summary":"A storage cube of 18 mm birch plywood, 400 mm on each side. You cut five parts with a jigsaw, join them with glue and screws, and nail on a thin back.","level":"new","units":"mm","currency":"EUR","tax":{"rate":0.21,"label":"VAT","included":true},"priceNote":"Example prices from a Dutch DIY store and timber merchant, with 21% VAT. Replace them with the prices at your store.","pricesAsOf":"2026-11-02","estimate":true,"kerf":3,"trim":0},"parts":[{"id":"A1","label":"A","name":"Side","material":"ply-18","materialName":"Birch plywood 18 mm","kind":"sheet","shape":"box","size":[18,400,394],"at":[0,5,6],"rotate":null,"color":"#e4cca2","role":null,"cut":{"a":400,"b":394,"thick":18},"step":3},{"id":"A2","label":"A","name":"Side","material":"ply-18","materialName":"Birch plywood 18 mm","kind":"sheet","shape":"box","size":[18,400,394],"at":[382,5,6],"rotate":null,"color":"#e4cca2","role":null,"cut":{"a":400,"b":394,"thick":18},"step":5},{"id":"B1","label":"B","name":"Bottom","material":"ply-18","materialName":"Birch plywood 18 mm","kind":"sheet","shape":"box","size":[364,18,394],"at":[18,5,6],"rotate":null,"color":"#e4cca2","role":null,"cut":{"a":394,"b":364,"thick":18},"step":3},{"id":"C1","label":"C","name":"Top","material":"ply-18","materialName":"Birch plywood 18 mm","kind":"sheet","shape":"box","size":[364,18,394],"at":[18,387,6],"rotate":null,"color":"#e4cca2","role":null,"cut":{"a":394,"b":364,"thick":18},"step":4},{"id":"D1","label":"D","name":"Back","material":"ply-6","materialName":"Birch plywood 6 mm","kind":"sheet","shape":"box","size":[400,400,6],"at":[0,5,0],"rotate":null,"color":"#ead6b0","role":null,"cut":{"a":400,"b":400,"thick":6},"step":6},{"id":"E1","label":"E","name":"Felt pad","material":"pads","materialName":"Felt pad","kind":"each","shape":"cylinder","size":[25,5,25],"at":[5,0,370],"rotate":null,"color":"#6f747b","role":null,"cut":null,"step":8},{"id":"E2","label":"E","name":"Felt pad","material":"pads","materialName":"Felt pad","kind":"each","shape":"cylinder","size":[25,5,25],"at":[370,0,370],"rotate":null,"color":"#6f747b","role":null,"cut":null,"step":8},{"id":"E3","label":"E","name":"Felt pad","material":"pads","materialName":"Felt pad","kind":"each","shape":"cylinder","size":[25,5,25],"at":[5,0,5],"rotate":null,"color":"#6f747b","role":null,"cut":null,"step":8},{"id":"E4","label":"E","name":"Felt pad","material":"pads","materialName":"Felt pad","kind":"each","shape":"cylinder","size":[25,5,25],"at":[370,0,5],"rotate":null,"color":"#6f747b","role":null,"cut":null,"step":8}],"props":{},"materials":{"ply-18":{"name":"Birch plywood 18 mm","kind":"sheet","spec":"grade BB/BB","unit":null,"color":"#e4cca2"},"ply-6":{"name":"Birch plywood 6 mm","kind":"sheet","spec":"grade BB/BB","unit":null,"color":"#ead6b0"},"screw-4x40":{"name":"Wood screw","kind":"each","spec":"4 × 40 mm, countersunk","unit":"piece","color":"#8f959c"},"pins":{"name":"Panel pin","kind":"each","spec":"1.6 × 25 mm, steel","unit":"pin","color":"#7d838a"},"glue":{"name":"Wood glue","kind":"amount","spec":"PVA, D3","unit":"ml","color":null},"pads":{"name":"Felt pad","kind":"each","spec":"25 mm round, 5 mm thick, self-adhesive","unit":"pad","color":"#6f747b"},"sand-120":{"name":"Sandpaper","kind":"each","spec":"120 grit","unit":"sheet","color":null},"sand-180":{"name":"Sandpaper","kind":"each","spec":"180 grit","unit":"sheet","color":null},"sand-240":{"name":"Sandpaper","kind":"each","spec":"240 grit","unit":"sheet","color":null},"varnish":{"name":"Water-based varnish","kind":"amount","spec":"clear, matt, interior","unit":"L","color":null},"cloths":{"name":"Lint-free cloth","kind":"each","spec":"cotton","unit":"cloth","color":null}},"steps":[{"id":"cut","title":"Cut the parts","phase":"Prepare","minutes":60,"cuts":true,"tools":["tape","pencil","square","guide","fclamps","trestles","jigsaw","blades","glasses","ears"],"teach":["measure-mark","jigsaw-guide"],"warn":[{"type":"warning","text":"Wear safety glasses. The jigsaw can throw chips into your eyes."},{"type":"warning","text":"Wear ear protection. A loud jigsaw can hurt your ears."},{"type":"warning","text":"Keep your hands away from the area under the sheet. The blade comes out below the sheet."},{"type":"warning","text":"Unplug the jigsaw before you change the blade. A saw that starts can cut you."},{"type":"caution","text":"Put the sheet on the trestles with the good face down. The jigsaw splits the top face."}],"do":["Put the 18 mm sheet on the two trestles with the good face down.","Mark each part from the cut list on the top face.",{"t":"Measure each line two times before you cut.","new":true},"Cut across the sheet first, at the end of each part.","Cut each piece to a width of 394 mm.","Cut back D from the 6 mm sheet the same way.","Write the part letter on the top face of each part."],"check":"Make sure that you have two parts A and one each of parts B, C and D.","why":"A jigsaw cuts on the up stroke, so the bottom face stays clean. The face with the letter goes on the inside of the cube.","tip":"Keep the offcuts. They make good scrap blocks for the clamps and the drill.","pose":"kit","index":0,"fasteners":[],"wait":0},{"id":"sand","title":"Sand the parts","phase":"Prepare","minutes":40,"uses":{"sand-120":2,"sand-180":2},"tools":["block","mask"],"teach":["sand"],"do":["Sand each cut edge to the line with 120 grit.","Sand the faces of each part with 120 grit.","Sand each sharp edge to a 1 mm round.","Sand all faces and edges again with 180 grit.","Remove the dust with a dry cloth."],"check":"Make sure that the edges are straight and that no splinters show on the faces.","why":"Plywood edges show the plies. A smooth, round edge looks clean and does not splinter.","tip":"Keep the block flat on the edge. A tilted block makes the edge uneven.","pose":"kit","focus":["A1","A2","B1","C1","D1"],"index":1,"fasteners":[],"wait":0},{"id":"drill","title":"Drill the sides","phase":"Prepare","minutes":25,"tools":["tape","pencil","square","drill","bits","glasses"],"teach":["countersink"],"warn":[{"type":"caution","text":"Put a scrap block under the side. The bit can split the face when it comes out."}],"do":["Put the two sides A on the bench with the letters down.","Draw a line 9 mm from each short edge of each side.","Mark three holes on each line, at 40, 197 and 354 mm from a long edge.","Drill a 4 mm hole through the side at each mark.","Countersink each hole on the top face."],"check":"Make sure that each side has six holes, 9 mm from the short edges.","why":"The line at 9 mm is the center of the 18 mm edge of the top and the bottom. Each screw then goes into the middle of the edge.","pose":"kit","focus":["A1","A2"],"index":2,"fasteners":[],"wait":0},{"id":"bottom","title":"Attach the bottom to a side","phase":"Build","minutes":20,"parts":["A1","B1"],"fasteners":[{"material":"screw-4x40","at":[0,14,46],"dir":[1,0,0],"len":40,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x40","at":[0,14,203],"dir":[1,0,0],"len":40,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x40","at":[0,14,360],"dir":[1,0,0],"len":40,"d":4,"head":"flat","color":"#8f959c","count":1}],"uses":{"glue":8},"tools":["drill","bits","cclamps","glasses"],"teach":["glue-joint","corner-clamp","pilot-hole"],"warn":[{"type":"caution","text":"Drill a pilot hole before you install each screw. A screw with no pilot hole splits the plies."}],"do":[{"t":"Put bottom B flat on the bench with the letter up.","new":true},"Apply glue to one 394 mm edge of bottom B.","Put a side A against the glued edge, with its letter on the inside.","Align the holes in the side with the center of the edge.","Clamp the corner with the two corner clamps.","Drill a 2.5 mm pilot hole 25 mm into the edge through each hole.","Install three 40 mm screws through the side into the bottom."],"check":"Make sure that the front edges of the side and the bottom are flush.","why":"The glue makes the joint strong. The screws pull the joint tight while the glue dries.","index":3,"wait":0},{"id":"top","title":"Attach the top to the side","phase":"Build","minutes":15,"parts":["C1"],"fasteners":[{"material":"screw-4x40","at":[0,396,46],"dir":[1,0,0],"len":40,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x40","at":[0,396,203],"dir":[1,0,0],"len":40,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x40","at":[0,396,360],"dir":[1,0,0],"len":40,"d":4,"head":"flat","color":"#8f959c","count":1}],"uses":{"glue":8},"tools":["drill","bits","cclamps","glasses"],"warn":[{"type":"warning","text":"When you drill, wear safety glasses. The bit can throw chips into your eyes."},{"type":"caution","text":"Drill a pilot hole before you install each screw. A screw with no pilot hole splits the plies."}],"do":["Turn the assembly upside down on the bench.","Apply glue to one 394 mm edge of top C.","Put top C flat on the bench with the letter up and the glued edge against side A.","Clamp the corner with the two corner clamps.","Drill a 2.5 mm pilot hole 25 mm into the edge through each hole.","Install three 40 mm screws through the side into the top."],"check":"Make sure that the gap between the top and the bottom is 364 mm at the front and the back.","view":{"note":"The picture shows the cube upright, as it stands at the end."},"index":4,"wait":0},{"id":"side","title":"Attach the second side","phase":"Build","minutes":20,"parts":["A2"],"fasteners":[{"material":"screw-4x40","at":[400,14,46],"dir":[-1,0,0],"len":40,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x40","at":[400,14,203],"dir":[-1,0,0],"len":40,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x40","at":[400,14,360],"dir":[-1,0,0],"len":40,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x40","at":[400,396,46],"dir":[-1,0,0],"len":40,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x40","at":[400,396,203],"dir":[-1,0,0],"len":40,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x40","at":[400,396,360],"dir":[-1,0,0],"len":40,"d":4,"head":"flat","color":"#8f959c","count":1}],"uses":{"glue":16},"tools":["drill","bits","glasses"],"warn":[{"type":"warning","text":"When you drill, wear safety glasses. The bit can throw chips into your eyes."},{"type":"caution","text":"Drill a pilot hole before you install each screw. A screw with no pilot hole splits the plies."}],"do":["Put the assembly on the bench with side A down.","Apply glue to the free edges of the top and the bottom.","Put the second side A on the glued edges, with its letter on the inside.","Align the holes with the centers of the edges.","Drill a 2.5 mm pilot hole 25 mm into the edge through each hole.","Install six 40 mm screws through the side."],"check":"Make sure that the front edges of the two sides, the top and the bottom are flush.","tip":"The weight of the side holds the joint, so you do not need the clamps.","from":[260,0,0],"view":{"note":"The picture shows the cube upright."},"index":5,"wait":0},{"id":"back","title":"Attach the back","phase":"Build","minutes":25,"parts":["D1"],"fasteners":[{"material":"pins","at":[9,55,0],"dir":[0,0,1],"len":25,"d":1.6,"head":"flat","color":"#7d838a","count":1},{"material":"pins","at":[9,155,0],"dir":[0,0,1],"len":25,"d":1.6,"head":"flat","color":"#7d838a","count":1},{"material":"pins","at":[9,255,0],"dir":[0,0,1],"len":25,"d":1.6,"head":"flat","color":"#7d838a","count":1},{"material":"pins","at":[9,355,0],"dir":[0,0,1],"len":25,"d":1.6,"head":"flat","color":"#7d838a","count":1},{"material":"pins","at":[391,55,0],"dir":[0,0,1],"len":25,"d":1.6,"head":"flat","color":"#7d838a","count":1},{"material":"pins","at":[391,155,0],"dir":[0,0,1],"len":25,"d":1.6,"head":"flat","color":"#7d838a","count":1},{"material":"pins","at":[391,255,0],"dir":[0,0,1],"len":25,"d":1.6,"head":"flat","color":"#7d838a","count":1},{"material":"pins","at":[391,355,0],"dir":[0,0,1],"len":25,"d":1.6,"head":"flat","color":"#7d838a","count":1},{"material":"pins","at":[100,14,0],"dir":[0,0,1],"len":25,"d":1.6,"head":"flat","color":"#7d838a","count":1},{"material":"pins","at":[200,14,0],"dir":[0,0,1],"len":25,"d":1.6,"head":"flat","color":"#7d838a","count":1},{"material":"pins","at":[300,14,0],"dir":[0,0,1],"len":25,"d":1.6,"head":"flat","color":"#7d838a","count":1},{"material":"pins","at":[100,396,0],"dir":[0,0,1],"len":25,"d":1.6,"head":"flat","color":"#7d838a","count":1},{"material":"pins","at":[200,396,0],"dir":[0,0,1],"len":25,"d":1.6,"head":"flat","color":"#7d838a","count":1},{"material":"pins","at":[300,396,0],"dir":[0,0,1],"len":25,"d":1.6,"head":"flat","color":"#7d838a","count":1}],"uses":{"glue":10},"tools":["tape","pencil","hammer","glasses"],"teach":["square-diagonals"],"warn":[{"type":"warning","text":"Wear safety glasses. A pin can fly out of the wood when you hit it."}],"do":["Put the cube on the bench with the front down.","Square the cube with the two diagonals.","Apply a thin line of glue to the back edges of the cube.","Put back D on the cube with the letter down and its edges flush with the outer faces.","Draw a line on back D, 9 mm from each edge.","Nail the back along the lines with 14 panel pins, about 100 mm apart."],"check":"Make sure that no pin comes out of an inner or outer face of the cube.","why":"The back holds the cube square. The lines put each pin in the center of an 18 mm edge.","from":[0,0,-260],"view":{"az":205,"el":26,"note":"The picture shows the cube upright, from the back."},"index":6,"wait":0},{"id":"finish","title":"Apply the finish","phase":"Finish","minutes":50,"wait":240,"uses":{"sand-240":1,"cloths":2},"finish":{"material":"varnish","coats":2,"parts":["A1","A2","B1","C1","D1"]},"tools":["brush","gloves"],"teach":["finish-brush"],"warn":[{"type":"warning","text":"Open a window or work outdoors. Finish fumes in a closed room can give you a headache."}],"do":["Remove the dust from all faces with a damp cloth.","Brush the first coat on all faces, inside and outside.","Wait 2 hours.","Sand all faces lightly with 240 grit.","Remove the dust with a damp cloth.","Brush the second coat."],"check":"Make sure that the finish is dry and smooth before you put items in the cube.","why":"Water lifts the wood fibres in the first coat. The light sand removes them, so the second coat is smooth.","index":7,"fasteners":[]},{"id":"pads","title":"Attach the felt pads","phase":"Finish","minutes":5,"parts":["E1","E2","E3","E4"],"do":["Put the cube upside down on a soft cloth.","Clean each corner of the bottom with a dry cloth.","Remove the paper from a felt pad.","Press the pad on a corner, 5 mm from each outer edge.","Attach the other three pads the same way."],"check":"Make sure that the cube stands flat on the floor and does not rock.","why":"The pads keep the cube off the floor. They stop scratches on the floor and on the finish.","from":[0,-40,0],"view":{"az":30,"el":3,"note":"The picture shows the cube upright, so you can see where each pad goes."},"index":8,"fasteners":[],"wait":0}],"tools":[{"id":"tape","name":"Tape measure","have":true,"get":"buy","days":1,"qty":1,"power":false,"ppe":false,"est":true,"first":0},{"id":"pencil","name":"Pencil","have":true,"get":"buy","days":1,"qty":1,"power":false,"ppe":false,"est":true,"first":0},{"id":"square","name":"Try square","spec":"300 mm","have":false,"get":"buy","price":9.99,"days":1,"qty":1,"store":"diy","power":false,"ppe":false,"est":true,"first":0},{"id":"guide","name":"Straightedge","spec":"aluminium, 1000 mm","have":false,"get":"buy","price":12.99,"days":1,"qty":1,"store":"diy","power":false,"ppe":false,"est":true,"first":0},{"id":"fclamps","name":"F-clamp","spec":"300 mm","have":false,"get":"buy","price":8.99,"days":1,"qty":2,"store":"diy","power":false,"ppe":false,"est":true,"first":0},{"id":"trestles","name":"Two trestles","have":false,"get":"borrow","days":1,"qty":1,"power":false,"ppe":false,"est":true,"first":0},{"id":"jigsaw","name":"Jigsaw","spec":"with a pendulum setting of 0","have":false,"get":"borrow","days":1,"qty":1,"power":true,"ppe":false,"est":true,"first":0},{"id":"blades","name":"Jigsaw blades","spec":"clean cut for wood (T101B), pack of 5","have":false,"get":"buy","price":6.99,"days":1,"qty":1,"store":"diy","power":false,"ppe":false,"est":true,"first":0},{"id":"drill","name":"Cordless drill","have":true,"get":"buy","days":1,"qty":1,"power":true,"ppe":false,"est":true,"first":2},{"id":"bits","name":"Drill bit set","spec":"2.5 mm and 4 mm wood bits, countersink bit","have":false,"get":"buy","price":9.99,"days":1,"qty":1,"store":"diy","power":false,"ppe":false,"est":true,"first":2},{"id":"cclamps","name":"Corner clamp","spec":"90°, opens to 20 mm or more","have":false,"get":"buy","price":9.99,"days":1,"qty":2,"store":"diy","power":false,"ppe":false,"est":true,"first":3},{"id":"hammer","name":"Hammer","spec":"pin hammer or small claw hammer","have":true,"get":"buy","days":1,"qty":1,"power":false,"ppe":false,"est":true,"first":6},{"id":"block","name":"Sanding block","have":false,"get":"buy","price":3.99,"days":1,"qty":1,"store":"diy","power":false,"ppe":false,"est":true,"first":1},{"id":"brush","name":"Synthetic brush","spec":"50 mm, for water-based finish","have":false,"get":"buy","price":5.49,"days":1,"qty":1,"store":"diy","power":false,"ppe":false,"est":true,"first":7},{"id":"glasses","name":"Safety glasses","spec":"EN 166","have":false,"get":"buy","price":4.99,"days":1,"qty":1,"store":"diy","power":false,"ppe":true,"est":true,"first":0},{"id":"ears","name":"Ear protection","have":false,"get":"buy","price":7.99,"days":1,"qty":1,"store":"diy","power":false,"ppe":true,"est":true,"first":0},{"id":"mask","name":"Dust mask","spec":"FFP2","have":false,"get":"buy","price":5.99,"days":1,"qty":1,"store":"diy","power":false,"ppe":true,"est":true,"first":1},{"id":"gloves","name":"Nitrile gloves","have":false,"get":"buy","price":4.99,"days":1,"qty":1,"store":"online","power":false,"ppe":true,"est":true,"first":7}],"techniques":{"measure-mark":{"name":"Measure and mark","why":"The saw blade removes 3 mm of wood. The X tells you which side of the line to cut on.","warn":[],"do":["Hook the tape on the square end of the board.","Read the tape at eye level.","Make a small V mark with a sharp pencil.","Put the square against the edge of the board.","Draw a line through the V along the square.","Write an X on the waste side of the line."],"tools":["Tape measure","Pencil","Square"]},"jigsaw-guide":{"name":"Cut along a guide with a jigsaw","why":"A jigsaw blade bends in thick plywood. A clamped guide and a slow push keep the cut straight.","warn":[{"type":"warning","text":"Keep your hands away from the area under the sheet. The blade comes out below the sheet."}],"do":["Set the pendulum action of the jigsaw to 0.","Measure from the edge of the base plate to the near side of the blade.","Clamp the straightedge on the part side of the line, at that distance.","Put the base plate against the straightedge with the blade clear of the sheet.","Start the jigsaw.","When the blade is at full speed, push the jigsaw slowly along the straightedge.","Keep the base plate flat on the sheet until the cut is complete."],"tools":["Jigsaw","Straightedge","F-clamps"]},"sand":{"name":"Sand a face","why":"Each finer grit removes the scratches of the grit before it.","warn":[{"type":"warning","text":"Wear a dust mask. Fine dust can hurt your lungs."},{"type":"caution","text":"Do not sand across the grain. Cross scratches show through the finish."}],"do":["Wrap the sandpaper around a flat block.","Sand along the grain with a medium grit.","Remove the dust with a dry cloth.","Sand again with a finer grit."],"tools":["Sanding block","Sandpaper","Dust mask"]},"countersink":{"name":"Countersink the hole","why":"The cone lets the screw head sit flush with the face.","warn":[{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Put the countersink bit in the pilot hole.","Drill until the cone is as wide as the screw head.","Remove the dust from the hole."],"tools":["Drill","Countersink bit"]},"glue-joint":{"name":"Glue a joint","why":"Too much glue makes a weak, wet joint. Dry glue stains do not take the finish.","warn":[],"do":["Apply a thin line of glue to one face.","Spread the glue with your finger or a scrap.","Put the parts together in 10 minutes or less.","Wipe off the extra glue with a wet cloth."],"tools":["Wet cloth"]},"corner-clamp":{"name":"Hold a corner with corner clamps","why":"A corner clamp holds two parts at 90°. Your two hands are then free for the drill.","warn":[],"do":["Open the two jaws of the clamp wider than the parts.","Put the corner of the joint into the clamp.","Tighten the jaw on the first part.","Align the edges of the second part with the edges of the first part.","Tighten the jaw on the second part."],"tools":["Corner clamps"]},"pilot-hole":{"name":"Drill a pilot hole","why":"A pilot hole gives the screw a path. Without it, the wood can split near an edge.","warn":[{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Select a drill bit that is a little smaller than the screw shaft.","Mark the hole position with a pencil.","Clamp small parts before you drill.","Hold the drill at 90° to the face.","Drill to the depth of the screw."],"tools":["Drill","Drill bit"]},"square-diagonals":{"name":"Square a frame","why":"A square frame has two equal diagonals. Shelves and doors then fit.","warn":[],"do":["Measure the frame from corner to corner.","Measure the other diagonal.","If the two lengths are not equal, push the long diagonal corners together.","Measure again until the two lengths are equal within 2 mm."],"tools":["Tape measure"]},"finish-brush":{"name":"Brush a water-based finish","why":"Thin coats dry fast and do not run. A thick coat stays soft and shows brush marks.","warn":[{"type":"warning","text":"Wear gloves. The finish can irritate your skin."},{"type":"caution","text":"Do not shake the can. Air bubbles from the can stay in the dry finish."}],"do":["Stir the finish for 1 minute.","Put one third of the brush hairs into the finish.","Brush a thin coat along the grain.","Brush each face from one end to the other in long strokes.","Remove runs at the edges with the brush.","Wait for the time on the can before the next coat."],"tools":["Synthetic brush","Gloves"]}},"cuts":[{"material":"ply-18","name":"Birch plywood 18 mm","kind":"sheet","color":"#e4cca2","sheets":[{"stock":{"w":1220,"h":610,"price":34.95},"cuts":[{"id":"A1","label":"A","x":0,"y":0,"w":400,"h":394,"rotated":false},{"id":"A2","label":"A","x":403,"y":0,"w":400,"h":394,"rotated":false},{"id":"B1","label":"B","x":806,"y":0,"w":364,"h":394,"rotated":true}],"usedArea":0.458616,"waste":0.285584},{"stock":{"w":1220,"h":610,"price":34.95},"cuts":[{"id":"C1","label":"C","x":0,"y":0,"w":364,"h":394,"rotated":true}],"usedArea":0.143416,"waste":0.600784}]},{"material":"ply-6","name":"Birch plywood 6 mm","kind":"sheet","color":"#ead6b0","sheets":[{"stock":{"w":1220,"h":610,"price":13.95},"cuts":[{"id":"D1","label":"D","x":0,"y":0,"w":400,"h":400,"rotated":false}],"usedArea":0.16,"waste":0.5842}]}],"boq":[{"code":"T01","group":"Timber and sheet","key":"ply-18:1220x610","id":"ply-18","name":"Birch plywood 18 mm","spec":"grade BB/BB, 1220 × 610 mm","need":"4 pieces, 0.60 m²","needQty":0.602,"qty":2,"unit":"sheet","rate":34.95,"amount":69.9,"est":true,"store":"timber","first":0,"note":"","get":"buy"},{"code":"T02","group":"Timber and sheet","key":"ply-6:1220x610","id":"ply-6","name":"Birch plywood 6 mm","spec":"grade BB/BB, 1220 × 610 mm","need":"1 piece, 0.16 m²","needQty":0.16,"qty":1,"unit":"sheet","rate":13.95,"amount":13.95,"est":true,"store":"timber","first":0,"note":"","get":"buy"},{"code":"H01","group":"Hardware","key":"screw-4x40","id":"screw-4x40","name":"Wood screw","spec":"4 × 40 mm, countersunk","need":"12 pieces + 10% spare","needQty":12,"qty":1,"unit":"box of 50","rate":4.79,"amount":4.79,"est":true,"store":"diy","first":3,"note":"","get":"buy"},{"code":"H02","group":"Hardware","key":"pins","id":"pins","name":"Panel pin","spec":"1.6 × 25 mm, steel","need":"14 pins + 10% spare","needQty":14,"qty":1,"unit":"box of 200","rate":2.49,"amount":2.49,"est":true,"store":"diy","first":6,"note":"","get":"buy"},{"code":"H03","group":"Hardware","key":"pads","id":"pads","name":"Felt pad","spec":"25 mm round, 5 mm thick, self-adhesive","need":"4 pads","needQty":4,"qty":1,"unit":"pack of 16","rate":3.49,"amount":3.49,"est":true,"store":"online","first":8,"note":"","get":"buy"},{"code":"C01","group":"Consumables","key":"sand-120","id":"sand-120","name":"Sandpaper","spec":"120 grit","need":"2 sheets","needQty":2,"qty":1,"unit":"pack of 5","rate":3.49,"amount":3.49,"est":true,"store":"online","first":1,"note":"","get":"buy"},{"code":"C02","group":"Consumables","key":"sand-180","id":"sand-180","name":"Sandpaper","spec":"180 grit","need":"2 sheets","needQty":2,"qty":1,"unit":"pack of 5","rate":3.49,"amount":3.49,"est":true,"store":"online","first":1,"note":"","get":"buy"},{"code":"C03","group":"Consumables","key":"glue","id":"glue","name":"Wood glue","spec":"PVA, D3","need":"42 ml","needQty":42,"qty":1,"unit":"250 ml bottle","rate":6.99,"amount":6.99,"est":true,"store":"diy","first":3,"note":"","get":"buy"},{"code":"C04","group":"Consumables","key":"sand-240","id":"sand-240","name":"Sandpaper","spec":"240 grit","need":"1 sheet","needQty":1,"qty":1,"unit":"pack of 5","rate":3.49,"amount":3.49,"est":true,"store":"online","first":7,"note":"","get":"buy"},{"code":"F01","group":"Finish","key":"varnish","id":"varnish","name":"Water-based varnish","spec":"clear, matt, interior","need":"0.33 L + 10% spare","needQty":0.329,"qty":1,"unit":"0.375 L can","rate":12.95,"amount":12.95,"est":true,"store":"online","first":7,"note":"1.65 m² × 2 coats ÷ 10 m² per L. The area counts every face of each finished part, so it is an upper bound.","get":"buy"},{"code":"F02","group":"Finish","key":"cloths","id":"cloths","name":"Lint-free cloth","spec":"cotton","need":"2 cloths","needQty":2,"qty":1,"unit":"pack of 10","rate":3.99,"amount":3.99,"est":true,"store":"online","first":7,"note":"","get":"buy"},{"code":"S01","group":"Safety","key":"tool/glasses","id":"glasses","name":"Safety glasses","spec":"EN 166","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":4.99,"amount":4.99,"est":true,"store":"diy","first":0,"note":"","get":"buy"},{"code":"S02","group":"Safety","key":"tool/ears","id":"ears","name":"Ear protection","spec":"","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":7.99,"amount":7.99,"est":true,"store":"diy","first":0,"note":"","get":"buy"},{"code":"S03","group":"Safety","key":"tool/mask","id":"mask","name":"Dust mask","spec":"FFP2","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":5.99,"amount":5.99,"est":true,"store":"diy","first":1,"note":"","get":"buy"},{"code":"S04","group":"Safety","key":"tool/gloves","id":"gloves","name":"Nitrile gloves","spec":"","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":4.99,"amount":4.99,"est":true,"store":"online","first":7,"note":"","get":"buy"},{"code":"X01","group":"Tools","key":"tool/square","id":"square","name":"Try square","spec":"300 mm","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":9.99,"amount":9.99,"est":true,"store":"diy","first":0,"note":"","get":"buy"},{"code":"X02","group":"Tools","key":"tool/guide","id":"guide","name":"Straightedge","spec":"aluminium, 1000 mm","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":12.99,"amount":12.99,"est":true,"store":"diy","first":0,"note":"","get":"buy"},{"code":"X03","group":"Tools","key":"tool/fclamps","id":"fclamps","name":"F-clamp","spec":"300 mm","need":"buy 2","needQty":2,"qty":2,"unit":"each","rate":8.99,"amount":17.98,"est":true,"store":"diy","first":0,"note":"","get":"buy"},{"code":"X04","group":"Tools","key":"tool/trestles","id":"trestles","name":"Two trestles","spec":"","need":"borrow 1","needQty":1,"qty":1,"unit":"each","rate":0,"amount":0,"est":false,"store":null,"first":0,"note":"","get":"borrow"},{"code":"X05","group":"Tools","key":"tool/jigsaw","id":"jigsaw","name":"Jigsaw","spec":"with a pendulum setting of 0","need":"borrow 1","needQty":1,"qty":1,"unit":"each","rate":0,"amount":0,"est":false,"store":null,"first":0,"note":"","get":"borrow"},{"code":"X06","group":"Tools","key":"tool/blades","id":"blades","name":"Jigsaw blades","spec":"clean cut for wood (T101B), pack of 5","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":6.99,"amount":6.99,"est":true,"store":"diy","first":0,"note":"","get":"buy"},{"code":"X07","group":"Tools","key":"tool/block","id":"block","name":"Sanding block","spec":"","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":3.99,"amount":3.99,"est":true,"store":"diy","first":1,"note":"","get":"buy"},{"code":"X08","group":"Tools","key":"tool/bits","id":"bits","name":"Drill bit set","spec":"2.5 mm and 4 mm wood bits, countersink bit","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":9.99,"amount":9.99,"est":true,"store":"diy","first":2,"note":"","get":"buy"},{"code":"X09","group":"Tools","key":"tool/cclamps","id":"cclamps","name":"Corner clamp","spec":"90°, opens to 20 mm or more","need":"buy 2","needQty":2,"qty":2,"unit":"each","rate":9.99,"amount":19.98,"est":true,"store":"diy","first":3,"note":"","get":"buy"},{"code":"X10","group":"Tools","key":"tool/brush","id":"brush","name":"Synthetic brush","spec":"50 mm, for water-based finish","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":5.49,"amount":5.49,"est":true,"store":"diy","first":7,"note":"","get":"buy"}],"purchase":[{"store":"online","name":"Online order","online":true,"lead":3,"note":"Order 3 days before you start.","url":null,"orderBy":null,"items":["sand-120","sand-180","sand-240","varnish","cloths","tool/gloves","pads"],"subtotal":35.89},{"store":"diy","name":"DIY store","online":false,"lead":0,"note":"","url":null,"orderBy":null,"items":["tool/glasses","tool/ears","tool/square","tool/guide","tool/fclamps","tool/blades","tool/mask","tool/block","tool/bits","screw-4x40","glue","tool/cclamps","pins","tool/brush"],"subtotal":120.64},{"store":"timber","name":"Timber merchant","online":false,"lead":0,"note":"Ask for birch plywood, grade BB/BB. Look at the two faces before you buy a sheet.","url":null,"orderBy":null,"items":["ply-18:1220x610","ply-6:1220x610"],"subtotal":83.85},{"store":"_borrow","name":"Borrow","online":false,"lead":0,"note":"Ask a friend, a neighbour or a tool library.","url":null,"orderBy":null,"items":["tool/trestles","tool/jigsaw"],"subtotal":0}],"plan":{"phases":[{"name":"Prepare","steps":[0,1,2],"minutes":125,"wait":0},{"name":"Build","steps":[3,4,5,6],"minutes":80,"wait":0},{"name":"Finish","steps":[7,8],"minutes":55,"wait":240}],"active":260,"wait":240,"levels":{"new":1.5,"some":1.2,"pro":1}},"totals":{"subtotal":240.38,"contingencyRate":0.1,"contingency":24.04,"taxRate":0.21,"taxLabel":"VAT","taxIncluded":true,"tax":45.89,"total":264.42,"currency":"EUR","area":1.645,"areaDisplay":"1.65 m²","unknownPrices":0},"safety":{"tip":{"height":405,"depth":390,"ratio":1.04,"anchored":false,"limit":2},"ppe":["glasses","ears","mask","gloves"],"handoffs":[],"power":["jigsaw","drill"],"notes":["When you use a saw or a router, wear safety glasses and ear protection. The tool can throw chips, and the noise can hurt your ears.","When you drill, wear safety glasses. The bit can throw chips into your eyes.","When you sand, wear a dust mask. Fine dust can hurt your lungs."]},"problems":[{"level":"info","code":"I_ESTIMATE","path":"estimate","where":"project","msg":"The prices are estimates.","hint":"Replace them with the prices at your store. Set \"est\": false on each price that you confirm."}],"counts":{"error":0,"warn":0,"ste":0,"info":1}}</script>
+<!-- three.js 0.160.0 (three.module.min.js, OrbitControls.js). MIT License. Copyright 2010-2023 Three.js Authors. https://github.com/mrdoob/three.js/blob/r160/LICENSE -->
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"},"integrity":{"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js":"sha384-8/hf5tabFfIo0BPku31TKUvGIKpWGYaMwNtlSNqNyZzXgZCMd4lnOGWbJElML9dv","https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js":"sha384-qlO/ZugKPxAQUAvTlQoo0QECzxJIJySZmCF/DHdb2Xn/hHndFwX/vfUAC9Hbk6LP"}}</script>
+<script type="module">
+const { createViewer } = (() => {
+// The 3D step viewer. No static import: createViewer() loads three.js with import() and, on failure, writes the
+// reason into the viewer slot. Parts already built are plain, the parts of this step are lit and arrive along their
+// path, parts still to come are hidden (or ghosted). Units are millimetres, y is up. One WebGL renderer is shared:
+// only the viewer on screen owns the canvas.
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)");
+const CAPTURE = /[?&]capture\b/.test(location.search); // keep the drawing buffer only for screen captures
+const MSG = {
+  webgl: "3D needs WebGL. The steps still work without it.",
+  network: "3D needs a network connection. The steps still work without it.",
+};
+const ease = (t) => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3);
+const easeIO = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const isVec = (v) => Array.isArray(v) && v.length === 3 && v.every((x) => typeof x === "number" && Number.isFinite(x));
+let THREE = null, Orbit = null, loading = null, shared = null;
+
+// WebGL first (a test canvas), then the two modules. Each failure carries its reason.
+function hasWebGL() {
+  try {
+    const c = document.createElement("canvas"), gl = c.getContext("webgl2") || c.getContext("webgl");
+    gl?.getExtension("WEBGL_lose_context")?.loseContext();
+    return Boolean(gl);
+  } catch { return false; }
+}
+function load3d() {
+  return (loading ??= (async () => {
+    if (!hasWebGL()) throw Object.assign(new Error("WebGL is not available"), { reason: "webgl" });
+    try {
+      const [t, o] = await Promise.all([import("three"), import("three/addons/controls/OrbitControls.js")]);
+      THREE = t;
+      Orbit = o.OrbitControls;
+    } catch (e) { throw Object.assign(new Error(e?.message ?? String(e)), { reason: "network" }); }
+  })());
+}
+
+function fail(host, err) {
+  const p = document.createElement("p");
+  p.className = "vmsg";
+  p.textContent = err?.reason ? MSG[err.reason] : `3D error: ${err?.message ?? err}. The steps still work without it.`;
+  host.replaceChildren(p);
+  host.dataset.state = err?.reason ?? "error";
+  if (!err?.reason) console.warn("jig 3D:", err);
+}
+
+// One renderer for the page. The canvas moves to the viewer that is on screen.
+function renderer() {
+  if (shared) return shared;
+  const r = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: CAPTURE });
+  r.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  r.shadowMap.enabled = true;
+  r.shadowMap.type = THREE.PCFSoftShadowMap;
+  const c = r.domElement;
+  c.tabIndex = 0;
+  c.setAttribute("role", "img");
+  c.addEventListener("keydown", (e) => { if (shared.owner?.key(e)) { e.preventDefault(); e.stopPropagation(); } });
+  return (shared = { r, canvas: c, owner: null });
+}
+
+// createViewer(host, data, { mode: "hero" | "steps", label, onSpin }) -> viewer API, or null when 3D cannot run.
+async function createViewer(host, data, opts = {}) {
+  try { await load3d(); } catch (e) { fail(host, e); return null; }
+  try { return build(host, data, opts); } catch (e) { fail(host, e); return null; }
+}
+
+function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
+  const T = THREE, hero = mode === "hero", R = renderer(), canvas = R.canvas;
+  const box = host.querySelector("[data-canvas]"), layer = host.querySelector("[data-tags]");
+  const UP = new T.Vector3(0, 1, 0), V = (a) => new T.Vector3(...a), RAD = Math.PI / 180;
+  const small = Math.min(screen.width || 1e4, screen.height || 1e4) < 700;
+  const scene = new T.Scene();
+  const camera = new T.PerspectiveCamera(30, 1.6, 10, 60000);
+  const controls = new Orbit(camera, canvas);
+  canvas.style.touchAction = ""; // OrbitControls sets none; the CSS gives pan-y until a tap turns on orbit
+  controls.enabled = false;
+  controls.enableDamping = true;
+  controls.autoRotateSpeed = 0.7;
+  controls.maxPolarAngle = Math.PI * 0.495;
+
+  // ---- theme tokens
+  const tok = {};
+  const readTokens = () => {
+    const cs = getComputedStyle(host);
+    for (const k of ["ink", "accent", "grid"]) tok[k] = cs.getPropertyValue(`--v-${k}`).trim() || "#888888";
+    const shade = parseFloat(cs.getPropertyValue("--v-prop")); // props (a white wall) are dimmed in the dark theme
+    tok.prop = shade > 0 && shade <= 1 ? shade : 1;
+  };
+  readTokens();
+
+  // ---- lights and floor
+  const hemi = new T.HemisphereLight(0xffffff, 0x8a7f72, 2.1);
+  const sun = new T.DirectionalLight(0xffffff, 2.2);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(small ? 1024 : 2048, small ? 1024 : 2048);
+  sun.shadow.bias = -0.0004;
+  scene.add(hemi, sun, sun.target);
+  const floor = new T.Mesh(new T.PlaneGeometry(1, 1).rotateX(-Math.PI / 2), new T.ShadowMaterial({ opacity: 0.18 }));
+  floor.receiveShadow = true;
+  scene.add(floor);
+
+  // ---- shapes: a box, or a cylinder along the side that is not one of the two equal sides
+  const axisOf = ([x, y, z]) => { const eq = (a, b) => Math.abs(a - b) < 1e-6; return eq(x, z) ? 1 : eq(x, y) ? 2 : eq(y, z) ? 0 : -1; };
+  function shape(kind, size) {
+    const axis = kind === "cylinder" ? axisOf(size) : -1;
+    if (axis < 0) return new T.BoxGeometry(...size);
+    const r = size[(axis + 1) % 3] / 2, g = new T.CylinderGeometry(r, r, size[axis], 28);
+    if (axis === 0) g.rotateZ(Math.PI / 2);
+    if (axis === 2) g.rotateX(Math.PI / 2);
+    return g;
+  }
+  function solid(g, mat, edge) {
+    const m = new T.Mesh(g, mat);
+    m.castShadow = m.receiveShadow = true;
+    if (edge) m.add(new T.LineSegments(new T.EdgesGeometry(g, 30), edge));
+    return m;
+  }
+  // rotate [rx, ry, rz] degrees about the box centre, x then y then z (R = Rz Ry Rx, as geometry.mjs)
+  const turn = (m, r) => { if (isVec(r)) m.rotation.set(r[0] * RAD, r[1] * RAD, r[2] * RAD, "ZYX"); };
+
+  // ---- parts: an assembled mesh and a flat "kit" mesh share one material per part
+  for (const p of data.parts) if (!isVec(p.at) || !isVec(p.size)) throw new Error(`part ${p.id} has no position ("at") or size`);
+  const parts = data.parts.map((p, i) => {
+    const size = V(p.size), center = V(p.at).addScaledVector(size, 0.5);
+    const base = new T.Color(p.color || "#cfc6b8");
+    base.offsetHSL(0, 0, (((i * 37) % 7) - 3) * 0.008); // a little variation, like real boards
+    const mat = new T.MeshLambertMaterial({ color: base.clone() }), edge = new T.LineBasicMaterial({ color: tok.ink, transparent: true });
+    const mesh = solid(shape(p.shape, p.size), mat, edge);
+    mesh.position.copy(center);
+    turn(mesh, p.rotate);
+    mesh.updateMatrixWorld();
+    const wb = new T.Box3().setFromObject(mesh);
+    const flat = [...p.size].sort((a, b) => b - a), round = p.shape === "cylinder" && axisOf(p.size) >= 0;
+    const kitSize = round ? [p.size[axisOf(p.size)], p.size[(axisOf(p.size) + 1) % 3], p.size[(axisOf(p.size) + 1) % 3]] : [flat[0], flat[2], flat[1]];
+    const kit = p.kind === "each" ? null : solid(shape(p.shape, kitSize), mat, edge); // bought parts are not cut
+    return { ...p, i, center, base, mat, edge, mesh, kit, kitSize, round, offset: new T.Vector3(), fly: new T.Vector3(), state: "hidden", wb };
+  });
+  const assembly = new T.Group(), kitGroup = new T.Group();
+  parts.forEach((p) => { assembly.add(p.mesh); if (p.kit) kitGroup.add(p.kit); });
+  scene.add(assembly, kitGroup);
+
+  // ---- props (wall, bench): context only, never in the bill
+  const props = Object.entries(data.props || {}).filter(([, pr]) => isVec(pr.at) && isVec(pr.size)).map(([id, pr]) => {
+    const base = new T.Color(pr.color || "#e6e1d8"), m = solid(shape(pr.shape, pr.size), new T.MeshLambertMaterial({ color: base.clone().multiplyScalar(tok.prop) }), null);
+    m.position.copy(V(pr.at).addScaledVector(V(pr.size), 0.5));
+    turn(m, pr.rotate);
+    m.castShadow = false;
+    m.visible = false;
+    scene.add(m);
+    m.updateMatrixWorld(true);
+    // props never move: their world box (0.5 mm inside, so a part that only touches one is not in it) stops "Apart"
+    return { id, m, base, hero: pr.hero !== false, box: new T.Box3().setFromObject(m).expandByScalar(-0.5) };
+  });
+
+  // the camera frames the parts. A repair has no parts: the object that is there (the props of the Plan view) sets it.
+  const bounds = new T.Box3();
+  parts.forEach((p) => bounds.union(p.wb));
+  if (bounds.isEmpty()) props.filter((pr) => pr.hero).forEach((pr) => bounds.union(new T.Box3().setFromObject(pr.m)));
+  if (bounds.isEmpty()) bounds.set(new T.Vector3(-100, 0, -100), new T.Vector3(100, 200, 100));
+  const modelCenter = bounds.getCenter(new T.Vector3()), modelSize = Math.max(1, bounds.getSize(new T.Vector3()).length());
+  controls.minDistance = Math.max(10, modelSize * 0.03); // close enough for a zoomed step on a bracket
+  controls.maxDistance = Math.max(2000, modelSize * 8);
+
+  // kit layout: rows on the floor, centred under the assembly. Bounds come from the kit meshes only (all visible).
+  const kitBox = new T.Box3();
+  {
+    const cut = parts.filter((p) => p.kit).sort((a, b) => b.kitSize[0] - a.kitSize[0]);
+    const rowMax = Math.max(1600, modelSize * 0.9, ...cut.map((p) => p.kitSize[0])), gap = Math.max(20, modelSize * 0.04);
+    let x = 0, z = 0, rowDepth = 0;
+    for (const p of cut) {
+      if (x > 0 && x + p.kitSize[0] > rowMax) { x = 0; z += rowDepth + gap; rowDepth = 0; }
+      p.kit.position.set(x + p.kitSize[0] / 2, p.kitSize[1] / 2, z + p.kitSize[2] / 2);
+      kitBox.union(new T.Box3().setFromCenterAndSize(p.kit.position, V(p.kitSize)));
+      x += p.kitSize[0] + gap;
+      rowDepth = Math.max(rowDepth, p.kitSize[2]);
+    }
+    if (!kitBox.isEmpty()) {
+      const kc = kitBox.getCenter(new T.Vector3());
+      kitGroup.position.set(modelCenter.x - kc.x, 0, modelCenter.z - kc.z);
+      kitBox.translate(kitGroup.position);
+    }
+  }
+
+  // ---- fasteners: one InstancedMesh pair (shaft + head) per type; head at `at`, the shaft runs along `dir`
+  const HEADS = {
+    flat: (d) => new T.CylinderGeometry(d, d * 0.5, d * 0.6, 16).translate(0, -d * 0.2, 0),
+    pan: (d) => new T.CylinderGeometry(d * 0.8, d * 0.95, d * 0.6, 16).translate(0, d * 0.3, 0),
+    hex: (d) => new T.CylinderGeometry(d * 0.95, d * 0.95, d * 0.7, 6).translate(0, d * 0.35, 0),
+  };
+  const types = new Map(), fast = [];
+  data.steps.forEach((s, si) => (s.fasteners || []).forEach((f, fi) => {
+    if (!isVec(f.at)) return; // a counted fastener: in the bill, not drawn
+    if (!isVec(f.dir) || !f.dir.some((v) => v !== 0)) throw new Error(`fastener ${fi + 1} of step ${si + 1} has no direction ("dir")`);
+    const len = f.len > 0 ? f.len : 30, d = f.d > 0 ? f.d : 4, head = Object.hasOwn(HEADS, f.head ?? "") ? f.head : "flat";
+    const key = `${len}|${d}|${head}|${f.color || ""}`;
+    if (!types.has(key)) types.set(key, { len, d, head, base: new T.Color(f.color || "#8f959c"), list: [] });
+    const t = types.get(key), dir = V(f.dir).normalize();
+    const item = { step: si, t, k: t.list.length, home: V(f.at), dir, len, q: new T.Quaternion().setFromUnitVectors(UP, dir.clone().negate()), state: "hidden" };
+    t.list.push(item);
+    fast.push(item);
+  }));
+  for (const t of types.values()) {
+    const mat = new T.MeshLambertMaterial({ color: 0xffffff });
+    t.meshes = [new T.CylinderGeometry(t.d / 2, t.d * 0.3, t.len, 10).translate(0, -t.len / 2, 0), HEADS[t.head](t.d)].map((g) => {
+      const m = new T.InstancedMesh(g, mat, t.list.length);
+      m.castShadow = true;
+      m.frustumCulled = false;
+      for (let k = 0; k < t.list.length; k++) m.setColorAt(k, t.base);
+      scene.add(m);
+      return m;
+    });
+  }
+  // A fastener moves with its host when the parts move apart: the part its shank enters first, just past the head
+  // (installed by its step; the smallest box when parts overlap). With no host it hides while the parts are apart.
+  const volume = (b) => { const s = b.getSize(new T.Vector3()); return s.x * s.y * s.z; };
+  for (const f of fast) {
+    const into = f.home.clone().addScaledVector(f.dir, Math.min(1.5, f.len / 2)), all = parts.filter((p) => p.wb.containsPoint(into));
+    const built = all.filter((p) => (typeof p.step === "number" ? p.step : Infinity) <= f.step);
+    f.host = (built.length ? built : all).sort((a, b) => volume(a.wb) - volume(b.wb))[0] ?? null;
+  }
+  const M4 = new T.Matrix4(), P3 = new T.Vector3(), Q = new T.Quaternion(), SPIN = new T.Quaternion(), ONE = new T.Vector3(1, 1, 1), ZERO = new T.Vector3(0, 0, 0), C = new T.Color();
+  // want: the state asks for it; visible: it is drawn (want, and a host or the parts together)
+  function placeF(f, want, away = 0, spin = 0) {
+    Object.assign(f, { want, away, spin });
+    const visible = want && (Boolean(f.host) || !explode);
+    P3.copy(f.home).addScaledVector(f.dir, -f.len * 1.6 * away);
+    if (f.host) P3.add(f.host.offset);
+    Q.copy(f.q).multiply(SPIN.setFromAxisAngle(UP, spin));
+    M4.compose(P3, Q, visible ? ONE : ZERO);
+    for (const m of f.t.meshes) { m.setMatrixAt(f.k, M4); m.instanceMatrix.needsUpdate = true; }
+    f.visible = visible;
+  }
+  function colorF(f, lit) {
+    C.copy(f.t.base);
+    if (lit) C.lerp(new T.Color(tok.accent), 0.65);
+    for (const m of f.t.meshes) { m.setColorAt(f.k, C); m.instanceColor.needsUpdate = true; }
+  }
+
+  // ---- frame the floor, grid and sun to the scene
+  let grid;
+  {
+    const all = bounds.clone().union(kitBox.isEmpty() ? bounds : kitBox);
+    const c = all.getCenter(new T.Vector3()), s = all.getSize(new T.Vector3());
+    const span = Math.max(200, Math.ceil((Math.max(s.x, s.z) * 2.2) / 100) * 100);
+    floor.scale.set(span * 2, 1, span * 2);
+    floor.position.set(c.x, 0, c.z);
+    grid = new T.GridHelper(span, Math.min(200, span / 100), tok.grid, tok.grid);
+    grid.material.transparent = true;
+    grid.material.opacity = 0.5;
+    grid.position.set(c.x, 0.2, c.z);
+    scene.add(grid);
+    const r = Math.max(1, s.length());
+    sun.position.set(c.x - r * 0.5, r * 1.3, c.z + r * 0.9);
+    sun.target.position.copy(c);
+    Object.assign(sun.shadow.camera, { left: -r, right: r, top: r, bottom: -r, near: 10, far: r * 4 });
+    sun.shadow.camera.updateProjectionMatrix();
+  }
+
+  // ---- tags: one letter per lit part, in HTML over the canvas
+  const tags = new Map();
+  const tag = (p) => {
+    if (!tags.has(p.id)) {
+      const el = document.createElement("span");
+      el.className = "tag";
+      el.textContent = p.label;
+      el.title = p.name;
+      layer.appendChild(el);
+      tags.set(p.id, el);
+    }
+    return tags.get(p.id);
+  };
+  const pins = fast.map(() => { const el = document.createElement("span"); el.className = "pin"; el.hidden = true; layer.appendChild(el); return el; });
+  layer.setAttribute("aria-hidden", "true");
+
+  // ---- state and animations. kind "camera" is dropped when the user takes over; the rest finish at once.
+  let step = hero ? data.steps.length : 0, explode = false, ghost = false, userView = false, framed = false, sized = false;
+  let paused = REDUCED.matches, active = false, tap = null, onScreen = false, running = false, need = true;
+  const anims = [];
+  const now = () => performance.now();
+  const animate = (dur, fn, delay = 0, kind = "part") => {
+    if (REDUCED.matches) { fn(1); wake(); return; } // an instant change still draws a new frame
+    anims.push({ t0: now() + delay, dur, fn, kind });
+    fn(0);
+    wake();
+  };
+  const finish = () => { for (const a of anims.splice(0)) if (a.kind !== "camera") a.fn(1); };
+  const kitPose = () => !hero && data.steps[step]?.pose === "kit";
+  const stepOf = (p) => (typeof p.step === "number" ? p.step : Infinity); // a part no step installs never shows in steps
+  const place = (p) => p.mesh.position.copy(p.center).add(p.offset).add(p.fly);
+  // where "Apart" puts a part: 35% further out from the model centre (nowhere in the kit pose). A part never goes into
+  // a prop that shows: it slides along the face of the prop that it is on (a bracket goes up the wall, not into it),
+  // else it stops short of the prop.
+  const apart = (p) => {
+    const o = new T.Vector3();
+    if (!explode || kitPose()) return o;
+    o.copy(p.center).sub(modelCenter).multiplyScalar(0.35);
+    const hits = (B, t = 1) => p.wb.clone().translate(o.clone().multiplyScalar(t)).intersectsBox(B);
+    for (const pr of props) {
+      const B = pr.box;
+      if (!pr.m.visible || B.isEmpty() || p.wb.intersectsBox(B) || !hits(B)) continue;
+      for (const a of ["x", "y", "z"]) if ((o[a] < 0 && p.wb.min[a] >= B.max[a]) || (o[a] > 0 && p.wb.max[a] <= B.min[a])) o[a] = 0;
+      if (!hits(B)) continue;
+      let lo = 0, hi = 1; // the largest share of the move that keeps the part out of the prop
+      for (let k = 0; k < 8; k++) { const t = (lo + hi) / 2; if (hits(B, t)) hi = t; else lo = t; }
+      o.multiplyScalar(lo);
+    }
+    return o;
+  };
+
+  // states: hidden, ghost, done, current (installed in this step), coat (built before, finished in this step)
+  function paint(p, state) {
+    p.state = state;
+    const lit = state === "current" || state === "coat", see = state === "ghost";
+    p.mat.color.copy(p.base);
+    if (lit) p.mat.color.lerp(new T.Color(tok.accent), 0.22);
+    p.mat.emissive.set(lit ? tok.accent : "#000000").multiplyScalar(lit ? 0.12 : 0);
+    p.mat.transparent = see;
+    p.mat.opacity = see ? 0.14 : 1;
+    p.mat.depthWrite = !see;
+    p.mesh.castShadow = !see; // a ghost (a part still to come) throws no shadow on the wall or the floor
+    p.edge.color.set(lit ? tok.accent : tok.ink);
+    p.edge.opacity = see ? 0.18 : lit ? 1 : 0.55;
+    p.mat.needsUpdate = true;
+  }
+
+  function apply({ fly = true } = {}) {
+    const kit = kitPose(), s = hero ? null : data.steps[step];
+    assembly.visible = !kit;
+    kitGroup.visible = kit;
+    for (const pr of props) pr.m.visible = !kit && (hero ? pr.hero : (s?.props ?? []).includes(pr.id));
+    const focus = new Set(kit ? s?.focus ?? [] : []), coat = new Set(kit ? [] : s?.finish?.parts ?? []);
+    // before the first part goes in (a step that marks the wall), the parts to come show as a ghost, so the view is not empty
+    const auto = !hero && !kit && parts.length > 0 && parts.every((p) => stepOf(p) > step);
+    host.toggleAttribute("data-auto-ghost", auto);
+    // while the view ghosts the parts on its own, "Show finished" shows as pressed and does nothing. In the kit pose, or
+    // with no parts (a repair of an object that is there, all props), "Apart" and "Show finished" have no effect, so
+    // both show as not pressed and do nothing. app.js skips a click on a disabled toggle. The flags stay, so a later step
+    // shows the reader's own choice again. On a step where every part is already in place, "Show finished" stays as it is.
+    const none = parts.length === 0; // a repair with no parts: nothing to move apart or to ghost
+    const gb = host.querySelector("[data-v=ghost]"), eb = host.querySelector("[data-v=explode]");
+    if (gb) { gb.setAttribute("aria-pressed", String(!kit && !none && (ghost || auto))); gb.setAttribute("aria-disabled", String(kit || none || auto)); }
+    if (eb) { eb.setAttribute("aria-pressed", String(!kit && !none && explode)); eb.setAttribute("aria-disabled", String(kit || none)); }
+    tags.forEach((el) => (el.hidden = true));
+    for (const p of parts) {
+      p.fly.set(0, 0, 0);
+      if (kit) {
+        paint(p, focus.has(p.id) ? "current" : "done");
+        if (p.kit) tag(p).hidden = false;
+        continue;
+      }
+      const at = stepOf(p), state = hero ? "done" : at < step ? (coat.has(p.id) ? "coat" : "done") : at === step ? "current" : ghost || auto ? "ghost" : "hidden";
+      p.mesh.visible = state !== "hidden";
+      paint(p, state);
+      place(p);
+      if (state === "current") tag(p).hidden = false;
+    }
+    // parts of this step arrive along a path: step.from, else outward from the model centre and from above
+    const arriving = kit ? [] : parts.filter((p) => p.state === "current");
+    if (fly) arriving.forEach((p, k) => {
+      const away = isVec(s?.from) ? V(s.from) : p.center.clone().sub(modelCenter).setY(0).normalize().multiplyScalar(modelSize * 0.32).add(new T.Vector3(0, modelSize * 0.18, 0));
+      animate(950, (t) => {
+        const e = ease(t), see = e < 1;
+        p.fly.copy(away).multiplyScalar(1 - e);
+        place(p);
+        if (p.mat.transparent !== see) { p.mat.transparent = see; p.mat.needsUpdate = true; }
+        p.mat.opacity = Math.min(1, 0.15 + e * 1.2);
+      }, k * 160);
+    });
+    const landed = arriving.length ? 950 + (arriving.length - 1) * 160 : 0;
+    let order = 0;
+    for (const f of fast) {
+      const state = kit ? "hidden" : hero || f.step < step ? "done" : f.step === step ? "current" : "hidden";
+      f.state = state;
+      colorF(f, state === "current");
+      placeF(f, state !== "hidden");
+      if (state === "current" && fly) {
+        const k = order++;
+        animate(520, (t) => { const e = ease(t); placeF(f, t > 0, 1 - e, 6 * (1 - e)); }, landed + k * 45);
+      }
+    }
+    applyExplode(false);
+    frame({ jump: !fly });
+    wake();
+  }
+
+  // move the parts apart or together; each fastener follows its host part
+  function applyExplode(anim = true) {
+    const moves = parts.map((p) => [p, p.offset.clone(), apart(p)]);
+    const set = (t) => {
+      const e = easeIO(t);
+      for (const [p, from, to] of moves) { p.offset.lerpVectors(from, to, e); place(p); }
+      for (const f of fast) placeF(f, f.want, f.away, f.spin);
+    };
+    anim ? animate(600, set) : set(1);
+  }
+
+  // The camera distance that fits every corner of box b around c, seen along back (target to camera), with the
+  // object inside FIT_X of the half width and FIT_Y of the half height.
+  const FIT_X = 0.9, FIT_Y = 0.8, LIFT = 0.06; // LIFT: the model sits this much (of the half height) above centre
+  function fitDistance(b, c, back) {
+    const right = new T.Vector3().crossVectors(UP, back);
+    if (right.lengthSq() < 1e-9) right.set(1, 0, 0); // straight down
+    right.normalize();
+    const up = new T.Vector3().crossVectors(back, right);
+    const tv = Math.tan((camera.fov * RAD) / 2), th = tv * camera.aspect, q = new T.Vector3();
+    let d = 1;
+    for (let k = 0; k < 8; k++) {
+      q.set(k & 1 ? b.max.x : b.min.x, k & 2 ? b.max.y : b.min.y, k & 4 ? b.max.z : b.min.z).sub(c);
+      const z = q.dot(back);
+      d = Math.max(d, z + Math.abs(q.dot(right)) / (th * FIT_X), z + Math.abs(q.dot(up)) / (tv * FIT_Y));
+    }
+    return { d, up, tv };
+  }
+
+  // ---- camera: the whole model (or the kit) in frame, clear of the hint and the toolbar; closer when a step asks
+  // (view.zoom), but never so close that a lit part of the step goes out of the frame
+  function frame({ force = false, jump = false } = {}) {
+    if (userView && !force) return;
+    const s = hero ? null : data.steps[step], v = s?.view ?? {}, kit = kitPose();
+    // no az given: turn toward the side of this step's screw heads, half way from the front
+    let autoAz = hero ? 32 : 36;
+    const heads = kit ? new T.Vector3() : fast.filter((f) => f.step === step).reduce((a, f) => a.sub(f.dir), new T.Vector3());
+    if (!hero && heads.lengthSq() > 0.25 && Math.hypot(heads.x, heads.z) > 0.5) autoAz = ((Math.atan2(heads.x, heads.z) * 180) / Math.PI) * 0.55;
+    // the kit lies flat, so it is seen from higher up
+    const az = (Number.isFinite(v.az) ? v.az : autoAz) * RAD, el = (Number.isFinite(v.el) ? v.el : kit ? 50 : 22) * RAD, zoom = v.zoom > 0 ? v.zoom : 1;
+    const bx = kit && !kitBox.isEmpty() ? kitBox.clone() : bounds.clone();
+    if (explode && !kit) parts.forEach((p) => bx.union(p.wb.clone().translate(apart(p)))); // "Apart" needs more room
+    const c = bx.getCenter(new T.Vector3());
+    const back = new T.Vector3(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el));
+    const fit = fitDistance(bx, c, back);
+    let dist = fit.d / zoom;
+    const lit = kit ? [] : parts.filter((p) => p.state === "current");
+    if (zoom !== 1 && lit.length) {
+      const fb = new T.Box3();
+      lit.forEach((p) => fb.union(p.wb.clone().translate(apart(p))));
+      c.lerp(fb.getCenter(new T.Vector3()), 1 - 0.15 / zoom);
+      dist = Math.max(dist, fitDistance(fb, c, back).d); // a zoom never cuts off a part of this step
+    }
+    c.addScaledVector(fit.up, -LIFT * dist * fit.tv); // lift the model clear of the toolbar at the bottom of the viewer
+    const pos = back.clone().multiplyScalar(dist).add(c);
+    const p0 = camera.position.clone(), t0 = controls.target.clone();
+    // the first frame at a real size jumps, and so do resizes and moves without animation; the rest glide
+    if (REDUCED.matches || !framed || jump) { camera.position.copy(pos); controls.target.copy(c); framed = sized; wake(); return; }
+    animate(850, (t) => { const e = easeIO(t); camera.position.lerpVectors(p0, pos, e); controls.target.lerpVectors(t0, c, e); }, 0, "camera");
+  }
+
+  const spin = (on) => { controls.autoRotate = hero && on; onSpin?.(controls.autoRotate); wake(); };
+  controls.addEventListener("start", () => { userView = true; finish(); if (controls.autoRotate) spin(false); host.dataset.user = ""; });
+  controls.addEventListener("change", () => wake());
+
+  // keyboard orbit on the focused canvas: arrows turn, + and - zoom
+  function key(e) {
+    if (e.altKey || e.ctrlKey || e.metaKey) return false;
+    if (e.key === "Escape" && active) { setActive(false); return true; }
+    const r = { ArrowLeft: [1, 0], ArrowRight: [-1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
+    const z = e.key === "+" || e.key === "=" ? 0.85 : e.key === "-" || e.key === "_" ? 1 / 0.85 : 0;
+    if (!r && !z) return false;
+    finish();
+    userView = true;
+    host.dataset.user = "";
+    if (controls.autoRotate) spin(false);
+    const sph = new T.Spherical().setFromVector3(camera.position.clone().sub(controls.target));
+    if (r) {
+      sph.theta += r[0] * 10 * RAD;
+      sph.phi = Math.min(controls.maxPolarAngle, Math.max(0.05, sph.phi + r[1] * 7 * RAD));
+    }
+    if (z) sph.radius = Math.min(controls.maxDistance, Math.max(controls.minDistance, sph.radius * z));
+    camera.position.copy(controls.target).add(new T.Vector3().setFromSpherical(sph));
+    camera.lookAt(controls.target);
+    controls.update();
+    wake();
+    return true;
+  }
+
+  // touch: a finger scrolls the page (pan-y) until a tap on the view turns on one-finger orbit; a tap outside ends it
+  const setActive = (on) => { active = on; host.toggleAttribute("data-active", on); };
+  host.addEventListener("pointerdown", (e) => {
+    if (R.owner !== api) return;
+    const touch = e.pointerType === "touch";
+    controls.enabled = !touch || active;
+    tap = touch && !active && e.target === canvas ? { x: e.clientX, y: e.clientY, t: e.timeStamp } : null;
+  }, true);
+  host.addEventListener("pointerup", (e) => {
+    if (tap && Math.hypot(e.clientX - tap.x, e.clientY - tap.y) < 10 && e.timeStamp - tap.t < 500) { setActive(true); controls.enabled = true; }
+    tap = null;
+  }, true);
+  document.addEventListener("pointerdown", (e) => { if (active && !host.contains(e.target)) setActive(false); });
+
+  // ---- loop: render only while something moves, and only in the viewer that owns the canvas
+  function wake() { need = true; if (!running && onScreen && R.owner === api) { running = true; requestAnimationFrame(tick); } }
+  function tick() {
+    if (R.owner !== api || !onScreen) { running = false; return; }
+    const t = now();
+    for (let i = anims.length - 1; i >= 0; i--) {
+      const a = anims[i];
+      if (t < a.t0) continue;
+      const k = Math.min(1, (t - a.t0) / a.dur);
+      a.fn(k);
+      if (k >= 1) anims.splice(i, 1);
+    }
+    const moved = controls.update();
+    if (need || moved || anims.length || controls.autoRotate) { R.r.render(scene, camera); placeTags(); need = false; }
+    if (anims.length || moved || controls.autoRotate) requestAnimationFrame(tick);
+    else running = false;
+  }
+
+  // pins: a ring at each screw head of this step, hidden when a part is in front of it
+  const ray = new T.Raycaster(), v3 = new T.Vector3(), q3 = new T.Vector3(), seen = new T.Vector3();
+  // true when a visible solid other than `own` is between the camera and point q (raycasting ignores .visible: the
+  // list holds only the visible solids)
+  function behind(q, solids, own = null) {
+    const to = q.clone().sub(camera.position), d = to.length();
+    ray.set(camera.position, to.normalize());
+    const hit = ray.intersectObjects(solids, false).find((x) => x.object !== own);
+    return Boolean(hit && hit.distance < d - 3);
+  }
+  function placePins(w, h, solids) {
+    fast.forEach((f, k) => {
+      const el = pins[k];
+      el.hidden = !(!hero && !kitPose() && f.step === step && f.visible);
+      if (el.hidden) return;
+      const head = f.home.clone().addScaledVector(f.dir, -1.5);
+      if (f.host) head.add(f.host.offset);
+      if (behind(head, solids)) { el.hidden = true; return; }
+      v3.copy(head).project(camera);
+      el.style.transform = `translate(${((v3.x + 1) / 2) * w}px, ${((1 - v3.y) / 2) * h}px) translate(-50%, -50%)`;
+    });
+  }
+  // A tag shows while some of its part can be seen: points of the part in its own frame (the centre of its own top
+  // face first, then the centre, near each face, near each corner of a box). inSight gives the index of the first
+  // point that is in the view and that no other solid hides (and copies that point to `seen`), or -1 when there is none.
+  const FACES = [[0, 0.5, 0], [0, 0, 0], [0, 0, 0.45], [0.45, 0, 0], [-0.45, 0, 0], [0, 0, -0.45], [0, -0.45, 0]];
+  const CORNERS = [-0.4, 0.4].flatMap((x) => [-0.4, 0.4].flatMap((y) => [-0.4, 0.4].map((z) => [x, y, z])));
+  const inView = (q) => { v3.copy(q).project(camera); return Math.abs(v3.x) <= 1 && Math.abs(v3.y) <= 1 && v3.z <= 1; };
+  function inSight(p, solids) {
+    const list = p.round ? FACES : [...FACES, ...CORNERS];
+    for (let k = 0; k < list.length; k++) {
+      const s = list[k];
+      p.mesh.localToWorld(q3.set(s[0] * p.size[0], s[1] * p.size[1], s[2] * p.size[2]));
+      if (inView(q3) && !behind(q3, solids, p.mesh)) { seen.copy(q3); return k; }
+    }
+    return -1;
+  }
+  // the area that two tag boxes share
+  const overlap = (a, b) => Math.max(0, Math.min(a.r, b.r) - Math.max(a.l, b.l)) * Math.max(0, Math.min(a.b, b.b) - Math.max(a.t, b.t));
+  function placeTags() {
+    const w = canvas.clientWidth, h = canvas.clientHeight, kit = kitPose(), placed = [];
+    const solids = kit ? [] : [...parts.filter((p) => p.mesh.visible && p.state !== "ghost").map((p) => p.mesh), ...props.filter((pr) => pr.m.visible).map((pr) => pr.m)];
+    placePins(w, h, solids);
+    tags.forEach((el) => (el.style.visibility = ""));
+    // in the order of the parts, so the first parts keep their tags; the kit reads the tag sizes before it moves one
+    const shown = parts.filter((p) => tags.has(p.id) && !tags.get(p.id).hidden);
+    const dims = kit ? shown.map((p) => [tags.get(p.id).offsetWidth, tags.get(p.id).offsetHeight]) : [];
+    shown.forEach((p, n) => {
+      const el = tags.get(p.id), k = kit ? 0 : inSight(p, solids);
+      if (k < 0) { el.style.visibility = "hidden"; return; }
+      // the tag stands on the point that inSight found: the centre top of the part when that can be seen
+      if (kit) { p.kit.getWorldPosition(v3); v3.y += p.kitSize[1] / 2; } else v3.copy(seen);
+      v3.project(camera);
+      if (Math.abs(v3.x) > 1 || Math.abs(v3.y) > 1 || v3.z > 1) { el.style.visibility = "hidden"; return; } // not in the view
+      const x = ((v3.x + 1) / 2) * w, y = ((1 - v3.y) / 2) * h;
+      if (kit) {
+        // the kit shows every part: a tag that covers more than a quarter of its area on a tag before it does not
+        // show, so the tags of a pile of small parts do not cover one another
+        const [tw, th] = dims[n], box = { l: x - tw / 2, r: x + tw / 2, t: y - 1.3 * th, b: y - 0.3 * th };
+        if (placed.some((q) => overlap(q.box, box) > 0.25 * tw * th)) el.style.visibility = "hidden";
+        else placed.push({ box });
+      } else if (placed.some((q) => q.label === p.label && Math.hypot(q.x - x, q.y - y) < 34)) el.style.visibility = "hidden"; // the same letter twice in one spot reads as one tag
+      else placed.push({ label: p.label, x, y });
+      el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -130%)`;
+    });
+  }
+
+  function resize() {
+    const w = box.clientWidth, h = box.clientHeight;
+    if (!w || !h) return;
+    sized = true;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    frame({ jump: true });
+    if (R.owner !== api) return;
+    // setSize clears the canvas: draw again before the browser paints
+    R.r.setSize(w, h, false);
+    controls.update();
+    R.r.render(scene, camera);
+    placeTags();
+    wake();
+  }
+  // take the shared canvas when this viewer comes on screen
+  function claim() {
+    if (R.owner === api) return;
+    if (R.owner) R.owner.release();
+    R.owner = api;
+    box.appendChild(canvas);
+    canvas.setAttribute("aria-label", label);
+    controls.enabled = true;
+    need = true;
+    resize();
+  }
+  new ResizeObserver(resize).observe(box);
+  new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; if (onScreen) { claim(); wake(); } }).observe(host);
+  const retheme = () => {
+    readTokens();
+    grid.material.color.set(tok.grid);
+    for (const pr of props) pr.m.material.color.copy(pr.base).multiplyScalar(tok.prop);
+    finish();
+    apply({ fly: false });
+  };
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", retheme);
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  // live reduced-motion: finish every move at once and stop the turn
+  REDUCED.addEventListener("change", () => { if (!REDUCED.matches) return; finish(); paused = true; spin(false); });
+
+  const clamp = (i) => (Number.isInteger(i) ? Math.max(0, Math.min(data.steps.length - 1, i)) : 0);
+  const api = {
+    get step() { return step; },
+    get spinning() { return controls.autoRotate; },
+    go(i, fly = true) { step = clamp(i); finish(); apply({ fly }); },
+    replay() { finish(); apply({ fly: true }); },
+    explode(on) { explode = on; applyExplode(true); frame(); },
+    ghost(on) { ghost = on; finish(); apply({ fly: false }); },
+    reset() { userView = false; delete host.dataset.user; frame({ force: true }); },
+    spin(on) { paused = !on; spin(on); },
+    label(text) { label = String(text); if (R.owner === api) canvas.setAttribute("aria-label", label); },
+    release() { controls.enabled = false; setActive(false); },
+    key,
+    retheme,
+  };
+  apply({ fly: false });
+  spin(hero && !paused);
+  host.dataset.ready = "";
+  return api;
+}
+return { createViewer };
+})();
+// The guide page: Plan, Shop, Cut list and Build, rendered from the model in #jig-data. It needs no three.js: every
+// tab renders first, then createViewer() (viewer.js, in the same module) loads the 3D. Reader state stays in this browser.
+const root = document.getElementById("jig");
+const D = JSON.parse(document.getElementById("jig-data").textContent);
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+// h`...`: every interpolated value is escaped (numbers too), except h`...` output. null, false and true add nothing.
+class Html { constructor(s) { this.s = s; } toString() { return this.s; } }
+const ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ESC[c]);
+const val = (v) => (v == null || typeof v === "boolean" ? "" : v instanceof Html ? v.s : Array.isArray(v) ? v.map(val).join("") : esc(v));
+const h = (strs, ...vals) => new Html(strs.reduce((o, s, i) => o + s + (i < vals.length ? val(vals[i]) : ""), ""));
+
+// ---------- formats (the same rules as engine/lib/locale.mjs, which the browser cannot import)
+const U = D.meta.units === "in" ? "in" : "mm", CUR = D.meta.currency || "USD";
+const round = (n, d = 0) => { const f = 10 ** d, a = Math.abs(n) * f; return (Math.sign(n) * Math.round(Number.isInteger(a) || a >= 2 ** 49 ? a : a * (1 + 2 * Number.EPSILON))) / f || 0; };
+const gcd = (a, b) => (b ? gcd(b, a % b) : a);
+// "762 mm", "19.1 mm"; "30 1/16 in" (nearest 1/16). unit false: the number only.
+function len(mm, unit = true) {
+  if (typeof mm !== "number" || !Number.isFinite(mm)) return "?";
+  let t = String(round(mm, 1));
+  if (U === "in") {
+    const s = Math.round((Math.abs(mm) / 25.4) * 16), w = Math.floor(s / 16), f = s % 16, g = gcd(f, 16);
+    t = `${mm < 0 && s ? "-" : ""}${[w || !f ? String(w) : "", f ? `${f / g}/${16 / g}` : ""].filter(Boolean).join(" ")}`;
+  }
+  return unit ? `${t} ${U}` : t;
+}
+// The kerf and the trim, as locale.fmtLen(mm, units, { den: 64 }): "3/32 in", or decimal inches off a 1/64 step ("0.02 in").
+function fine(mm) {
+  if (U !== "in" || typeof mm !== "number" || !Number.isFinite(mm)) return len(mm);
+  const v = Math.abs(mm) / 25.4, s = Math.round(v * 64), w = Math.floor(s / 64), f = s % 64, g = gcd(f, 64);
+  if (v > 0 && (!s || Math.abs(v - s / 64) > 0.0005)) return `${mm < 0 ? "-" : ""}${round(v, 3)} in`;
+  return `${mm < 0 && s ? "-" : ""}${[w || !f ? String(w) : "", f ? `${f / g}/${64 / g}` : ""].filter(Boolean).join(" ")} in`;
+}
+// Money decimals come from the fixed table of locale.mjs minorUnits() (tests/page.test.mjs compares the two), not from
+// the browser's ICU data, so the page shows the same amounts as plan.md and the CLI. Other codes give 2.
+const DIGITS = Object.fromEntries([..."AFN ALL BIF CLP COP DJF GNF HUF IDR IQD IRR ISK JPY KMF KPW KRW LAK LBP MGA MMK PKR PYG RWF SLL SOS SYP UGX VND VUV XAF XOF XPF YER".split(" ").map((c) => [c, 0]), ..."BHD JOD KWD LYD OMR TND".split(" ").map((c) => [c, 3])]);
+const DEC = Object.hasOwn(DIGITS, CUR) ? DIGITS[CUR] : 2;
+const MF = (() => { try { return new Intl.NumberFormat("en-US", { style: "currency", currency: CUR, minimumFractionDigits: DEC, maximumFractionDigits: DEC }); } catch { return null; } })();
+const money = (n) => (typeof n !== "number" || !Number.isFinite(n) ? "price?" : MF ? MF.format(round(n, DEC)) : `${CUR} ${round(n, DEC).toFixed(DEC)}`);
+// A unit rate as given (the model does not round it), as locale.fmtRate: the minor unit at least, up to 4 decimals ("$0.045").
+const RD = Math.max(DEC, 4), RF = (() => { try { return new Intl.NumberFormat("en-US", { style: "currency", currency: CUR, minimumFractionDigits: DEC, maximumFractionDigits: RD }); } catch { return null; } })();
+const rate = (n) => (typeof n !== "number" || !Number.isFinite(n) ? "price?" : RF ? RF.format(round(n, RD)) : `${CUR} ${String(round(n, RD)).split(".")[1]?.length >= DEC ? round(n, RD) : round(n, RD).toFixed(DEC)}`);
+// under 10 min to the minute, else to the nearest 5 min: "1 min", "7 min", "1 h 25 min"
+function dur(minutes) {
+  const m = typeof minutes === "number" && Number.isFinite(minutes) && minutes > 0 ? minutes : 0;
+  if (!m) return "0 min";
+  const r = m < 1 ? 1 : m < 10 ? Math.round(m) : Math.round(m / 5) * 5, hh = Math.floor(r / 60), rest = r % 60;
+  return hh ? `${hh} h${rest ? ` ${rest} min` : ""}` : `${r} min`;
+}
+const pct = (r) => `${round((r || 0) * 100, 2)}%`;
+// A tax label inside a sentence, as markdown.mjs taxWord (tests/page.test.mjs compares the two): each capitalised word
+// in lower case ("Sales Tax" reads "sales tax"); a word with more capitals stays ("VAT", "GST/HST", "MwSt"). No
+// lookbehind: Safari before 16.4 cannot parse one, and the whole module would stop.
+const taxWord = (s) => String(s).replace(/(^|[^\p{L}\p{N}])(\p{Lu}\p{Ll}+)(?![\p{L}\p{N}])/gu, (m, a, w) => a + w.toLowerCase());
+// "foot" and "feet" keep the case of the word ("Foot" -> "Feet"), as util.mjs.
+const many = (w) => (/foot$/i.test(w) ? w.slice(0, -3) + (w.slice(-3) === "OOT" ? "EET" : "eet") : /feet$/i.test(w) ? w : /(ss|x|z|ch|sh)$/i.test(w) ? `${w}es` : /s$/i.test(w) ? w : /[^aeiou]y$/i.test(w) ? `${w.slice(0, -1)}ies` : `${w}s`);
+const one = (w) => (/feet$/i.test(w) ? w.slice(0, -3) + (w.slice(-3) === "EET" ? "OOT" : "oot") : /[^aeiou]ies$/i.test(w) ? `${w.slice(0, -3)}y` : /(ss|x|z|ch|sh)es$/i.test(w) ? w.slice(0, -2) : /(ss|us)$/i.test(w) ? w : /s$/i.test(w) ? w.slice(0, -1) : w);
+// plural: the rule of engine/lib/util.mjs plural() (tests/page.test.mjs compares the two). A word of one or two letters
+// ("L"), an abbreviation ("gal", "pcs.") or a word with no vowel ("qt", "m²") stays as it is. A unit of more words
+// changes the noun before "of" ("2 pairs of gloves"), else its last word ("16 shelf pins", "3 board feet"), unless
+// that word stays ("5.5 cu ft", "2 fl oz"). A note in brackets at the end stays as it is: "3 tins (small)".
+const ABBREV = new Set("ea pc pcs in ft yd mi mm cm m km ml cl dl l g kg mg oz lb lbs gal qt pt fl cu sq tsp tbsp doz".split(" "));
+const fixed = (x) => /^[a-z]{0,2}$/i.test(x) || /\.$/.test(x) || ABBREV.has(x.toLowerCase()) || !/[aeiouy]/i.test(x);
+function plural(n, word = "") {
+  const w = String(word ?? "").trim(), form = n === 1 ? one : many;
+  const br = /^(.*?\S)(\s*\([^()]*\))$/.exec(w);
+  if (br) return `${plural(n, br[1])}${br[2]}`;
+  if (!/\s/.test(w)) return fixed(w) ? `${n} ${w}`.trim() : `${n} ${form(w)}`;
+  const of = /^(\S+)( of .+)$/i.exec(w);
+  if (of) return `${n} ${fixed(of[1]) ? of[1] : form(of[1])}${of[2]}`;
+  const words = w.split(/\s+/), last = words[words.length - 1];
+  return fixed(last) ? `${n} ${w}` : `${n} ${[...words.slice(0, -1), form(last)].join(" ")}`;
+}
+const group = (list, key) => { const m = new Map(); for (const x of list) { const k = key(x); if (!m.has(k)) m.set(k, []); m.get(k).push(x); } return [...m]; };
+const isVec = (v) => Array.isArray(v) && v.length === 3 && v.every((x) => typeof x === "number" && Number.isFinite(x));
+const num = (v) => round(v, 2);
+// An amount a step uses, as util.mjs amount(): 2 decimals, but a small positive amount keeps 2 significant digits (0.004 L).
+const amount = (n) => (n > 0 && n < 0.01 ? Number(n.toPrecision(2)) : round(n, 2));
+// A BOQ row bought by the piece ("each", or the default unit "piece") shows a plain count, as markdown.mjs: "5", "5 × Hook".
+const byPiece = (r) => r.unit === "each" || r.unit === "piece";
+
+// ---------- model lookups and reader state
+const N = D.steps.length, T = D.totals;
+const TOOL = new Map(D.tools.map((t) => [t.id, t])), ROW = new Map(D.boq.map((r) => [r.key, r]));
+const KIT = new Set(D.boq.filter((r) => r.get === "kit").map((r) => r.id)); // materials that come in the kit (included)
+const mat = (id) => (D.materials && Object.hasOwn(D.materials, id) ? D.materials[id] : { name: id, spec: "", unit: "" });
+const FIRST = new Map(); // technique id -> first step that teaches it
+D.steps.forEach((s, i) => (s.teach ?? []).forEach((id) => FIRST.has(id) || FIRST.set(id, i)));
+const LEVELS = [["new", "First time"], ["some", "Some experience"], ["pro", "Experienced"]], LV = LEVELS.map((l) => l[0]);
+const NAMES = { plan: "Plan", shop: "Shop", cut: "Cut list", build: "Build" };
+let TABS = String(root.dataset.tabs || "").split(",").filter((t) => Object.hasOwn(NAMES, t));
+if (!TABS.length) TABS = Object.keys(NAMES);
+const KEY = `jig:${D.meta.id}`;
+const dict = (v) => Object.assign(Object.create(null), v && typeof v === "object" && !Array.isArray(v) ? v : {});
+const saved = (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } })();
+const S = {
+  level: LV.includes(saved.level) ? saved.level : LV.includes(D.meta.level) ? D.meta.level : "some",
+  tab: TABS.includes(saved.tab) ? saved.tab : TABS[0], step: Number.isInteger(saved.step) ? saved.step : 0, done: dict(saved.done), bought: dict(saved.bought),
+};
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ level: S.level, tab: S.tab, step: S.step, done: S.done, bought: S.bought })); } catch {} };
+const clamp = (i) => (Number.isInteger(i) && N ? Math.max(0, Math.min(N - 1, i)) : 0);
+const work = (m) => round((m || 0) * (D.plan.levels?.[S.level] ?? 1), 2);
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)");
+
+// Hash routes: #plan, #shop, #cut, #build/<n>. A bad step number falls back to step 1.
+function route() {
+  let t = "", n;
+  try { [t = "", n] = decodeURIComponent(location.hash.slice(1)).split("/"); } catch {}
+  return { tab: TABS.includes(t) ? t : null, step: t === "build" && n !== undefined ? (/^\d{1,6}$/.test(n) ? Number(n) - 1 : 0) : null };
+}
+
+// Overall size from the part boxes (rotated about their centres, x then y then z). Wall fixings (role anchor) are
+// not part of the object's size unless every part is one. A repair with no placed part measures the object that is
+// there: the props of the Plan view (hero), as the 3D view frames them.
+function sizeOf() {
+  const lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity], R = Math.PI / 180;
+  const body = D.parts.filter((p) => p.role !== "anchor"), placed = (list) => list.filter((p) => isVec(p.at) && isVec(p.size));
+  let list = placed(body.length ? body : D.parts);
+  if (!list.length) list = placed(Object.values(D.props ?? {}).filter((p) => p && p.hero !== false));
+  for (const p of list) {
+    const hs = p.size.map((s) => s / 2), c = p.at.map((a, i) => a + hs[i]);
+    let e = hs;
+    if (isVec(p.rotate) && p.rotate.some((d) => d % 360)) {
+      const [cx, sx, cy, sy, cz, sz] = [0, 0, 1, 1, 2, 2].map((a, i) => (i % 2 ? Math.sin : Math.cos)(p.rotate[a] * R));
+      e = [[cz * cy, cz * sy * sx - sz * cx, cz * sy * cx + sz * sx], [sz * cy, sz * sy * sx + cz * cx, sz * sy * cx - cz * sx], [-sy, cy * sx, cy * cx]]
+        .map((row) => row.reduce((a, r, j) => a + Math.abs(r) * hs[j], 0));
+    }
+    c.forEach((v, i) => { lo[i] = Math.min(lo[i], v - e[i]); hi[i] = Math.max(hi[i], v + e[i]); });
+  }
+  return lo[0] === Infinity ? null : hi.map((v, i) => v - lo[i]);
+}
+
+// ---------- shared pieces
+const warnBox = (w) => h`<div class="alert ${w.type === "caution" ? "caution" : "warning"}" role="note"><b>${w.type === "caution" ? "CAUTION" : "WARNING"}</b>${w.text}</div>`;
+// The WARNING and CAUTION blocks of a step: its own, then those of the cards it teaches (every level sees them).
+function warningsOf(s) {
+  const seen = new Set();
+  return [...(s.warn ?? []), ...(s.teach ?? []).flatMap((id) => D.techniques[id]?.warn ?? [])].filter((w) => w?.text && !seen.has(w.type + w.text) && seen.add(w.type + w.text));
+}
+const est = (on) => on && h`<span class="est" title="Estimated price">est</span>`;
+const stepChip = (i) => h`<button type="button" data-go="${i}" aria-label="Step ${i + 1}: ${D.steps[i].title}" title="${D.steps[i].title}">${i + 1}</button>`;
+const fastCount = (s) => s.fasteners.reduce((a, f) => a + (f.count ?? 1), 0);
+const viewerBox = (mode) => h`<div class="viewer" data-viewer="${mode}"><div data-canvas></div><div data-tags></div>
+<p class="hint" aria-hidden="true"><span class="h-mouse">Drag to turn. Scroll to zoom.</span><span class="h-touch">Tap the view to turn it.</span><span class="h-on">Drag to turn. Tap outside to scroll.</span></p>
+<div class="vbar"><div class="vtools">${mode === "hero" ? h`<button type="button" data-v="spin" aria-label="Pause the turn">Pause</button>`
+  : h`<button type="button" data-v="replay">Replay</button><button type="button" data-v="explode" aria-pressed="false">Apart</button><button type="button" data-v="ghost" aria-pressed="false">Show finished</button><button type="button" data-v="reset">Reset view</button>`}</div>${mode === "steps" && h`<div class="readout" data-readout aria-hidden="true"></div>`}</div></div>`;
+
+// ---------- Plan
+function planShell() {
+  const size = sizeOf();
+  return h`<div class="grid2"><div>${viewerBox("hero")}<div class="fig"><span>Fig 1 · ${D.meta.title}, finished</span>${size && h`<span>${size.map((v) => len(v, false)).join(" × ")} ${U} (W × H × D)</span>`}</div></div><div class="stack" data-fill="plan"></div></div>`;
+}
+function planText() {
+  const ppe = D.tools.filter((t) => t.ppe), get = D.tools.filter((t) => !t.have && !t.ppe), have = D.tools.filter((t) => t.have && !t.ppe);
+  const borrow = get.filter((t) => t.get === "borrow").length, cut = D.parts.filter((p) => p.kind !== "each").length;
+  const extra = [`${pct(T.contingencyRate)} spare`, T.taxRate > 0 && !T.taxIncluded && taxWord(T.taxLabel || "tax")].filter(Boolean).join(" and ");
+  const build = TABS.includes("build") && N > 0, handoffs = D.safety?.handoffs ?? [], notes = D.safety?.notes ?? [];
+  // a tool shows its count when it is more than 1 ("2 × Bar clamp"), as plan.md and the Shop tab
+  const count = (t) => (t.qty > 1 ? `${t.qty} × ` : "");
+  return h`
+  <div class="stats">
+    <div><b>${dur(work(D.plan.active))}</b><span>work time</span></div>
+    <div><b>${dur(D.plan.wait)}</b><span>wait time (glue, finish)</span></div>
+    <div><b>${money(T.total).replace(/\s/g, " ")}</b><span>total with ${extra}${T.unknownPrices > 0 ? `, ${plural(T.unknownPrices, "price")} unknown` : ""}</span></div>
+    <div><b>${cut}</b><span>parts to cut</span></div>
+    <div><b>${N}</b><span>steps</span></div>
+    <div><b>${get.length - borrow} + ${borrow}</b><span>tools to buy + borrow</span></div>
+  </div>
+  ${D.plan.phases.length > 0 && h`<div class="card"><h3>The plan</h3><div class="phases">${D.plan.phases.map((p) => h`<div class="phase" style="flex:${Math.max(p.minutes, 20)} 1 ${build ? p.steps.length * 32 - 4 : 0}px">
+    <div class="bar"></div><div class="nm">${p.name}</div><div class="tm">${dur(work(p.minutes))}${p.wait > 0 ? ` + ${dur(p.wait)} wait` : ""}</div>
+    ${build && h`<div class="chips">${p.steps.map(stepChip)}</div>`}</div>`)}</div></div>`}
+  <div class="card">
+    <h3>Before you start</h3>
+    <ul class="plain">
+      ${ppe.length > 0 && h`<li><span class="pill ppe">Safety</span><span>${ppe.map((t) => `${count(t)}${t.name}`).join(", ")}</span></li>`}
+      ${get.length > 0 && h`<li><span class="pill">Get</span><span>${get.map((t) => `${count(t)}${t.name}${t.get === "borrow" ? " (borrow)" : t.get === "rent" ? " (rent)" : ""}`).join(", ")}</span></li>`}
+      ${have.length > 0 && h`<li><span class="pill">Have</span><span>${have.map((t) => `${count(t)}${t.name}`).join(", ")}</span></li>`}
+    </ul>
+    ${notes.length > 0 && h`<ul class="notes">${notes.map((n) => h`<li>${n}</li>`)}</ul>`}
+    ${handoffs.length > 0 && h`<div class="alert caution" role="note"><b>HAND-OFF</b>Get a professional for this work:<ul class="notes">${handoffs.map((x) => h`<li><strong>${x.name ?? x.topic}</strong>: ${x.text}</li>`)}</ul></div>`}
+    <div class="nav">${TABS.includes("shop") && h`<button type="button" data-tab-go="shop">What to buy</button>`}${build && h`<button type="button" class="primary" data-go="0">Start step 1 →</button>`}</div>
+  </div>`;
+}
+
+// ---------- Shop: trips first, then the full bill of quantities
+function shopText() {
+  const anyEst = D.boq.some((r) => r.est), steps = N > 0;
+  const lede = [`Buy in this order. The step number shows when you need each item.`, `Prices in ${CUR}${D.meta.pricesAsOf ? ` as of ${D.meta.pricesAsOf}` : ""}.`,
+    D.meta.priceNote, anyEst && "A rate marked est is an estimate."].filter(Boolean).join(" ");
+  const trips = D.purchase.map((t, ti) => {
+    const borrow = t.store === "_borrow", site = (() => { try { return /^https?:\/\//i.test(t.url ?? "") ? new URL(t.url).hostname : ""; } catch { return ""; } })();
+    const when = t.orderBy && (t.online ? `Order by ${t.orderBy}.` : `Get these by ${t.orderBy}.`);
+    const items = t.items.map((k) => ROW.get(k)).filter(Boolean).map((r) => {
+      // a borrowed tool shows its count when it is more than 1 ("2 × Bar clamp"); a rented one shows it in the small line
+      const rent = r.get === "rent", lead = rent ? "" : borrow ? (r.qty > 1 ? `${r.qty} × ` : "") : `${r.qty ?? "?"} × `;
+      const small = [rent ? r.need : "", r.spec, borrow || rent || byPiece(r) ? "" : r.unit].filter(Boolean).join(" · ");
+      return h`<label><input type="checkbox" data-buy="${r.key}"${S.bought[r.key] ? h` checked` : ""}>
+        <span class="it">${lead}${r.name}${small && h`<small>${small}</small>`}</span>
+        <span class="n">${!borrow && h`${money(r.amount)}${est(r.est)}<br>`}${steps && h`<span class="pill">step ${r.first + 1}</span>`}</span></label>`;
+    });
+    return h`<div class="card trip">
+      <h3><span>${ti + 1}. ${t.name}</span><span class="eyebrow">${borrow ? "ask" : t.online ? (t.lead > 0 ? `delivery in ${plural(t.lead, "day")}` : "online") : "trip"}</span></h3>
+      ${(when || t.note) && h`<p class="note">${[when, t.note].filter(Boolean).join(" ")}</p>`}
+      ${site && h`<p class="note"><a href="${t.url}" target="_blank" rel="noopener noreferrer">${site}</a></p>`}
+      ${items}
+      ${!borrow && h`<div class="sum"><span>Subtotal</span><span>${money(t.subtotal)}</span></div>`}
+    </div>`;
+  });
+  let grp = null;
+  const body = D.boq.map((r) => {
+    const head = r.group !== grp && h`<tr class="grp"><td colspan="6">${(grp = r.group)}</td></tr>`;
+    const kit = r.get === "kit", borrow = r.get === "borrow";
+    const buy = kit ? "in the kit" : borrow ? "borrow" : byPiece(r) ? `${r.qty ?? "?"}` : `${r.qty ?? "?"} × ${r.unit}`;
+    // data-long: a word of 20 letters or more, which may break in print (page.css); on screen fitBoq() decides
+    const long = /\S{20,}/.test(`${r.name} ${r.spec ?? ""}`);
+    return h`${head}<tr><td><code class="c">${r.code}</code></td><td${long ? h` data-long` : ""}>${r.name}${r.spec && h`<br><small>${r.spec}</small>`}</td><td data-l="Need">${r.need}</td><td class="n" data-l="Buy">${buy}</td>
+      <td class="n">${kit || borrow ? "-" : h`${rate(r.rate)}${est(r.est)}`}</td><td class="n">${kit ? "included" : borrow ? "-" : money(r.amount)}</td></tr>`;
+  });
+  const kit = D.boq.filter((r) => r.get === "kit").map((r) => r.name), notes = D.boq.filter((r) => r.note);
+  const unknown = T.unknownPrices > 0 && `${plural(T.unknownPrices, "row")} ${T.unknownPrices === 1 ? "has" : "have"} no price (price?). The total does not include ${T.unknownPrices === 1 ? "it" : "them"}.`;
+  // tax that the prices include is not added again, so its amount reads "includes £76.84" (as boqMd), not as a sum. That
+  // cell may wrap after "includes", so it does not make the Amount column wider than the amounts.
+  const tax = T.taxRate > 0 && h`<tr><td colspan="5">${T.taxLabel || "Tax"} (${pct(T.taxRate)}${T.taxIncluded ? ", included in the prices" : ""})</td>${T.taxIncluded ? h`<td class="n inc">includes ${money(T.tax)}</td>` : h`<td class="n">${money(T.tax)}</td>`}</tr>`;
+  return h`<div class="stack">
+    <div><div class="eyebrow">Purchase plan · in order</div><p class="lede">${lede}</p></div>
+    ${D.purchase.length ? h`<div class="trips">${trips}</div>` : h`<p class="empty">Nothing to buy.</p>`}
+    ${D.boq.length > 0 && h`<div class="card">
+      <h2>Bill of quantities</h2>
+      <p class="lede sm">The guide calculates each quantity from the parts, the fasteners in the steps${T.area > 0 ? ` and the finished area (${T.areaDisplay}, an upper bound)` : ""}. It rounds each quantity up to full packs.</p>
+      <div class="scroll"><table class="boq">
+        <thead><tr><th>Code</th><th>Item</th><th>Need</th><th class="n">Buy</th><th class="n">Rate</th><th class="n">Amount</th></tr></thead>
+        <tbody>${body}</tbody>
+        <tfoot><tr><td colspan="5">Subtotal</td><td class="n">${money(T.subtotal)}</td></tr>
+        <tr><td colspan="5">Contingency for price changes and errors (${pct(T.contingencyRate)})</td><td class="n">${money(T.contingency)}</td></tr>
+        ${tax}<tr class="total"><td colspan="5">Total budget</td><td class="n">${money(T.total)}</td></tr></tfoot>
+      </table></div>
+      ${(unknown || kit.length > 0 || notes.length > 0) && h`<ul class="notes">${unknown && h`<li>${unknown}</li>`}${kit.length > 0 && h`<li>In the kit, not bought: ${kit.join(", ")}.</li>`}${notes.map((r) => h`<li>${r.code}: ${r.note}</li>`)}</ul>`}
+    </div>`}
+  </div>`;
+}
+
+// ---------- Cut list: each board and sheet to scale, filled with a light tint of the material colour
+const tint = (hex) => {
+  const m = /^#([0-9a-f]{6})$/i.exec(hex ?? "") ?? [null, "d9b88a"], v = parseInt(m[1], 16);
+  return `#${[16, 8, 0].map((s) => Math.round(((v >> s) & 255) * 0.45 + 255 * 0.55).toString(16).padStart(2, "0")).join("")}`;
+};
+// A piece with no letter in its drawing is named in one line under the board or sheet: "Too small to show a letter:
+// 2 × F (964 × 70 mm)." So the tab names every piece, on a phone too.
+const unlettered = (list) => list.length > 0 && h`<p class="note">Too small to show a letter: ${group(list, (x) => `${x.label}\n${x.size}`)
+  .map(([, g]) => `${g.length > 1 ? `${g.length} × ` : ""}${g[0].label} (${g[0].size})`).join(", ")}.</p>`;
+function cutText() {
+  const W = 1000, kerf = D.meta.kerf, trim = D.meta.trim;
+  // two materials with one name ("Birch plywood", 18 mm and 6 mm): the heading adds the spec, so each drawing has its own
+  const heading = (c) => { const spec = D.cuts.filter((x) => x.name === c.name).length > 1 ? mat(c.material).spec : ""; return h`<h3>${c.name}${spec ? `, ${spec}` : ""}</h3>`; };
+  const drawings = D.cuts.map((c) => {
+    const fill = tint(c.color);
+    // A board is an HTML bar, so its labels keep their size on a phone. A label shows only when it fits at 330 px.
+    if (c.kind === "linear") return h`${heading(c)}${c.boards.map((b, bi) => {
+      const L = b.stock.length, fits = (f, s) => f * 330 >= String(s).length * 7.5 + 6, at = (v) => `${round((v / L) * 100, 3)}%`, small = [];
+      const segs = b.cuts.map((x) => {
+        const f = x.len / L, label = len(x.len, false);
+        if (!fits(f, x.label)) small.push({ label: x.label, size: len(x.len) });
+        return h`<span class="seg" style="left:${at(x.at)};width:${at(x.len)};background:${fill}" title="${x.label} (${x.id}): ${len(x.len)}">${fits(f, x.label) && h`<b>${x.label}</b>`}${fits(f, label) && h`<small>${label}</small>`}</span>`;
+      });
+      return h`<div class="board"><div class="t"><span>Board ${bi + 1} of ${c.boards.length} · buy ${len(L)} · ${money(b.stock.price)}</span><span>waste ${len(b.waste)}</span></div>
+        <div class="bar" role="img" aria-label="Board ${bi + 1}: ${b.cuts.map((x) => `${x.label} ${len(x.len)}`).join(", ")}">${segs}</div>${unlettered(small)}</div>`;
+    })}`;
+    return h`${heading(c)}${c.sheets.map((s, si) => {
+      const k = W / s.stock.w, H = num(s.stock.h * k), small = [];
+      const segs = s.cuts.map((x) => {
+        const label = `${len(x.w, false)} × ${len(x.h, false)}`, cw = x.w * k, ch = x.h * k, cx = x.x * k + cw / 2, cy = x.y * k + ch / 2;
+        // the letter fits the piece (52 units at most, 26 at least): across it, or up a tall piece when that gives a
+        // larger letter. With room for the size too, the letter stands above the size.
+        const fit = (a, b) => Math.min(52, 0.8 * b, (a - 6) / (0.62 * String(x.label).length)), flat = fit(cw, ch), up = fit(ch, cw);
+        const turn = ch > cw && up > flat, fs = turn ? up : flat, dim = !turn && fs >= 52 && cw >= label.length * 24 + 10 && ch >= 110;
+        if (fs < 26) small.push({ label: x.label, size: `${len(x.w, false)} × ${len(x.h)}` });
+        const letter = dim ? h`<text x="${num(cx)}" y="${num(cy)}" text-anchor="middle">${x.label}</text>`
+          : fs >= 26 && h`<text x="${num(cx)}" y="${num(cy)}" text-anchor="middle" dominant-baseline="central" style="font-size:${num(fs)}px"${turn ? h` transform="rotate(-90 ${num(cx)} ${num(cy)})"` : ""}>${x.label}</text>`;
+        return h`<rect class="wood" fill="${fill}" x="${num(x.x * k)}" y="${num(x.y * k)}" width="${num(cw)}" height="${num(ch)}"><title>${x.label} (${x.id}): ${len(x.w, false)} × ${len(x.h)}</title></rect>${letter}${dim && h`<text class="dim" x="${num(cx)}" y="${num(cy + 46)}" text-anchor="middle">${label}</text>`}`;
+      });
+      return h`<div class="board"><div class="t"><span>Sheet ${si + 1} of ${c.sheets.length} · buy ${len(s.stock.w, false)} × ${len(s.stock.h, false)} ${U} · ${money(s.stock.price)}</span></div>
+        <svg class="sheet" viewBox="-1 -1 ${W + 2} ${num(H + 2)}" role="img" aria-label="Sheet ${si + 1}: ${s.cuts.map((x) => `${x.label} ${len(x.w, false)} × ${len(x.h)}`).join(", ")}"><rect class="waste" width="${W}" height="${H}"/><rect class="stock" width="${W}" height="${H}"/>${segs}</svg>${unlettered(small)}</div>`;
+    })}`;
+  });
+  // A cut size wraps only after a "×" on a phone: a mixed fraction ("35 5/16") keeps a no-break space.
+  const size = (p) => (p.cut ? (p.cut.length !== undefined ? [p.cut.length, p.cut.width, p.cut.thick] : [p.cut.a, p.cut.b, p.cut.thick]).map((v) => len(v, false).replace(/ /g, "\u00a0")).join("\u00a0× ")
+    : p.kind === "each" ? (KIT.has(p.material) ? "in the kit" : "bought") : "?");
+  const rows = group(D.parts, (p) => p.label).map(([label, list]) => h`<tr><td><span class="pill part"><b>${label}</b></span></td><td>${list[0].name}<small class="pm">${list[0].materialName}</small></td><td class="n">${list.length}</td><td class="n">${size(list[0])}</td><td class="pmat">${list[0].materialName}</td></tr>`);
+  return h`<svg class="defs" aria-hidden="true" focusable="false"><defs><pattern id="jig-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--faint)"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--line)" stroke-width="2"/></pattern></defs></svg>
+  <div class="grid2"><div class="card cutplan"><h2>Cut plan</h2>
+    <p class="lede sm">Each saw cut removes ${fine(kerf)}. The plan includes it.${trim > 0 ? ` Cut ${fine(trim)} from the start of each board to square the end.` : ""} Cut the longest parts first.</p>
+    ${D.cuts.length ? drawings : h`<p class="empty">Nothing to cut.</p>`}</div>
+    <div class="card"><h2>Parts</h2><div class="scroll"><table class="parts"><thead><tr><th>Part</th><th>Name</th><th class="n">Qty</th><th class="n">Cut size (${U})</th><th class="pmat">Material</th></tr></thead><tbody>${rows}</tbody></table></div></div></div>`;
+}
+
+// ---------- Build: one step card (also used for the printed list)
+function stepCard(i, { print = false } = {}) {
+  const s = D.steps[i];
+  const parts = group(D.parts.filter((p) => p.step === i), (p) => p.label);
+  const fast = group(s.fasteners, (f) => f.material);
+  const uses = Object.entries(s.uses ?? {});
+  const time = (s.minutes > 0 || s.wait > 0) && `${s.minutes > 0 ? dur(work(s.minutes)) : ""}${s.wait > 0 ? `${s.minutes > 0 ? " + " : ""}${dur(s.wait)} wait` : ""}`;
+  const tools = (s.tools ?? []).map((id) => TOOL.get(id) ?? { name: id });
+  const cards = (s.teach ?? []).filter((id) => D.techniques && Object.hasOwn(D.techniques, id)).map((id) => {
+    const c = D.techniques[id], first = FIRST.get(id) === i, open = first && (print || S.level === "new");
+    return h`<details class="tech"${open ? h` open` : ""}><summary>${c.name}${!first && h`<span class="see">see step ${FIRST.get(id) + 1}</span>`}</summary><div class="in">
+      <ol>${c.do.map((d) => h`<li>${d}</li>`)}</ol>${c.tools?.length > 0 && h`<p class="tl">Tools: ${c.tools.join(", ")}</p>`}${c.why && h`<p class="why"><b>Why</b>${c.why}</p>`}</div></details>`;
+  });
+  return h`
+    <div class="eyebrow">Step ${i + 1} of ${N} · ${s.phase || "Build"}</div>
+    ${print ? h`<h2>${i + 1}. ${s.title}</h2>` : h`<h2 id="jig-step-title" tabindex="-1">${s.title}</h2>`}
+    <div class="meta">${time && h`<span class="pill">${time}</span>`}
+      ${parts.map(([label, list]) => h`<span class="pill part"><b>${label}</b> ${list.length > 1 ? `${list.length} × ` : ""}${list[0].name}</span>`)}
+      ${fast.map(([id, list]) => h`<span class="pill">${list.reduce((a, f) => a + (f.count ?? 1), 0)} × ${mat(id).name}${mat(id).spec ? `, ${mat(id).spec}` : ""}</span>`)}
+      ${uses.map(([id, q]) => h`<span class="pill">${mat(id).unit && !byPiece(mat(id)) ? plural(amount(q), mat(id).unit) : `${amount(q)} ×`} ${mat(id).name}${mat(id).spec ? `, ${mat(id).spec}` : ""}</span>`)}
+      ${s.finish && h`<span class="pill">Finish: ${mat(s.finish.material).name}${s.finish.coats > 0 ? `, ${plural(s.finish.coats, "coat")}` : ""}</span>`}</div>
+    ${tools.length > 0 && h`<div class="meta">${tools.map((t) => h`<span class="pill${t.ppe ? " ppe" : ""}">${t.name}</span>`)}</div>`}
+    ${warningsOf(s).map(warnBox)}
+    ${(s.do ?? []).length > 0 && h`<ol class="do">${s.do.map((d) => (typeof d === "string" ? h`<li>${d}</li>` : h`<li${d.new ? h` class="new only-new"` : ""}>${d.new && h`<span class="sr-only">First time: </span>`}${d.t}</li>`))}</ol>`}
+    ${cards}
+    ${s.check && h`<label class="check"><input type="checkbox"${print ? "" : h` data-done="${s.id}"`}${!print && S.done[s.id] ? h` checked` : ""}><span><b>Check.</b> ${s.check}</span></label>`}
+    ${s.why && h`<p class="why only-new"><b>Why</b>${s.why}</p>`}
+    ${s.tip && h`<p class="tip not-pro"><b>Tip</b>${s.tip}</p>`}`;
+}
+function buildShell() {
+  if (!N) return h`<p class="empty">This guide has no steps.</p>`;
+  let phase = null;
+  const rail = D.steps.map((s, i) => { const sep = i > 0 && s.phase !== phase; phase = s.phase; return h`${sep && h`<span class="sep" aria-hidden="true"></span>`}${stepChip(i)}`; });
+  return h`<nav class="rail" aria-label="Steps">${rail}</nav>
+  <div class="build"><div class="stage">${viewerBox("steps")}<p class="vnote" data-vnote aria-hidden="true" hidden></p></div><article class="card step" aria-labelledby="jig-step-title" data-step></article></div>
+  <section class="print-only" data-print></section>`;
+}
+const readout = (i) => {
+  const s = D.steps[i], k = D.parts.filter((p) => p.step === i).length, n = fastCount(s), coat = s.finish?.parts?.length ?? 0;
+  if (s.pose === "kit") return "parts on the floor";
+  if (!k && !n && coat) return `finish on ${plural(coat, "part")}`;
+  // a step that only shows props (the wall, the ground): name them, not "0 parts · 0 fasteners". A label that comes
+  // more than once shows its count ("2 × Front leg"), and after 3 labels the line gives only the count of the rest.
+  if (!k && !n) {
+    const c = new Map();
+    for (const id of s.props ?? []) { const l = (D.props && Object.hasOwn(D.props, id) && D.props[id].label) || id; c.set(l, (c.get(l) ?? 0) + 1); }
+    const names = [...c].map(([l, m]) => (m > 1 ? `${m} × ${l}` : l));
+    const list = names.length > 3 ? `${names.slice(0, 2).join(", ")} and ${names.length - 2} more` : names.join(", ");
+    return list ? `no new parts · ${list}` : "no new parts";
+  }
+  return `${plural(k, "part")} · ${plural(n, "fastener")}`;
+};
+const KEYS = "Use the arrow keys to turn it. Use + and - to zoom.";
+// step view.note: a note on the 3D view only ("The picture shows the cube upright."), at every level. It is under the
+// view and in the canvas label, never in the step card, so print, the no-script copy and plan.md do not show it. The
+// line under the view has aria-hidden, so a screen reader reads the note one time, in the label.
+const viewNote = (i) => (typeof D.steps[i].view?.note === "string" ? D.steps[i].view.note.trim() : "");
+const stepLabel = (i) => `3D view of step ${i + 1} of ${N}: ${D.steps[i].title}. ${D.steps[i].pose === "kit" ? "The cut parts lie on the floor." : `${readout(i).replace(" · ", ", ").replace(/^./, (c) => c.toUpperCase())}.`} ${viewNote(i) ? `${viewNote(i)} ` : ""}${KEYS}`;
+
+// ---------- mount
+const single = TABS.length === 1, levels = TABS.includes("plan") || TABS.includes("build");
+const SHELL = { plan: planShell, shop: () => h`<div data-fill="shop"></div>`, cut: () => h`<div data-fill="cut"></div>`, build: buildShell };
+root.toggleAttribute("data-single", single);
+root.innerHTML = String(h`
+<header class="top"><div><div class="eyebrow">DIY guide · ${plural(D.parts.length, "part")} · ${plural(N, "step")}</div><h1>${D.meta.title}</h1>${D.meta.summary && h`<p class="lede">${D.meta.summary}</p>`}</div>
+${levels && h`<div class="level" role="group" aria-label="Your experience"><span class="eyebrow" aria-hidden="true">Your experience</span>${LEVELS.map(([k, n]) => h`<button type="button" data-level="${k}" aria-pressed="false">${n}</button>`)}</div>`}</header>
+${!single && h`<div class="tabs" role="tablist" aria-label="Guide sections">${TABS.map((t) => h`<button type="button" role="tab" id="jig-tab-${t}" aria-controls="jig-panel-${t}" aria-selected="false" tabindex="-1" data-tab="${t}">${NAMES[t]}</button>`)}</div>`}
+${TABS.map((t) => h`<section id="jig-panel-${t}" data-panel="${t}" ${single ? h`aria-label="${NAMES[t]}"` : h`role="tabpanel" aria-labelledby="jig-tab-${t}" tabindex="0"`} hidden>${SHELL[t]()}</section>`)}
+<p class="sr-only" role="status" aria-live="polite" data-live></p>`);
+const fill = (name, html) => { const el = $(`[data-fill="${name}"]`); if (el) el.innerHTML = String(html); };
+
+let current = null, heroView = null, stepsView = null, fitWidth = 0, boqWidth = 0;
+function renderLevel() {
+  root.dataset.level = S.level;
+  $$("[data-level]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.level === S.level)));
+  fill("plan", planText());
+  const pr = $("[data-print]");
+  if (pr) pr.innerHTML = String(h`<h2>Steps</h2>${D.steps.map((_, i) => h`<div class="card">${stepCard(i, { print: true })}</div>`)}`);
+  if (N && $("[data-step]")) showStep(S.step, false);
+}
+const setHash = () => { try { history.replaceState(null, "", current === "build" && N ? `#build/${S.step + 1}` : `#${current}`); } catch {} };
+function markRail() {
+  $$(".rail [data-go]").forEach((b) => {
+    const k = Number(b.dataset.go), done = Boolean(S.done[D.steps[k].id]);
+    b.toggleAttribute("data-done", done);
+    b.setAttribute("aria-label", `Step ${k + 1}: ${D.steps[k].title}${done ? " (done)" : ""}`);
+    if (k === S.step) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+  });
+}
+// Keep the current chip inside the rail (it scrolls sideways on narrow screens).
+function railScroll() {
+  const rail = $(".rail"), chip = $(`.rail [data-go="${S.step}"]`);
+  if (!rail || !chip || !rail.clientWidth) return;
+  const a = rail.getBoundingClientRect(), b = chip.getBoundingClientRect();
+  if (b.left < a.left || b.right > a.right) rail.scrollLeft += b.left - a.left - a.width / 2 + b.width / 2;
+}
+function showStep(i, fly = true) {
+  S.step = clamp(i);
+  save();
+  const s = D.steps[S.step], last = S.step === N - 1;
+  $("[data-step]").innerHTML = String(h`${stepCard(S.step)}<div class="nav"><button type="button" data-prev${S.step === 0 ? h` disabled` : ""}>← Back</button><button type="button" class="primary" data-next>${last ? "Finish ✓" : "Next step →"}</button></div>`);
+  markRail();
+  railScroll();
+  const ro = $("[data-readout]"), vn = $("[data-vnote]");
+  // the readout has aria-hidden (the canvas label says the same); the title shows the full text if the line ends in "…"
+  if (ro) ro.title = ro.textContent = `${String(S.step + 1).padStart(2, "0")} / ${N} · ${readout(S.step)}`;
+  if (vn) { vn.textContent = viewNote(S.step); vn.hidden = !vn.textContent; }
+  stepsView?.label(stepLabel(S.step));
+  stepsView?.go(S.step, fly);
+  if (current === "build") setHash();
+  return s;
+}
+// The Parts table fits its card. Cut sizes stay on one line and the material has its own column until the table would
+// scroll sideways. Then, one stage at a time while it still would (data-fit): the material goes under the name
+// ("stack"), the sizes wrap after a "×" ("wrap"), a long material name breaks inside a word ("mat"), and last a long
+// part name breaks too ("break"). It fits again only when the width changes, so its own change of height cannot loop.
+function fitParts(force = false) {
+  const t = $("table.parts"), s = t?.parentElement, w = s?.clientWidth ?? 0;
+  if (!t || (w === fitWidth && !force)) return;
+  fitWidth = w;
+  if (!w) return; // a hidden tab: fit when it shows
+  const over = () => s.scrollWidth > s.clientWidth + 1;
+  t.removeAttribute("data-fit");
+  for (const f of ["stack", "stack wrap", "stack wrap mat", "stack wrap mat break"]) { if (!over()) break; t.dataset.fit = f; }
+}
+// The BOQ item column: when the table would scroll sideways, a long word breaks inside the word (data-break) in one
+// item cell at a time, the cell with the widest word first, until the table fits. So "Sandpaper" stays whole next to
+// a 40-letter material name. Under 601 px each row is a grid and page.css breaks every item. Same width memo rule.
+function fitBoq(force = false) {
+  const t = $("[data-panel=shop] table.boq"), s = t?.closest(".scroll"), w = s?.clientWidth ?? 0;
+  if (!t || (w === boqWidth && !force)) return;
+  boqWidth = w;
+  if (!w) return;
+  const over = () => s.scrollWidth > s.clientWidth + 1, cells = $$("tbody td:nth-child(2)", t);
+  cells.forEach((td) => td.removeAttribute("data-break"));
+  if (!over()) return;
+  const rg = document.createRange(), widest = (td) => {
+    let m = 0;
+    for (let tw = document.createTreeWalker(td, NodeFilter.SHOW_TEXT), n = tw.nextNode(); n; n = tw.nextNode()) for (const x of n.data.matchAll(/\S+/g)) {
+      rg.setStart(n, x.index);
+      rg.setEnd(n, x.index + x[0].length);
+      m = Math.max(m, rg.getBoundingClientRect().width);
+    }
+    return m;
+  };
+  for (const [td] of cells.map((td) => [td, widest(td)]).sort((a, b) => b[1] - a[1])) { td.dataset.break = ""; if (!over()) break; }
+}
+function tab(name, { focus = false, hash = true } = {}) {
+  current = name;
+  S.tab = name;
+  save();
+  $$("[data-tab]").forEach((b) => { const on = b.dataset.tab === name; b.setAttribute("aria-selected", String(on)); b.tabIndex = on ? 0 : -1; });
+  $$("[data-panel]").forEach((p) => (p.hidden = p.dataset.panel !== name));
+  if (name === "cut") fitParts();
+  if (name === "shop") fitBoq();
+  if (name === "build") railScroll();
+  if (focus) $(`[data-tab="${name}"]`)?.focus();
+  if (hash) setHash();
+}
+const live = $("[data-live]");
+const announce = (msg) => { live.textContent = ""; setTimeout(() => (live.textContent = msg), 60); };
+// After a step change: announce it, focus the step heading, and bring the view (narrow screens) or the heading into sight.
+function go(i, { force = false } = {}) {
+  if (!TABS.includes("build") || !N) return;
+  const k = clamp(i), away = current !== "build";
+  if (k === S.step && !away && !force) return;
+  if (away) tab("build", { hash: false });
+  const s = showStep(k, true);
+  announce(`Step ${k + 1} of ${N}: ${s.title}`);
+  const hd = $("#jig-step-title");
+  if (!hd) return;
+  hd.focus({ preventScroll: true });
+  // scroll when the target is above the screen, under the sticky tab bar, or low on the screen
+  const target = matchMedia("(max-width: 860px)").matches ? $(".build .stage") : hd, r = target.getBoundingClientRect();
+  if (away || r.top < ($(".tabs")?.getBoundingClientRect().bottom ?? 0) || r.top > innerHeight * 0.7) target.scrollIntoView({ block: "start", behavior: REDUCED.matches ? "auto" : "smooth" });
+}
+
+document.addEventListener("click", (e) => {
+  const t = e.target.closest?.("button");
+  if (!t || !root.contains(t)) return;
+  const d = t.dataset;
+  if (d.level) { S.level = d.level; save(); renderLevel(); }
+  else if (d.tab) tab(d.tab);
+  else if (d.tabGo) tab(d.tabGo, { focus: true });
+  else if (d.go !== undefined) go(Number(d.go), { force: current !== "build" });
+  else if (t.matches("[data-prev]")) go(S.step - 1);
+  else if (t.matches("[data-next]")) {
+    // Next marks a step done only when it has no Check box: the reader ticks the check, so the box and the rail agree
+    const cur = D.steps[S.step];
+    if (!cur.check) S.done[cur.id] = true;
+    save();
+    markRail();
+    if (S.step < N - 1) go(S.step + 1);
+    else announce("You finished the last step.");
+  } else if (d.v === "spin") heroView?.spin(!heroView.spinning);
+  else if (d.v === "replay") stepsView?.replay();
+  else if (d.v === "reset") stepsView?.reset();
+  else if ((d.v === "explode" || d.v === "ghost") && t.getAttribute("aria-disabled") !== "true") { const on = t.getAttribute("aria-pressed") !== "true"; t.setAttribute("aria-pressed", String(on)); stepsView?.[d.v](on); }
+});
+document.addEventListener("change", (e) => {
+  const t = e.target;
+  if (t.dataset?.buy) { S.bought[t.dataset.buy] = t.checked; save(); }
+  if (t.dataset?.done) { S.done[t.dataset.done] = t.checked; save(); markRail(); }
+});
+// Tabs: arrow keys, Home and End move between tabs (automatic activation, roving tabindex).
+$(".tabs")?.addEventListener("keydown", (e) => {
+  const k = TABS.indexOf(current), n = TABS.length;
+  const to = { ArrowRight: (k + 1) % n, ArrowLeft: (k - 1 + n) % n, Home: 0, End: n - 1 }[e.key];
+  if (to === undefined) return;
+  e.preventDefault();
+  tab(TABS[to], { focus: true });
+});
+// Left and right arrows change the step only when focus is in the step card or the step viewer (the focused canvas
+// takes the arrows for orbit).
+document.addEventListener("keydown", (e) => {
+  if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || (e.key !== "ArrowLeft" && e.key !== "ArrowRight")) return;
+  const t = e.target;
+  if (current !== "build" || !t.closest?.("article.step, [data-viewer='steps']") || t.closest("input, textarea, select, canvas")) return;
+  e.preventDefault();
+  go(S.step + (e.key === "ArrowRight" ? 1 : -1));
+});
+// A typed or linked hash goes through go(), as a click does (announce, focus, scroll); then the URL shows the real step.
+// A hash the page does not have (no such tab) changes nothing, and the URL goes back to what the page shows, as on load.
+addEventListener("hashchange", () => {
+  const r = route();
+  if (!r.tab) { setHash(); return; }
+  if (r.tab === "build" && r.step !== null && N) go(r.step);
+  else if (r.tab !== current) tab(r.tab, { hash: false });
+  setHash();
+});
+
+// ---------- start: text first, then the 3D
+const start = route();
+if (start.step !== null) S.step = start.step;
+S.step = clamp(S.step);
+fill("shop", shopText());
+fill("cut", cutText());
+renderLevel();
+tab(start.tab ?? S.tab, { hash: Boolean(location.hash) });
+// fit the Parts table and the BOQ again after a resize (in the next frame, so the observer never sees its own change)
+// and when the web fonts arrive
+const fitBoxes = [$("table.parts")?.parentElement, $("[data-panel=shop] table.boq")?.closest(".scroll")].filter(Boolean);
+if (fitBoxes.length && typeof ResizeObserver === "function") { const ro = new ResizeObserver(() => requestAnimationFrame(() => { fitParts(); fitBoq(); })); fitBoxes.forEach((b) => ro.observe(b)); }
+document.fonts?.ready.then(() => { fitParts(true); fitBoq(true); });
+const onSpin = (on) => { const b = $('[data-v="spin"]'); if (b) { b.textContent = on ? "Pause" : "Play"; b.setAttribute("aria-label", on ? "Pause the turn" : "Play the turn"); } };
+const heroHost = $('[data-viewer="hero"]'), stepsHost = $('[data-viewer="steps"]');
+if (heroHost) createViewer(heroHost, D, { mode: "hero", onSpin, label: `3D model of the ${D.meta.title}, finished. ${KEYS}` }).then((v) => { heroView = v; });
+if (stepsHost) createViewer(stepsHost, D, { mode: "steps", label: stepLabel(S.step) }).then((v) => { stepsView = v; v?.go(S.step, false); });
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+[
+  { "query": "Is this bookshelf plan safe for a kid's room?", "should_trigger": true },
+  { "query": "What PPE do I need to build a workbench with a circular saw and a router?", "should_trigger": true },
+  { "query": "Review the warnings in my jig project.json and add the ones that are missing", "should_trigger": true },
+  { "query": "Will this 6 ft shelf tip over? It's only 12 inches deep", "should_trigger": true },
+  { "query": "Can I move the light switch myself while I build the new wardrobe around it?", "should_trigger": true },
+  { "query": "Run a safety check on my DIY plan before I start cutting", "should_trigger": true },
+  { "query": "I want to knock through the wall between my kitchen and dining room as a weekend project, what do I need to know?", "should_trigger": true },
+  { "query": "What safety gear do I need to sand MDF and put Danish oil on it?", "should_trigger": true },
+  { "query": "Do I need a permit or a professional to build a deck attached to my house?", "should_trigger": true },
+  { "query": "Check my build steps for anything dangerous for a beginner", "should_trigger": true },
+  { "query": "Make me a build guide for a garden bench with a 3D viewer", "should_trigger": false },
+  { "query": "Write printable step-by-step instructions for a step stool", "should_trigger": false },
+  { "query": "Rewrite this paragraph of assembly instructions in STE", "should_trigger": false },
+  { "query": "Screenshot my built guide page on mobile and check it for layout bugs", "should_trigger": false },
+  { "query": "How much will the materials for my planter cost?", "should_trigger": false },
+  { "query": "Make a cut list for plywood shelves with the least waste", "should_trigger": false },
+  { "query": "Plan my store trips for the deck materials and tell me what to order online", "should_trigger": false },
+  { "query": "Is it safe to eat raw cookie dough?", "should_trigger": false },
+  { "query": "Check my web app for SQL injection and other security holes", "should_trigger": false },
+  { "query": "Which cordless drill should I buy for under 100 pounds?", "should_trigger": false }
+]

@@ -1,0 +1,140 @@
+name: Bug report
+description: A skill, the engine, a guide page or an install did something wrong.
+title: "Bug: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for the report. A project file and the exact command or prompt help most.
+        For a security problem, do not use this form. Follow SECURITY.md instead.
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Which skill?
+      options:
+        - jig (full guide)
+        - jig-plan (printable plan)
+        - jig-boq (bill of quantities)
+        - jig-buy (purchase plan)
+        - jig-cut (cut list)
+        - jig-3d (3D viewer)
+        - jig-ste (STE writing)
+        - jig-safety (safety review)
+        - jig-verify (page check)
+        - The engine CLI (engine/jig.mjs) or a repo script
+        - Not sure
+    validations:
+      required: true
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Which agent?
+      options:
+        - Claude Code
+        - Claude Desktop or claude.ai
+        - Codex
+        - GitHub Copilot CLI
+        - VS Code
+        - Cursor
+        - Gemini CLI
+        - No agent (I ran the engine myself)
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How did you install Jig?
+      options:
+        - Claude Code plugin marketplace
+        - Anthropic's directory
+        - skills CLI (npx skills add)
+        - Codex plugin marketplace
+        - VS Code (Install Plugin from Source)
+        - Copilot CLI (copilot plugin install)
+        - Gemini CLI extension
+        - Manual copy or ZIP
+        - A clone of this repo
+    validations:
+      required: true
+  - type: dropdown
+    id: size
+    attributes:
+      label: Project size
+      description: The size the skill named, or your best guess.
+      options:
+        - Small (up to 15 parts and 8 steps)
+        - Standard (up to 40 parts and 16 steps)
+        - Big (more than 40 parts or 16 steps)
+        - Not about a project
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Windows with WSL2
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where is the problem?
+      options:
+        - The guide page in a browser
+        - A wrong number (quantity, cut, cost, time)
+        - The report, an error code or an exit code
+        - The text of the instructions or warnings
+        - The agent's reply or the skill it chose
+        - The install
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you saw, and where. For a wrong number, give the number and the one you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to reproduce
+      description: The prompt you gave the agent, or the exact command you ran. Attach the project.json if you can.
+      placeholder: |
+        Make me a build guide for a cedar planter, 600 x 300 x 300 mm.
+        node engine/jig.mjs build planter/project.json --strict
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: The report, any error, or the console messages of the page.
+      render: shell
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Node.js, the Jig version, the agent version and the browser.
+      placeholder: "node --version, node engine/jig.mjs --version, claude --version, Chrome 140"
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Drag images here. For a page fault, give the tab or step and the theme.

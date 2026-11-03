@@ -1,0 +1,22 @@
+[
+  { "query": "Rewrite these maintenance instructions in Simplified Technical English", "should_trigger": true },
+  { "query": "Can you put this SOP into STE so our staff who speak English as a second language can follow it?", "should_trigger": true },
+  { "query": "Lint this procedure against the ASD-STE100 writing rules and tell me what breaks them", "should_trigger": true },
+  { "query": "Make these assembly steps clearer: one action per sentence, short sentences, warnings first", "should_trigger": true },
+  { "query": "Fix the STE findings in the step text of my jig project.json", "should_trigger": true },
+  { "query": "Our work instructions are too wordy and full of passive voice, rewrite them as plain commands", "should_trigger": true },
+  { "query": "Check this aircraft task card for sentences over 20 words and -ing forms", "should_trigger": true },
+  { "query": "Simplify the setup steps in our README so a beginner can follow them, in simplified technical english", "should_trigger": true },
+  { "query": "Turn this paragraph of repair instructions into short numbered commands with the cautions before the steps", "should_trigger": true },
+  { "query": "Score my troubleshooting procedure for STE style before it goes into the manual", "should_trigger": true },
+  { "query": "Make me a full build guide for a bookshelf with 3D steps and a shopping list", "should_trigger": false },
+  { "query": "Write step-by-step instructions to build a step stool from scratch", "should_trigger": false },
+  { "query": "Is my workbench plan safe? What protective gear do I need for it?", "should_trigger": false },
+  { "query": "Check my built guide page on a phone and in dark mode", "should_trigger": false },
+  { "query": "How much will the timber for my raised bed cost?", "should_trigger": false },
+  { "query": "Optimise the cut list for these shelves from 8 ft boards", "should_trigger": false },
+  { "query": "Tighten up the prose in my blog post about our company culture", "should_trigger": false },
+  { "query": "Translate these assembly instructions into German", "should_trigger": false },
+  { "query": "Proofread my cover letter for typos and grammar", "should_trigger": false },
+  { "query": "Write a marketing email announcing our new cordless drill", "should_trigger": false }
+]

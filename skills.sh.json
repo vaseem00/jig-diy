@@ -1,0 +1,20 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "groupings": [
+    {
+      "title": "Build guide",
+      "description": "The full interactive guide, or the 3D assembly viewer alone.",
+      "skills": ["jig", "jig-3d"]
+    },
+    {
+      "title": "Plan, price and buy",
+      "description": "One output each from the same project file: steps, costs, store trips and cut layouts.",
+      "skills": ["jig-plan", "jig-boq", "jig-buy", "jig-cut"]
+    },
+    {
+      "title": "Write and check",
+      "description": "Clear instructions, a safety review and a final check of a built guide page.",
+      "skills": ["jig-ste", "jig-safety", "jig-verify"]
+    }
+  ]
+}

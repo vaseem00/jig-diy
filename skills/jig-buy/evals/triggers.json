@@ -1,0 +1,22 @@
+[
+  { "query": "I start the deck box on Saturday 14 November. What do I order online and when?", "should_trigger": true },
+  { "query": "Split my materials list between the timber yard and the hardware store.", "should_trigger": true },
+  { "query": "Make a shopping checklist for my bench project that I can tick off in the store.", "should_trigger": true },
+  { "query": "Should I buy or rent a mitre saw for one weekend project?", "should_trigger": true },
+  { "query": "what do I need to pick up at the hardware store to hang three shelves on brackets", "should_trigger": true },
+  { "query": "When do I have to order the oak worktop so it arrives before I start on the 20th?", "should_trigger": true },
+  { "query": "Plan my store trips for this project.json. My neighbour can lend me a drill and clamps.", "should_trigger": true },
+  { "query": "Give me a shopping list for building a raised garden bed, grouped by store.", "should_trigger": true },
+  { "query": "I can only make one trip this weekend. What do I buy where for the bookshelf build?", "should_trigger": true },
+  { "query": "Which items for my workbench need ordering online first because of delivery times?", "should_trigger": true },
+  { "query": "What will this bench cost in total with tax? Just give me the table.", "should_trigger": false },
+  { "query": "How many 8 ft 2x4s do I need for this frame, and where do I cut each one?", "should_trigger": false },
+  { "query": "Build the full interactive guide for my bookshelf, with 3D and the shopping tab.", "should_trigger": false },
+  { "query": "Write the build steps for a planter box that I can print.", "should_trigger": false },
+  { "query": "Make my weekly grocery shopping list for a family of four.", "should_trigger": false },
+  { "query": "Track my online order for a cordless drill, it is late.", "should_trigger": false },
+  { "query": "Which cordless drill brand is better for a beginner?", "should_trigger": false },
+  { "query": "Review my guide for missing warnings and tip-over risk.", "should_trigger": false },
+  { "query": "Rewrite this assembly procedure in plain STE.", "should_trigger": false },
+  { "query": "Check that my built guide page renders on a phone in dark mode.", "should_trigger": false }
+]

@@ -1,0 +1,22 @@
+[
+  { "query": "I need 4 legs at 34 in, 2 rails at 72 in and 4 stretchers at 21 in from 2x4s. How many 8 footers and how do I cut them?", "should_trigger": true },
+  { "query": "Make a cut list for a base cabinet from one 4x8 sheet of 3/4 plywood.", "should_trigger": true },
+  { "query": "Optimise these cuts so I waste less wood: 6 at 600 mm and 4 at 900 mm from 2.4 m battens.", "should_trigger": true },
+  { "query": "Draw a cutting layout for MDF shelves 762 x 280 from a 2440 x 1220 sheet.", "should_trigger": true },
+  { "query": "How many sheets of birch ply do I need for these drawer boxes? The grain has to run along the fronts.", "should_trigger": true },
+  { "query": "cut diagram please, 3 mm kerf, trim 10 mm off the end of every board", "should_trigger": true },
+  { "query": "I'm ripping 40 mm strips from 140 mm oak sold by the metre. What lengths should I buy?", "should_trigger": true },
+  { "query": "Can you lay out these parts on a half sheet so the store can cut it for me?", "should_trigger": true },
+  { "query": "What's the most efficient way to cut 12 slats of 450 mm from 1.8 m pine boards?", "should_trigger": true },
+  { "query": "Give me an SVG cutting plan for the boards in my bookshelf project.json.", "should_trigger": true },
+  { "query": "How much will this bookshelf cost in total with VAT?", "should_trigger": false },
+  { "query": "Make me a shopping list split by store, with the dates I need to order things.", "should_trigger": false },
+  { "query": "How do I cut a mortise and tenon joint by hand with a chisel?", "should_trigger": false },
+  { "query": "Write printable step-by-step instructions for building a planter box.", "should_trigger": false },
+  { "query": "Build me the full interactive build guide for a workbench, with the 3D steps.", "should_trigger": false },
+  { "query": "My table saw blade burns the wood when I rip oak. What is wrong?", "should_trigger": false },
+  { "query": "Cut this video into three clips and add captions.", "should_trigger": false },
+  { "query": "Check my built guide page for console errors and sideways scroll on a phone.", "should_trigger": false },
+  { "query": "Show me in 3D how the drawer slides into the cabinet.", "should_trigger": false },
+  { "query": "Rewrite my cutting instructions so they follow Simplified Technical English.", "should_trigger": false }
+]

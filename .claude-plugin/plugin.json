@@ -1,0 +1,26 @@
+{
+  "name": "jig",
+  "displayName": "Jig",
+  "version": "1.0.0",
+  "description": "Makes DIY build guides: a step-by-step plan, a bill of quantities, a shopping plan, a cut list and a 3D assembly viewer. Every number comes from one project file, and the instructions follow ASD-STE100 writing rules.",
+  "author": {
+    "name": "vaseem00",
+    "url": "https://github.com/vaseem00"
+  },
+  "homepage": "https://github.com/vaseem00/jig-diy",
+  "repository": "https://github.com/vaseem00/jig-diy",
+  "license": "MIT",
+  "keywords": [
+    "diy",
+    "woodworking",
+    "build-guide",
+    "assembly-instructions",
+    "bill-of-quantities",
+    "cut-list",
+    "shopping-list",
+    "3d",
+    "simplified-technical-english",
+    "furniture"
+  ],
+  "icon": "./assets/icon.svg"
+}

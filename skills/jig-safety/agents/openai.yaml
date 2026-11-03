@@ -1,0 +1,9 @@
+interface:
+  display_name: "Jig Safety"
+  short_description: "Review a DIY build for risks, warnings and hand-off work"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  brand_color: "#C9531A"
+  default_prompt: "Use $jig-safety to review my tall bookcase plan for a child's room and fix the warnings."
+policy:
+  allow_implicit_invocation: true

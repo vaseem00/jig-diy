@@ -1,0 +1,35 @@
+{
+  "name": "jig-diy",
+  "owner": {
+    "name": "vaseem00",
+    "url": "https://github.com/vaseem00"
+  },
+  "description": "The jig plugin: DIY build guides with a plan, a bill of quantities, a shopping plan, a cut list and 3D assembly steps.",
+  "plugins": [
+    {
+      "name": "jig",
+      "source": "./",
+      "description": "Makes DIY build guides: a step-by-step plan, a bill of quantities, a shopping plan, a cut list and a 3D assembly viewer. Every number comes from one project file, and the instructions follow ASD-STE100 writing rules.",
+      "category": "productivity",
+      "tags": [
+        "diy",
+        "woodworking",
+        "build-guide",
+        "bill-of-quantities",
+        "cut-list",
+        "3d"
+      ],
+      "skills": [
+        "./skills/jig",
+        "./skills/jig-plan",
+        "./skills/jig-boq",
+        "./skills/jig-buy",
+        "./skills/jig-cut",
+        "./skills/jig-3d",
+        "./skills/jig-ste",
+        "./skills/jig-safety",
+        "./skills/jig-verify"
+      ]
+    }
+  ]
+}

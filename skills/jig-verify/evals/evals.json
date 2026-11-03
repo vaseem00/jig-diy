@@ -1,0 +1,63 @@
+{
+  "skill_name": "jig-verify",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Here's the project for my bench guide: spruce-bench/project.json. Build the page and check it like a critic before I send it to my brother. He'll read it on his phone, in dark mode.",
+      "expected_output": "The page is built with build --strict next to the project, after check reports 0 errors. The Plan tab is captured first (stop rule), then the Plan, Shop and Cut list tabs, all 5 steps, phone views at 390 px wide and dark views, each with --wait for the 3D. Every image is read against the checklist: lit parts and letters, camera side, screw rings, warnings before instructions, prices in EUR with VAT included, no sideways scroll at 390 px, wood and rings visible in dark. The reply starts with a PASS or FIX verdict, lists any faults with the image and the fix as a project field, names the captures folder, and lists what it did not check (keyboard, levels, print, no network).",
+      "files": ["evals/files/spruce-bench/project.json"],
+      "expectations": [
+        "The jig engine check command ran on spruce-bench/project.json before the page was captured.",
+        "The page was built with the build command and --strict, and not with --force.",
+        "At least one capture used --width 390, and at least one capture used --theme dark.",
+        "Each of the 5 build steps was captured with --hash build/1 to build/5.",
+        "The reply starts with a verdict line that says PASS or FIX.",
+        "Each fault in the reply names an image file or a report line and gives a fix as a project field, not an HTML edit.",
+        "No HTML file was edited by hand.",
+        "The reply lists the checks it did not do, such as keyboard, print or no network."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "My planter guide is in inches (cedar-planter/project.json). Can you build it and check that the cut list and the shopping tab show inches and the sales tax correctly? I'm in California.",
+      "expected_output": "After check and build --strict, the Cut list and Shop tabs are captured and read. The lengths show in inches as fractions (24 in, 10 1/2 in, 11 in), never in millimetres. The cut tab matches the output of the cut command (boards of 96 in, kerf 1/8 in). The Shop tab shows USD, every estimated rate marked est, and a total equal to subtotal + contingency + sales tax at 7.25 percent, compared with totals in the report. The reply gives a verdict and, for each fault, the field to fix.",
+      "files": ["evals/files/cedar-planter/project.json"],
+      "expectations": [
+        "The Cut list tab was captured with --hash cut and the Shop tab with --hash shop.",
+        "The reply states whether the cut lengths show in inches as fractions, for example 10 1/2 in.",
+        "The cut command or the report was used to compare the boards on the page with the engine's cut plan.",
+        "The reply compares the page total with totals in the report and checks subtotal + contingency + sales tax = total.",
+        "The reply says the prices are in USD and whether the estimated rates carry the est badge.",
+        "The reply starts with a verdict line that says PASS or FIX."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I'd like to publish the guide for my tall bookcase on my makerspace's wiki. The project is tall-bookcase/project.json. Can you build it and check it first?",
+      "expected_output": "check reports errors: E_POWER_NO_WARNING on steps 1, 7 and 9 and E_TIP_OVER, so build --strict refuses. The skill does not build with --force and does not capture a forced page. The verdict is FIX with BLOCK faults first: the three missing WARNINGs, the missing wall fixing with role anchor for a 1800 mm bookcase in a child's room, and step 9, which connects the light to the light switch (mains work for a licensed electrician; remove those instructions and add a handoff entry). Each fault gives the fix as a project field. The reply says the page must not be published until a fresh build passes.",
+      "files": ["evals/files/tall-bookcase/project.json"],
+      "expectations": [
+        "The jig engine check command ran and its errors are reported in the reply.",
+        "No build or capture command in the transcript used --force.",
+        "The verdict is FIX, not PASS.",
+        "The reply lists the missing WARNINGs on the power-tool steps as BLOCK faults or as the first faults.",
+        "The reply lists the tip-over (no wall fixing) as a BLOCK fault, with a fix that adds a part or material with role anchor and a step with a WARNING.",
+        "The reply says that step 9 connects the light to the mains at the switch and that this is work for a licensed electrician, with no wiring instructions.",
+        "The reply tells the user not to publish the page until the fixes are made and the page builds with 0 errors."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "My brother says he can't see where the screws go in step 3 of my bench guide. The project is spruce-bench/project.json. Can you look at that step?",
+      "expected_output": "A focused check of one step. The page is built (or found) and step 3 is captured with --hash build/3 and --wait, and again close up with --select on the viewer and --scale 2 if the rings are small. The reply says whether the 4 screw rings sit on the leg faces and face the camera, compares with the step's fasteners, and if the camera shows the wrong side, gives a fix in the project such as a view with az set toward the screw heads. It does not edit the HTML.",
+      "files": ["evals/files/spruce-bench/project.json"],
+      "expectations": [
+        "Step 3 was captured with --hash build/3.",
+        "The reply says how many screw rings step 3 shows, or that it expects 4 from the step's fasteners.",
+        "The reply states whether the screw heads face the camera in step 3.",
+        "If the reply finds a camera fault, its fix is a view setting in steps[2] of the project, not an HTML edit.",
+        "No HTML file was edited by hand."
+      ]
+    }
+  ]
+}

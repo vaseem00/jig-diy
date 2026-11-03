@@ -1,0 +1,28 @@
+# Dependencies (the pack has none, so nothing here is ever committed)
+node_modules/
+
+# Secrets and logs
+.env
+.env.*
+*.log
+npm-debug.log*
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+__MACOSX/
+
+# Results of `claude plugin eval` and skill-creator runs
+evals/results/
+*-workspace/
+
+# Captures, scratch work and archives
+shots/
+tmp/
+.scratch/
+*.zip
+*.tgz
+
+# Local Claude Code settings
+.claude/settings.local.json
