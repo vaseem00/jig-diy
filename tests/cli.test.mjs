@@ -25,6 +25,8 @@ function run(args, { cwd = ROOT, input = "", env } = {}) {
   return new Promise((ok) => {
     const child = execFile(process.execPath, [JIG, ...args], { cwd, encoding: "utf8", timeout: 120000, maxBuffer: 64 << 20, ...(env ? { env: { ...process.env, ...env } } : {}) },
       (err, stdout, stderr) => ok({ code: err ? (typeof err.code === "number" ? err.code : -1) : 0, stdout, stderr }));
+    // a command that exits before it reads stdin closes the pipe first: EPIPE there is no fault of the command
+    child.stdin.on("error", (e) => { if (e.code !== "EPIPE") throw e; });
     child.stdin.end(input);
   });
 }
