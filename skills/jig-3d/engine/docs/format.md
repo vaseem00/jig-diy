@@ -93,16 +93,16 @@ Fields every kind takes:
 | Field | Meaning |
 |---|---|
 | `name` | Required. Name in the BOQ and the shopping list: "Pine board" |
-| `kind` | Required. `linear`, `sheet`, `each` or `amount` |
+| `kind` | Required. `linear`, `sheet`, `each`, `amount` or `printed` |
 | `spec` | Size or grade as the store writes it: "19 x 235 mm (1x10)" |
 | `store` | Store id |
 | `color` | `#rrggbb` in the 3D view and the cut drawings |
-| `group` | BOQ group name. Default from the kind: Timber and sheet (linear, sheet). Hardware for an `each` material that is a part or a fastener, or has `len`, `d` or `head`; else Consumables (sandpaper). Finish for an `amount` material that a finish uses; else Consumables (glue) |
+| `group` | BOQ group name. Default from the kind: Timber and sheet (linear, sheet). Printing (printed). Hardware for an `each` material that is a part or a fastener, or has `len`, `d` or `head`; else Consumables (sandpaper). Finish for an `amount` material that a finish uses; else Consumables (glue) |
 | `est` | `false` when the price is a real quote. Default: the project `estimate` |
 | `note` | Shown next to the item in the shopping list |
 | `role` | `"anchor"`: a wall fixing. Parts and fasteners of this material count for the tip-over check |
 
-BOQ groups come in this order, with their code letters: Timber and sheet `T`, Hardware `H`, Consumables `C`, Finish `F`, Safety `S`, Tools `X`. Any other group name gets `O` and comes last. Codes count up inside each group (`H01`, `H02`), so a new timber row never renumbers the hardware.
+BOQ groups come in this order, with their code letters: Timber and sheet `T`, Printing `P`, Hardware `H`, Consumables `C`, Finish `F`, Safety `S`, Tools `X`. Any other group name gets `O` and comes last. Codes count up inside each group (`H01`, `H02`), so a new timber row never renumbers the hardware.
 
 ### 4.1 linear: boards, battens, rods
 
@@ -160,6 +160,27 @@ The quantity is the `uses` amounts, plus each finish: finished area x coats / co
 
 Packs to buy, for every kind that has packs: `ceil(need x (1 + spare) / pack)`. The BOQ shows the need and the packs in two columns, so the reader sees why they buy more than they use.
 
+### 4.5 printed: filament for 3D-printed parts
+
+| Field | Meaning |
+|---|---|
+| `price` | Price of one spool |
+| `spool` | Grams of filament in one spool. Default 1000 |
+| `packName` | "1 kg spool". Default: "1 kg spool", or "750 g spool" for a spool that is not whole kilograms |
+| `density` | Filament density in g/cm³. Default 1.24 (PLA). PETG is about 1.27, ABS about 1.04 |
+| `fill` | Share of the solid part volume that the printer fills, walls and infill together, more than 0 and up to 1. Default 0.3 |
+| `rate` | Grams of filament that the printer lays down in one hour. Default 12 |
+| `spare` | Spare share 0 to 1, for failed prints and purge. Default 0.1 |
+
+A part of a printed material is printed, not cut. Its grams and hours come from its `print` (section 6), the slicer numbers. A value that is not there is an estimate from the part size:
+
+- grams = solid volume in cm³ x `density` x `fill`, to 1 g (1 g or more). The solid volume is the box of `size`, or the cylinder of a part with `shape: "cylinder"`.
+- hours = grams / `rate`, to 0.1 h (0.1 h or more).
+
+An estimate gives the info `I_PRINT_ESTIMATE`, one time for the project. Slice each part and put the slicer numbers in `print`.
+
+The BOQ has one row for each printed material, in the group Printing (`P`). The need is the count of parts and the total grams. Spools to buy: `ceil(grams x (1 + spare) / spool)`. The row note gives the printer hours. The printer time is waiting time of the step with `prints` (section 9), not work time.
+
 ## 5. Tools
 
 `tools` is a list of `{ id, name, spec?, have?, get?, price?, days?, qty?, store?, power?, ppe?, est? }`.
@@ -182,14 +203,14 @@ A borrowed tool costs 0 and goes on a final "Borrow" trip. A bought or rented to
 
 ## 6. Parts
 
-`parts` is a list of `{ id, label?, name, material, size, at?, shape?, rotate?, color?, rip?, grain?, role?, finish?, joins? }`.
+`parts` is a list of `{ id, label?, name, material, size, at?, shape?, rotate?, color?, rip?, grain?, role?, finish?, joins?, print? }`.
 
 | Field | Meaning |
 |---|---|
 | `id` | Required, unique: "A1", "A2" |
 | `label` | The letter the reader sees, shared by identical parts: "A". Default: the id. Parts that share a label must share `name`, `material` and `size` (`E_LABEL_MISMATCH`) |
 | `name` | Required. One word for the part everywhere: "Side", "Shelf". The text uses this word and no other |
-| `material` | Required. Id of a `linear`, `sheet` or `each` material |
+| `material` | Required. Id of a `linear`, `sheet`, `each` or `printed` material |
 | `size` | Required. `[x, y, z]`, every side more than 0, before rotation. Cut sizes come from `size` |
 | `at` | Minimum corner `[x, y, z]` before rotation. Required for `check` and `build` |
 | `shape` | `"box"` (default) or `"cylinder"`: two equal sides are the diameter, the third is the length along the axis |
@@ -200,8 +221,9 @@ A borrowed tool costs 0 and goes on a final "Borrow" trip. A bought or rented to
 | `role` | `"anchor"`: a wall fixing for the tip-over check |
 | `finish` | `false`: leave the part out of the finished area (a hidden back, a bought bracket) |
 | `joins` | Part ids this part may overlap on purpose: a shelf in a dado, a tenon in a mortise. Other overlaps over 1 mm are error `E_GEOMETRY` |
+| `print` | Only on a part of a `printed` material: `{ grams?, hours?, settings? }`. `grams` and `hours` are the slicer numbers for one part; a missing value is an estimate (section 4.5). `settings` is text for the reader: "0.2 mm layers, 20% infill, no supports". It is linted as a description. Parts that share a label must share `print` (`E_LABEL_MISMATCH`). `print` on another part is error `E_SCHEMA` |
 
-Each part is installed in exactly one step (`E_NOT_INSTALLED`, `E_INSTALLED_TWICE`).
+Each part is installed in exactly one step (`E_NOT_INSTALLED`, `E_INSTALLED_TWICE`). A printed part is printed in the step with `prints` (section 9), and installed in its own assembly step.
 
 ## 7. Props
 
@@ -263,8 +285,9 @@ Each card also has a `why` line. The page shows a card the first time a First ti
 | `parts` | Part ids installed in this step. 1 to 4 per step reads best |
 | `fasteners` | Fasteners installed in this step (section 9.1) |
 | `uses` | `{ materialId: amount }`: consumables of kind `each` or `amount` (glue ml, sandpaper sheets) |
-| `finish` | `{ material, coats?, parts? }`: an `amount` material with `coverage`. Default parts: every part that is not of an `each` material and has no `finish: false`. A `parts` list can also name parts of an `each` material. The area counts all six faces of each part, so it is an upper bound. The 3D view lights the finished parts |
+| `finish` | `{ material, coats?, parts? }`: an `amount` material with `coverage`. Default parts: every part that is not of an `each` or `printed` material and has no `finish: false`. A `parts` list can also name parts of an `each` or `printed` material. The area counts all six faces of each part, so it is an upper bound. The 3D view lights the finished parts |
 | `cuts` | `true`, or a list of `linear`/`sheet` material ids: the stock is cut in this step. It sets "needed by" in the purchase plan |
+| `prints` | `true`, or a list of `printed` material ids: the printer makes the parts of these materials in this step. Their printer hours go into the waiting time of this step (machine time, the same at every level). It sets "needed by" of the filament in the purchase plan. The first step that prints a material gets its parts. A printed material that no step prints is warning `W_NO_PRINT_STEP` |
 | `tools` | Tool ids |
 | `teach` | Technique ids |
 | `warn` | `[{ type: "warning" \| "caution", text }]`, shown before the instructions. A WARNING is for a risk of injury, a CAUTION for a risk of damage. Start the text with a command, then give the risk |
@@ -272,7 +295,7 @@ Each card also has a `why` line. The page shows a card the first time a First ti
 | `check` | The inspection that ends the step: "Make sure that the two diagonals are equal within 2 mm." Missing: warning `W_NO_CHECK` |
 | `why` | Why the step is done this way. Shown at First time only |
 | `tip` | A tip. Shown at First time and Some experience |
-| `pose` | `"kit"`: the cut parts lie flat on the floor with their letters (preparation steps) |
+| `pose` | `"kit"`: the cut and printed parts lie flat on the floor with their letters (preparation steps) |
 | `focus` | Part ids lit in the kit pose |
 | `from` | `[dx, dy, dz]`: the path the new parts arrive along. A drawer slides in from the front (`[0, 0, 400]`), a top drops from above (`[0, 300, 0]`) |
 | `view` | `{ az, el, zoom, note }`: camera. `az` 0 is the front, 90 the right side, 180 the back. `el` is the height of the camera in degrees: the schema takes -90 to 90, but the viewer cannot look from below, so it holds an `el` below about 1 at the horizon. Use 1 to 89. `zoom` above 1 is closer. `note` (120 characters or fewer, linted as a description) is a short line under the 3D view, at every level. It is never in print, `plan.md` or the no-script copy, where there is no picture |
@@ -356,7 +379,7 @@ Each problem has a `path` into the project (`steps[3].do[1]`), a `where` for peo
 
 | Code | Usual cause | Fix |
 |---|---|---|
-| `E_SCHEMA` | Wrong type, missing field, value out of range, unknown enum. A `perLength` step more than `max`, or more than 100,000 board lengths | Follow the hint. Write numbers without quotes (`3`, not `"3"`). A rate is a share: 7% is 0.07 |
+| `E_SCHEMA` | Wrong type, missing field, value out of range, unknown enum. A `perLength` step more than `max`, or more than 100,000 board lengths. `print` on a part that is not of a `printed` material | Follow the hint. Write numbers without quotes (`3`, not `"3"`). A rate is a share: 7% is 0.07 |
 | `E_UNKNOWN_KEY` | A misspelt field (`meterials`), or `price` on a linear material | Fix the name. A board price goes on each `stock` entry |
 | `E_DUP_ID` | Two parts, steps, tools or techniques with one id, or one id two times in a step's `parts` or `teach` | Give each its own id. Use `label` for identical parts. Remove the second entry from the step |
 | `E_LABEL_MISMATCH` | One label on parts that differ | Give the odd part its own letter |
@@ -381,12 +404,14 @@ Each problem has a `path` into the project (`steps[3].do[1]`), a `where` for peo
 | `W_COUNTED_FASTENER` | A counted fastener in guide mode | Give `at` and `dir`, with `repeat` for a row |
 | `W_TIP_SMALL` | Under 600 mm (24 in) tall, over `safety.tipRatio`, with no anchor (a lamp, a box) | Make the base wider or deeper, or put weight in the base. A wall fixing is for furniture 600 mm (24 in) tall or more |
 | `W_CLEARED_UNUSED` | A `safety.cleared` entry clears nothing: no text of its topic, a topic that `handoff` names, or a second entry for one topic | Remove the entry. `--strict` stops on this warning |
+| `W_NO_PRINT_STEP` | Plan or guide mode: no step has `prints` for a printed material, so its printer time is in no step | Add `"prints": true` to the step in which the printer makes the parts, or add the material id to its `prints` list |
 | `STE_*` | A sentence breaks a writing rule | Rewrite the sentence. Add a real trade word to `terms` or `verbs` |
 | `STE_WARN_NO_RISK` | A WARNING or CAUTION with no risk sentence after its command: "When you drill, wear safety glasses." | Give the risk in a second sentence: "Wear safety glasses. The bit can throw chips into your eyes." |
 | `I_ESTIMATE` (info) | Prices are estimates | Tell the reader. Set `est: false` on prices the user gave |
 | `I_TIP_UNCHECKED` (info) | Plan mode: a part has no `at`, so the tip-over rule cannot run, and nothing has role `anchor` | Divide the height by the base depth. Above `safety.tipRatio`, add an anchor part and a wall-fixing step to an object 600 mm (24 in) tall or more. Make the base of a smaller object wider or deeper. Or give every part an `at` |
 | `I_OLD_PAINT` (info) | A text strips, sands, scrapes, heats, burns or removes old paint, or names old paint with a heat gun, a scraper, a sander or a stripper, and nothing names lead paint | Ask how old the paint is. Paint from before 1978 (US) or 1992 (UK) can contain lead: then add the `lead-paint` hand-off ([safety.md](safety.md) section 10). Newer paint: give its age in a `lead-paint` entry of `safety.cleared` |
 | `I_HANDOFF_CLEARED` (info) | A `safety.cleared` entry clears the hits of its topic: one info for each topic | Make sure that the guide has no work of that topic. If it has, remove the entry and add the hand-off |
+| `I_PRINT_ESTIMATE` (info) | A printed part has no slicer `grams` or `hours`, so the engine estimates them from the part size. One info for the project, at the first such part | Slice each part. Put the slicer numbers in `print`: `"print": { "grams": 24, "hours": 1.5 }` |
 | `I_RIP_SHARE` (info) | Two or more rip strips of one material fit side by side across one board, and strips side by side give fewer boards or a lower cost than the plan, which cuts each strip from its own board length | The hint names the saving ("The plan then needs 1 board, not 6"). To get it, plan the rip cuts by hand. The BOQ stays an upper bound |
 
 ## 14. Examples
@@ -577,7 +602,34 @@ Where the WARNINGs come from: the cut, sand and finish steps get theirs from the
 - Rod F is a cylinder along y: two sides of 25 are the diameter.
 - Brace G is turned 45° about z. Its cut length is still 400.
 
-### 14.5 project.mjs
+### 14.5 3D-printed parts
+
+A board with two printed hooks and a printed peg. The printer makes the parts in step 1, and step 2 glues them to the board.
+
+```json
+"materials": {
+  "pla": { "kind": "printed", "name": "PLA filament", "spec": "1.75 mm, black", "price": 21.99, "spool": 1000, "store": "online", "color": "#333333" },
+  "board": { "kind": "linear", "name": "Pine board", "section": [90, 18], "stock": [{ "length": 1000, "price": 4.5 }] }
+},
+"parts": [
+  { "id": "A1", "label": "A", "name": "Plate", "material": "board", "size": [300, 18, 90], "at": [0, 0, 0] },
+  { "id": "B1", "label": "B", "name": "Hook", "material": "pla", "size": [40, 60, 20], "at": [40, 18, 35], "print": { "settings": "0.2 mm layers, 20% infill, no supports" } },
+  { "id": "B2", "label": "B", "name": "Hook", "material": "pla", "size": [40, 60, 20], "at": [220, 18, 35], "print": { "settings": "0.2 mm layers, 20% infill, no supports" } },
+  { "id": "C1", "label": "C", "name": "Peg", "material": "pla", "shape": "cylinder", "size": [20, 50, 20], "at": [140, 18, 35], "print": { "grams": 7, "hours": 0.8 } }
+],
+"steps": [
+  { "id": "print", "title": "Print the hooks and the peg", "pose": "kit", "prints": true, "minutes": 10, "do": ["Load the PLA filament.", "Start the print."], "check": "Make sure that each part is complete." },
+  { "id": "glue", "title": "Glue the hooks to the plate", "parts": ["A1", "B1", "B2", "C1"], "minutes": 15, "do": ["Apply glue to the base of each part.", "Put each part on the plate."], "check": "Make sure that each part is tight." }
+]
+```
+
+- Hook B has no slicer numbers. Its box is 40 x 60 x 20 mm = 48 cm³, so it needs 48 x 1.24 x 0.3 = 18 g and 18 / 12 = 1.5 h (info `I_PRINT_ESTIMATE`).
+- Peg C gives the slicer numbers: 7 g and 0.8 h.
+- The BOQ row `P01` needs 3 parts and 43 g. With 10% spare that is 47.3 g, so you buy one 1 kg spool.
+- Step 1 gets 1.5 + 1.5 + 0.8 = 3.8 h of printer time as waiting time. The work time stays 10 minutes.
+- The page calls the cut tab "Cut and print". It is "Print list" when no part is cut. A kit of bought parts only has no cut tab.
+
+### 14.6 project.mjs
 
 Use a module when positions repeat in patterns that `repeat` cannot express. Keep the helpers small and name the numbers.
 

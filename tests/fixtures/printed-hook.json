@@ -1,0 +1,37 @@
+{
+  "id": "desk-hook",
+  "title": "Desk hook",
+  "summary": "A hook rack for a desk. You print three parts and glue them to a board.",
+  "currency": "EUR",
+  "stores": {
+    "online": { "name": "Online order", "online": true, "lead": 2 },
+    "diy": { "name": "DIY store" }
+  },
+  "materials": {
+    "pla": { "kind": "printed", "name": "PLA filament", "spec": "1.75 mm, black", "price": 21.99, "store": "online", "color": "#333333" },
+    "board": { "kind": "linear", "name": "Pine board", "section": [90, 18], "stock": [{ "length": 1000, "price": 4.5 }], "store": "diy", "color": "#e3c79b" },
+    "glue": { "kind": "amount", "name": "Super glue", "unit": "g", "pack": 20, "packName": "20 g tube", "price": 5.5, "store": "diy" }
+  },
+  "tools": [
+    { "id": "printer", "name": "3D printer", "have": true },
+    { "id": "clamp", "name": "Clamp", "have": true }
+  ],
+  "parts": [
+    { "id": "A1", "label": "A", "name": "Plate", "material": "board", "size": [300, 18, 90], "at": [0, 0, 0] },
+    { "id": "B1", "label": "B", "name": "Hook", "material": "pla", "size": [40, 60, 20], "at": [40, 18, 35], "print": { "settings": "0.2 mm layers, 20% infill, no supports" } },
+    { "id": "B2", "label": "B", "name": "Hook", "material": "pla", "size": [40, 60, 20], "at": [220, 18, 35], "print": { "settings": "0.2 mm layers, 20% infill, no supports" } },
+    { "id": "C1", "label": "C", "name": "Peg", "material": "pla", "shape": "cylinder", "size": [20, 50, 20], "at": [140, 18, 35], "print": { "grams": 7, "hours": 0.8 } }
+  ],
+  "steps": [
+    {
+      "id": "print", "title": "Print the hooks and the peg", "pose": "kit", "prints": true, "minutes": 10, "tools": ["printer"],
+      "do": ["Load the PLA filament.", "Start the print."],
+      "check": "Make sure that each part is complete."
+    },
+    {
+      "id": "glue", "title": "Glue the hooks to the plate", "parts": ["A1", "B1", "B2", "C1"], "minutes": 15, "wait": 30, "tools": ["clamp"], "uses": { "glue": 2 },
+      "do": ["Apply glue to the base of each part.", "Put each part on the plate.", "Clamp each hook for one minute."],
+      "check": "Make sure that each part is tight."
+    }
+  ]
+}

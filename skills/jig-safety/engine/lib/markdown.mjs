@@ -54,7 +54,22 @@ function stepFacts(M, s, i) {
     const m = mat(id), spec = m.spec ? ` (${m.spec})` : "";
     return !m.unit || single(m) ? `${amount(q)} × ${m.name}${spec}` : `${plural(amount(q), m.unit)} of ${m.name}${spec}`;
   });
-  return { parts, fasteners, uses, finish: s.finish ? `${mat(s.finish.material).name}${s.finish.coats ? `, ${plural(s.finish.coats, "coat")}` : ""}` : null };
+  // the printed parts that the printer makes in this step (a prints step): "2 × B Hook"
+  const prints = groupBy(M.parts.filter((p) => p.print && p.print.step === i), "label").map(([label, list]) => `${list.length} × ${label} ${list[0].name}`);
+  return { parts, fasteners, uses, prints, finish: s.finish ? `${mat(s.finish.material).name}${s.finish.coats ? `, ${plural(s.finish.coats, "coat")}` : ""}` : null };
+}
+
+// printList(model) -> the printed parts by material: [{ material, name, count, grams, hours, step, parts: [{ label, name,
+// qty, grams, hours, settings, est }] }]. Part grams and hours are for one part; the material totals add up every part.
+export function printList(M) {
+  return groupBy(M.parts.filter((p) => p.kind === "printed" && p.print), "material").map(([material, list]) => ({
+    material, name: list[0].materialName, count: list.length, grams: round(list.reduce((a, p) => a + p.print.grams, 0), 1),
+    hours: round(list.reduce((a, p) => a + p.print.hours, 0), 1), step: list[0].print.step,
+    parts: groupBy(list, "label").map(([label, same]) => {
+      const p = same[0].print;
+      return { label, name: same[0].name, qty: same.length, grams: p.grams, hours: p.hours, settings: p.settings, est: p.est };
+    }),
+  }));
 }
 
 const toolStatus = (x) => (x.have ? "you have it" : x.get === "borrow" ? "borrow" : x.get === "rent" ? `rent for ${plural(x.days ?? 1, "day")}` : "buy");
@@ -84,6 +99,7 @@ export function planMd(M, { level } = {}) {
     L.push(`### ${i + 1}. ${t(s.title)}`, "");
     L.push(...[
       `Phase: ${s.phase ?? "Build"}`, `Time: ${fmtDuration(timeFor(s.minutes, lv))}${s.wait ? `, then wait ${fmtDuration(s.wait)}` : ""}`,
+      f.prints.length && `Prints: ${f.prints.join(", ")} (${fmtDuration(s.printMinutes ?? 0)} of printer time, in the waiting time)`,
       f.parts.length && `Parts: ${f.parts.join(", ")}`, f.fasteners.length && `Fasteners: ${f.fasteners.join(", ")}`,
       f.uses.length && `Uses: ${f.uses.join(", ")}`, f.finish && `Finish: ${f.finish}`, tools.length && `Tools: ${tools.join(", ")}`,
     ].filter(Boolean).map((x) => `- ${t(x)}`), "");
@@ -191,20 +207,42 @@ const cutName = (M, c) => {
   return spec ? `${c.name}, ${spec}` : c.name;
 };
 
-// cutMd(model) -> the parts list, then each board and sheet with its cuts and waste.
+// The name of the cut list: "Cut list", "Print list" (printed parts only) or "Cut and print list". The page tab says
+// "Cut list", "Print list" or "Cut and print".
+const cutTitle = (M) => {
+  const print = M.parts.some((p) => p.kind === "printed"), cut = M.cuts.length > 0 || M.parts.some((p) => p.kind === "linear" || p.kind === "sheet");
+  return print ? (cut ? "Cut and print list" : "Print list") : "Cut list";
+};
+
+// cutMd(model) -> the parts list, the printed parts, then each board and sheet with its cuts and waste.
 export function cutMd(M) {
-  const u = M.meta.units, fine = { den: 64 };
-  const L = [`# Cut list: ${t(M.meta.title)}`, "", `Kerf: ${fmtLen(M.meta.kerf, u, fine)}. Each saw cut removes this much, and the plan includes it.${M.meta.trim ? ` Trim: ${fmtLen(M.meta.trim, u, fine)} from the start of each board.` : ""}`, ""];
+  const u = M.meta.units, fine = { den: 64 }, title = cutTitle(M), prints = printList(M);
+  const L = [`# ${title}: ${t(M.meta.title)}`, ""];
+  if (title !== "Print list") L.push(`Kerf: ${fmtLen(M.meta.kerf, u, fine)}. Each saw cut removes this much, and the plan includes it.${M.meta.trim ? ` Trim: ${fmtLen(M.meta.trim, u, fine)} from the start of each board.` : ""}`, "");
   // The cost of a material is the sum of its BOQ rows, so the cut list and the BOQ always agree.
   const costOf = (c) => {
     const rows = M.boq.filter((r) => r.key.startsWith(`${c.material}:`));
     return rows.some((r) => r.amount === null) ? null : round(rows.reduce((a, r) => a + r.amount, 0), 6);
   };
   const size = (p) => (!p.cut ? (p.kind === "each" ? "not cut" : "size?") : p.cut.length !== undefined ? dims([p.cut.length, p.cut.width, p.cut.thick], u) : dims([p.cut.a, p.cut.b, p.cut.thick], u));
-  if (M.parts.length) {
+  // Printed parts are in their own table, with grams and hours for one part.
+  const others = M.parts.filter((p) => p.kind !== "printed");
+  if (others.length) {
     L.push("## Parts", "", "| Part | Name | Qty | Cut size | Material |", "|---|---|---|---|---|");
-    for (const [label, list] of groupBy(M.parts, "label")) L.push(`| ${cell(label)} | ${cell(list[0].name)} | ${list.length} | ${size(list[0])} | ${cell(list[0].materialName)} |`);
+    for (const [label, list] of groupBy(others, "label")) L.push(`| ${cell(label)} | ${cell(list[0].name)} | ${list.length} | ${size(list[0])} | ${cell(list[0].materialName)} |`);
     L.push("");
+  }
+  if (prints.length) {
+    const mark = (v, on) => `${v}${on ? " est" : ""}`, rows = new Map(M.boq.map((r) => [r.key, r]));
+    L.push("## Printed parts", "", "| Part | Name | Qty | Grams each | Hours each | Material | Settings |", "|---|---|---|---|---|---|---|");
+    for (const m of prints) for (const p of m.parts)
+      L.push(`| ${cell(p.label)} | ${cell(p.name)} | ${p.qty} | ${mark(`${p.grams} g`, p.est.grams)} | ${mark(`${p.hours} h`, p.est.hours)} | ${cell(m.name)} | ${p.settings ? cell(p.settings) : "-"} |`);
+    L.push("");
+    for (const m of prints) {
+      const r = rows.get(m.material), buy = r && r.qty !== null ? ` Buy ${r.qty} × ${r.unit}.` : "";
+      L.push(`${t(m.name)}: ${plural(m.count, "part")}, ${m.grams} g of filament, ${m.hours} h of printer time.${t(buy)}`, "");
+    }
+    if (prints.some((m) => m.parts.some((p) => p.est.grams || p.est.hours))) L.push("A value marked est is an estimate from the part size. The slicer gives the real value.", "");
   }
   for (const c of M.cuts) {
     const list = c.kind === "linear" ? c.boards : c.sheets;
@@ -222,7 +260,7 @@ export function cutMd(M) {
       }
     });
   }
-  if (!M.cuts.length) L.push("Nothing to cut.", "");
+  if (!M.cuts.length && !prints.length) L.push("Nothing to cut.", "");
   return `${L.join("\n").trimEnd()}\n`;
 }
 
@@ -308,11 +346,13 @@ export function reportText(M) {
   const c = M.counts, T = M.totals;
   const fasteners = M.steps.reduce((a, s) => a + s.fasteners.reduce((b, f) => b + (f.count ?? 1), 0), 0);
   const boards = M.cuts.reduce((a, x) => a + (x.boards?.length ?? 0), 0), sheets = M.cuts.reduce((a, x) => a + (x.sheets?.length ?? 0), 0);
+  const printed = M.parts.filter((p) => p.kind === "printed").length;
   const tax = T.taxRate ? `, ${oneLine(taxWord(T.taxLabel))} ${T.taxIncluded ? "included " : ""}${money(M, T.tax)}` : "";
   const L = [
     `jig ${M.engine}, ${M.mode} mode`,
     `Project: ${oneLine(M.meta.title) || "(no title)"}${M.meta.id ? ` (${oneLine(M.meta.id)})` : ""}`,
-    `Counts: ${[plural(M.parts.length, "part"), plural(M.steps.length, "step"), plural(fasteners, "fastener"), plural(boards, "board"), plural(sheets, "sheet")].join(", ")}`,
+    `Counts: ${[plural(M.parts.length, "part"), plural(M.steps.length, "step"), plural(fasteners, "fastener"), plural(boards, "board"), plural(sheets, "sheet"),
+      printed && plural(printed, "printed part")].filter(Boolean).join(", ")}`,
     `Cost: ${money(M, T.total)} (subtotal ${money(M, T.subtotal)}, contingency ${money(M, T.contingency)}${tax})${est(M) ? ", an estimate" : ""}${T.unknownPrices ? `, ${plural(T.unknownPrices, "price")} unknown` : ""}`,
     `Time: ${fmtDuration(M.plan.active)} of work and ${fmtDuration(M.plan.wait)} of waiting, for an experienced person`,
     `Problems: ${plural(c.error, "error")}, ${plural(c.warn, "warning")}, ${c.ste} STE, ${c.info} info`,

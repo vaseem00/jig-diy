@@ -8,7 +8,7 @@ import { toMM, fmtLen } from "./locale.mjs";
 import { HANDOFF_TOPICS, topicOf } from "./safety.mjs";
 
 const BAD = Symbol("bad");
-const KINDS = SCHEMA.$defs.material.anyOf.map((r) => deref(r).properties.kind.const); // linear, sheet, each, amount
+const KINDS = SCHEMA.$defs.material.anyOf.map((r) => deref(r).properties.kind.const); // linear, sheet, each, amount, printed
 const KERF = { mm: 3, in: 0.125 }; // default saw kerf in project units
 const MAX_KERF = SCHEMA.properties.kerf.maximum; // mm, also checked after an inch conversion
 const MAX_LENGTHS = 100000; // board lengths that one perLength may give (max / step)
@@ -294,8 +294,12 @@ function checks(R, units, mode, techniques, ctx) {
 
   rawParts.forEach((p, i) => {
     if (!isObj(p)) return;
-    mat(["parts", i, "material"], p.material, ["linear", "sheet", "each"], "A part");
+    mat(["parts", i, "material"], p.material, ["linear", "sheet", "each", "printed"], "A part");
     refs(p.joins, ["parts", i, "joins"], "part");
+    // print: the slicer numbers of a 3D-printed part. On a part of another kind it would count nothing.
+    const k = kindOf(p.material);
+    if (p.print !== undefined && k && k !== "printed")
+      err(ctx, ["parts", i, "print"], `The part has "print", but its material "${p.material}" has kind ${k}.`, 'Remove "print", or use a material of kind printed for the part.');
     if (mode === "guide" && p.at === undefined) err(ctx, ["parts", i, "at"], "The part has no position.", 'Add "at": [x, y, z], the minimum corner of the part box. The 3D guide needs it.');
   });
 
@@ -318,6 +322,7 @@ function checks(R, units, mode, techniques, ctx) {
     uses(s.uses, at("uses"));
     finish(s.finish, at("finish"));
     if (Array.isArray(s.cuts)) s.cuts.forEach((id, j) => mat(at("cuts", j), id, ["linear", "sheet"], "A cut"));
+    if (Array.isArray(s.prints)) s.prints.forEach((id, j) => mat(at("prints", j), id, ["printed"], "A print"));
     if (mode !== "estimate" && s.check === undefined) report(ctx, "warn", "W_NO_CHECK", at("check"), "The step has no check.", 'Add "check": the inspection that ends the step, for example "Make sure that the shelf is level."');
     if (mode !== "estimate" && s.minutes === undefined) report(ctx, "warn", "W_NO_MINUTES", at("minutes"), "The step has no work time.", 'Add "minutes": the work time for an experienced person.');
   });
@@ -408,7 +413,8 @@ function normalize(c, ctx, techniques, problems) {
       if (m.len !== undefined) n.len = L(m.len);
       if (m.d !== undefined) n.d = L(m.d);
       n.spare = m.spare ?? (fastened.has(id) || m.len !== undefined || m.d !== undefined || m.head !== undefined ? 0.1 : 0);
-    } else n.spare = m.spare ?? (finished.has(id) ? 0.1 : 0);
+    } else if (m.kind === "amount") n.spare = m.spare ?? (finished.has(id) ? 0.1 : 0);
+    // printed: spool, density, fill, rate and spare come with their schema defaults
     put(materials, id, n);
   }
   const kindIs = (id, kinds) => has(materials, id) && kinds.includes(materials[id].kind);
@@ -416,16 +422,18 @@ function normalize(c, ctx, techniques, problems) {
   // Parts: first of each id, material must resolve; label defaults to the id.
   const parts = [], partIds = new Set(), byLabel = new Map();
   for (const p of c.parts ?? []) {
-    if (partIds.has(p.id) || !kindIs(p.material, ["linear", "sheet", "each"])) continue;
+    if (partIds.has(p.id) || !kindIs(p.material, ["linear", "sheet", "each", "printed"])) continue;
     const n = { ...p, label: p.label ?? p.id, size: V(p.size) };
     if (p.at) n.at = V(p.at);
+    if (materials[p.material].kind !== "printed") delete n.print; // an E_SCHEMA in checks
     partIds.add(p.id);
     parts.push(n);
     const first = byLabel.get(n.label);
     if (!first) { byLabel.set(n.label, n); continue; }
     const sorted = (s) => [...s].sort((a, b) => a - b);
     const diff = [n.name !== first.name && "name", n.material !== first.material && "material",
-      sorted(n.size).some((v, k) => Math.abs(v - sorted(first.size)[k]) > 0.1) && "size"].filter(Boolean);
+      sorted(n.size).some((v, k) => Math.abs(v - sorted(first.size)[k]) > 0.1) && "size",
+      JSON.stringify(n.print ?? null) !== JSON.stringify(first.print ?? null) && "print"].filter(Boolean);
     if (!diff.length) continue;
     const dims = (s) => `${s.map((v) => fmtLen(v, units).replace(/ (mm|in)$/, "")).join(" x ")} ${units}`;
     const detail = diff.includes("size") ? ` Sizes: ${dims(n.size)} and ${dims(first.size)}.` : "";
@@ -472,6 +480,7 @@ function normalize(c, ctx, techniques, problems) {
     if (s.uses) n.uses = usesOf(s.uses);
     if (s.finish) { const f = finishOf(s.finish); if (f) n.finish = f; else delete n.finish; }
     if (Array.isArray(s.cuts)) n.cuts = uniq(s.cuts.filter((id) => kindIs(id, ["linear", "sheet"])));
+    if (Array.isArray(s.prints)) n.prints = uniq(s.prints.filter((id) => kindIs(id, ["printed"])));
     if (s.from) n.from = V(s.from);
     return n;
   });

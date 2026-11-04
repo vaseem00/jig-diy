@@ -1,12 +1,13 @@
 // Bill of quantities: one row for each board length, sheet size, pack and tool to get, with the exact need, the
 // quantity to buy, rate and amount. Rows sort by group, then by the first step that needs them; codes count up
 // inside each group (H01, H02), so a new timber row never renumbers the hardware. Then the totals.
-// needQty is the exact need: mm of cut length (linear), m² of pieces (sheet), pieces (each), units (amount), tools.
+// needQty is the exact need: mm of cut length (linear), m² of pieces (sheet), pieces (each), units (amount), grams
+// of filament (printed), tools.
 
 import { amount, plural, groupBy, round, stableSort } from "./util.mjs";
 import { fmtLen, fmtArea, roundMoney } from "./locale.mjs";
 
-export const GROUPS = { "Timber and sheet": "T", Hardware: "H", Consumables: "C", Finish: "F", Safety: "S", Tools: "X" };
+export const GROUPS = { "Timber and sheet": "T", Printing: "P", Hardware: "H", Consumables: "C", Finish: "F", Safety: "S", Tools: "X" };
 export const OTHER = "O"; // code letter of any other group name; those groups sort last
 export const TOOL_KEY = "tool/"; // key prefix of tool rows ("/" is not allowed in ids, so keys never clash)
 const NAMES = Object.keys(GROUPS), FT2 = 0.09290304;
@@ -21,9 +22,10 @@ const canon = (g) => NAMES.find((k) => k.toLowerCase() === g.trim().toLowerCase(
 const rank = (g) => (Object.hasOwn(GROUPS, g) ? NAMES.indexOf(g) : NAMES.length);
 
 // Default group from the kind and the use: each is Hardware as a part or fastener, else Consumables (sandpaper);
-// amount is Finish when a finish uses it, else Consumables (glue).
+// amount is Finish when a finish uses it, else Consumables (glue); printed is Printing.
 function defaultGroup(m, n) {
   if (m.kind === "linear" || m.kind === "sheet") return "Timber and sheet";
+  if (m.kind === "printed") return "Printing";
   if (m.kind === "each") return n.part || n.fastener || m.len !== undefined || m.d !== undefined || m.head !== undefined ? "Hardware" : "Consumables";
   return n.finish?.length ? "Finish" : "Consumables";
 }
@@ -35,8 +37,9 @@ function finishNote(fin, m, units) {
 }
 
 // buildBoq(ctx) -> { rows, totals }. ctx: { materials, tools, needs, cuts, area, units, currency, contingency, tax }.
-// needs: { [materialId]: { first, count, amount, finish: [{ area (m²), coats }], part, fastener } } (pieces in count for
-// each materials, units in amount for amount materials). tools: normalized tools with first (step index or null).
+// needs: { [materialId]: { first, count, amount, finish: [{ area (m²), coats }], part, fastener, hours } } (pieces in count
+// for each materials, units in amount for amount materials; printed parts in count, grams in amount, printer hours in
+// hours for printed materials). tools: normalized tools with first (step index or null).
 // cuts: model.cuts. area: finished area in m². tax: { rate, label, included } or null.
 export function buildBoq({ materials = {}, tools = [], needs = {}, cuts = [], area = 0, units = "mm", currency = "USD", contingency = 0.1, tax = null } = {}) {
   const money = (n) => roundMoney(n, currency), rows = [];
@@ -64,6 +67,17 @@ export function buildBoq({ materials = {}, tools = [], needs = {}, cuts = [], ar
           qty: same.length, unit: linear ? "board" : "sheet", ...priced(s.price, same.length),
         });
       }
+      continue;
+    }
+    // Filament: the grams of the printed parts, bought in whole spools with the spare share.
+    if (m.kind === "printed") {
+      const grams = n.amount ?? 0, spool = m.spool ?? 1000, spare = m.spare ?? 0.1, x = (grams * (1 + spare)) / spool;
+      const spools = Math.ceil(x - 1e-9 * Math.max(1, Math.abs(x))), qty = Number.isFinite(spools) ? spools : null;
+      const unit = m.packName ?? (spool % 1000 ? `${shown(spool)} g spool` : `${spool / 1000} kg spool`);
+      rows.push({
+        ...base, key: id, get: "buy", need: `${plural(n.count ?? 0, "part")}, ${shown(grams)} g${spare ? ` + ${pct(spare)} spare` : ""}`, needQty: finite(round(grams, 3)),
+        qty, unit, ...priced(m.price, qty), note: [m.note, `${round(n.hours ?? 0, 1)} h of printer time.`].filter(Boolean).join(" "),
+      });
       continue;
     }
     const fin = m.kind === "amount" ? n.finish ?? [] : [];
