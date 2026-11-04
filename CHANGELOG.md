@@ -6,6 +6,8 @@ The format follows [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-04
+
 ### Added
 
 **3D-printed parts**
@@ -22,6 +24,15 @@ A build can now use 3D-printed parts next to cut stock and bought parts, for exa
 | New codes | `W_NO_PRINT_STEP` (no step prints a printed material), `I_PRINT_ESTIMATE` (a grams or hours value is an estimate). `print` on a part that is not printed is `E_SCHEMA` |
 
 The STE linter accepts "print" and "slice" as command verbs. Print settings are read as reader text: the STE lint (as a description) and the hand-off screen.
+
+**Batteries, electronics, soldering and printers**
+
+`safety.md` section 12: NiMH cells or a protected lithium pack tested to IEC 62133-2 or UL 2054, a certified charger, a fuse or a protection board, the WARNINGs for a short circuit, a damaged lithium battery and the first charge, soldering, 3D printers, and button cells and magnets near children. The hazard-class table of section 1 sends a battery, a board or a printed part to it.
+
+### Changed
+
+- **Wood is one route, not the default.** The jig skills choose how each object is really made, at the lowest real cost, before they collect any number: timber for furniture, metal for racks and frames, a chassis kit and modules for a robot, modules in a 3D-printed case or a bought box for a gadget, pipe for garden frames. A kit, a module or a box is bought when it costs less than making it. The reply names the route, the reason and the main alternative with its cost. `method.md` section 2.1 has the route table and the rules. Rule 9 of the `jig` skill says it, and `jig-plan`, `jig-boq` and `jig-3d` follow it.
+- `method.md` gains the numbers for kits and modules (2.7), 3D printing (2.8) and metal, pipe and plastic sheet (2.9), the joints of these routes, and build orders for a robot from a chassis kit, an electronic device in a printed case and a metal frame. Its subsections 2.1 to 2.5 are now 2.2 to 2.6.
 
 ## [1.0.0] - 2026-11-04
 
@@ -109,5 +120,6 @@ The private first version, a single personal skill at `~/.claude/skills/jig`. It
 - One `jig` skill: SKILL.md, a model in `kit/model.mjs`, an STE linter, technique cards, a three.js viewer, a page builder (`scripts/build.mjs`) and references.
 - The pine bookshelf example as a `project.mjs` module with its built pages.
 
-[Unreleased]: https://github.com/vaseem00/jig-diy/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/vaseem00/jig-diy/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/vaseem00/jig-diy/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/vaseem00/jig-diy/releases/tag/v1.0.0

@@ -19,7 +19,7 @@ description: >-
 license: MIT
 compatibility: Requires Node.js 22 or later. The guide page loads three.js 0.160.0 from cdn.jsdelivr.net and fonts from fonts.googleapis.com when it opens. Screen captures need Chrome, Chromium or Edge.
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   pack: jig-diy
   author: vaseem00
 ---

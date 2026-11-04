@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "jig",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Makes DIY build guides: a step-by-step plan, a bill of quantities, a shopping plan, a cut list and a 3D assembly viewer. Every number comes from one project file, and the instructions follow ASD-STE100 writing rules.",
   "author": {
     "name": "vaseem00",
