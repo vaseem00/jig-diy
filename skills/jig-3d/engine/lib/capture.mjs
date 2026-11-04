@@ -264,10 +264,13 @@ export async function capture(url, { out, width = 1280, height = 900, scale = 1,
       child.kill();
       await Promise.race([gone, later(3000)]);
     }
-    // Helper processes of the browser can hold the profile for a moment after it exits (Windows): try again for up to
-    // about 5 s. A folder that stays locked is removed by a later capture (removeStaleProfiles).
+    // Helper processes of the browser can hold the profile for a moment after it exits (Windows), or write into it again
+    // just after it is removed (Linux): try again until the folder is gone, for up to about 5 s. A folder that stays is
+    // removed by a later capture (removeStaleProfiles).
     for (let k = 0; k < 10; k++) {
-      try { rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 }); break; } catch { await sleep(250); }
+      try { rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 }); } catch { /* locked: try again */ }
+      if (!existsSync(profile)) break;
+      await sleep(250);
     }
     for (const [sig, h] of Object.entries(handlers)) process.removeListener(sig, h);
   }

@@ -34,6 +34,10 @@ The STE linter accepts "print" and "slice" as command verbs. Print settings are 
 - **Wood is one route, not the default.** The jig skills choose how each object is really made, at the lowest real cost, before they collect any number: timber for furniture, metal for racks and frames, a chassis kit and modules for a robot, modules in a 3D-printed case or a bought box for a gadget, pipe for garden frames. A kit, a module or a box is bought when it costs less than making it. The reply names the route, the reason and the main alternative with its cost. `method.md` section 2.1 has the route table and the rules. Rule 9 of the `jig` skill says it, and `jig-plan`, `jig-boq` and `jig-3d` follow it.
 - `method.md` gains the numbers for kits and modules (2.7), 3D printing (2.8) and metal, pipe and plastic sheet (2.9), the joints of these routes, and build orders for a robot from a chassis kit, an electronic device in a printed case and a metal frame. Its subsections 2.1 to 2.5 are now 2.2 to 2.6.
 
+### Fixed
+
+- `capture` removes its browser profile also when a helper process of the browser writes into it again just after the first removal (seen on Linux).
+
 ## [1.0.0] - 2026-11-04
 
 The first public release. Jig turns a DIY project into one interactive build guide: a step-by-step plan, a bill of quantities, a purchase plan, a to-scale cut list and a 3D viewer that assembles the object part by part. The text follows the writing rules of ASD-STE100 Simplified Technical English, and a level switch serves a first-timer and an expert. Nine Agent Skills share one engine. [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) is the contract for this release.
