@@ -15,6 +15,7 @@ What can hurt the reader or damage the work, what to wear, how to write a WARNIN
 9. [Outdoor builds](#9-outdoor-builds)
 10. [Hand-off](#10-hand-off)
 11. [The words the hand-off screen finds](#11-the-words-the-hand-off-screen-finds)
+12. [Batteries, electronics, soldering and printers](#12-batteries-electronics-soldering-and-printers)
 
 ## 1. What the engine checks
 
@@ -63,6 +64,7 @@ What the engine cannot see:
 | It has a lid, a door, a flap, a spring or a bought mechanism | A storage bench, a sandpit lid, a wall bed | 8 and 6 |
 | It stands outdoors | A planter, a fence, a deck, a swing frame, a shed | 9 |
 | It has lights, a heater, a motor or another electric part | A headboard with lights, a lit display cabinet, a sauna heater | 10: mains work is a hand-off. A plug-in 12 V kit or battery lights are not |
+| It has a battery, a charger, a circuit board or soldered joints, or it has printed parts | A robot, an e-reader, a clock, a sensor box, a game handheld | 12 |
 
 ## 2. WARNING and CAUTION
 
@@ -363,3 +365,39 @@ The screen reads every reader text: the title, the summary, step titles, instruc
 A WARNING about a plug-in item names the item, not the supply: "Do not open the power supply. It can give you an electric shock."
 
 The screen cannot see work that the text does not name. Read each step for its meaning, too.
+
+## 12. Batteries, electronics, soldering and printers
+
+A robot, an e-reader or a sensor box runs on low voltage, so it is not mains work. Its hazards are fire from a battery, burns from a hot joint or a short circuit, and fumes.
+
+**Batteries.**
+
+| Battery | Use it when | Rules |
+|---|---|---|
+| NiMH AA or AAA cells in a holder | A first build, a toy-size robot, a clock | Use the charger made for NiMH. Do not mix new and old cells. New alkaline cells give more voltage than NiMH: check the motor and board ratings before a reader uses them |
+| A lithium-ion or lithium-polymer pack with a protection circuit | A thin device (an e-reader), a long run time | Buy a pack with a protection circuit, tested to IEC 62133-2 or UL 2054. Charge it only with a charger or a board made for that cell and its charge current. Use the connector that the board takes. Do not cut or solder the pack leads |
+| A bare lithium cell (an 18650 with no protection) | Never in a guide for a beginner | Use a protected cell or a pack with a protection board |
+
+WARNINGs to use:
+
+- "Remove the cells before you connect a lead. A short circuit can make the leads hot enough to burn you." In the first wiring step.
+- "Do not puncture, crush or bend the battery. A damaged lithium battery can catch fire." On each step that handles a lithium pack.
+- "Charge the battery on a hard surface, away from anything that can burn. Do not leave it to charge unattended at first." On the first charge.
+- "If the battery becomes hot, swells or smells, stop and disconnect it. Put it outdoors on a non-flammable surface." In the test step.
+
+Add a fuse or a protection board between a battery and the motors when a short circuit can draw more current than the leads can carry. Put the battery where the reader can remove it to charge it, and where a crash or a fall does not crush it.
+
+**Chargers and supplies.** Use a bought, certified charger or USB power supply. A guide never opens a charger or a supply, and never connects a wire to its mains side ([section 10](#10-hand-off)).
+
+**Soldering.** Prefer modules with pin headers, screw terminals and jumper wires. When a joint needs solder:
+
+- WARNING: "Put the soldering iron in its stand after each joint. The tip is hot enough to burn you and the bench."
+- WARNING: "Work with a window open or a fume fan on. Solder fumes can hurt your lungs."
+- WARNING: "Wear safety glasses when you cut wire ends. A cut end can fly into your eyes."
+- Use lead-free solder, or wash your hands after you use solder that contains lead.
+
+**3D printers.** The nozzle and the bed are hot. Run the printer where air moves, and not in a bedroom: some plastics give off fumes. Do not leave a printer unattended for the first layers of a long print. A part that carries a load or gets hot needs the material and the settings of [method.md](method.md) section 2.8.
+
+**Small parts and children.** A robot or a device with small parts, magnets or a button cell is not a toy for a child under 3. Keep button cells and magnets away from children: a swallowed button cell or two magnets can kill. A device for a child follows section 8 and its toy standard.
+
+**Standards.** Name the standard of the country for the product in the reply: for example IEC 60335-2-2 or UL 1017 for a floor-cleaning machine, IEC 62368-1 for an audio or a display device, IEC 62133-2 for the battery. A home build is not certified. Its safety comes from the certified bought parts: the charger, the supply and the battery pack.

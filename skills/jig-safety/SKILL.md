@@ -100,7 +100,7 @@ What the engine checks, and what it cannot see:
    node "${CLAUDE_SKILL_DIR}/engine/jig.mjs" safety bookcase/project.json
    ```
    Read each problem and the summary: the tip ratio, the protective equipment, the power tools and the hand-offs. Read every entry under "Cleared hand-off hits": the `why` and each text. If a text is hand-off work, or the `why` does not explain it, that is a finding (rule 9). For a plan in text, a page or a description, go to step 5 with the text.
-5. **Review step by step.** For each step, ask the questions in [references/review.md](references/review.md): the tool, the material, the finish, the wall, the load, the person, the order. Find the hazard in [engine/docs/safety.md](engine/docs/safety.md) sections 3 to 10. For a product with no row, use the hazard classes in section 1. Find the safety standard of the country. Give no safety gap, load limit or clearance from memory.
+5. **Review step by step.** For each step, ask the questions in [references/review.md](references/review.md): the tool, the material, the finish, the wall, the load, the person, the order. Find the hazard in [engine/docs/safety.md](engine/docs/safety.md) sections 3 to 10. For a product with no row, use the hazard classes in section 1. For batteries, chargers, soldering and 3D printers, use section 12. Find the safety standard of the country. Give no safety gap, load limit or clearance from memory.
 6. **Write each finding** with its level, its place, the risk and the fix:
    - **STOP:** hand-off work, or a risk of death (a tall unit with no wall fixing in a home with children). Nothing else is built until it is fixed.
    - **FIX:** a missing or wrong WARNING, missing protective equipment, a wrong fixing, an unsafe order.

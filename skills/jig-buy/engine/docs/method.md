@@ -24,7 +24,7 @@ A person who wants to build something asks five questions, in this order. Each p
 |---|---|---|
 | What will I get, and can I do it? | The finished object, time, cost, difficulty, tools | Plan |
 | What do I buy, where, and when? | Trips in order, then the BOQ | Shop |
-| How do I get my parts out of the stock? | Boards and sheets to scale, with the cuts | Cut list |
+| How do I get my parts out of the stock? | Boards and sheets to scale, with the cuts, and the parts to print. A kit build has neither, and the tab is not shown | Cut list, Print list, or Cut and print |
 | What do I do now? | One step: picture, warnings, instructions, check | Build |
 | Did I do it right? | The check at the end of each step | Build |
 
@@ -32,11 +32,34 @@ The first screen answers the first question with a picture and one sentence.
 
 ## 2. Numbers to collect first
 
-Collect real numbers before you design anything. A guide built on a nominal size or an invented price is wrong in every later number.
+Collect real numbers before you design anything. A guide built on a nominal size or an invented price is wrong in every later number. The numbers depend on how the object is made, so choose the route first (2.1).
 
 If the user's country, units or currency are unknown and they change the result, ask once. Otherwise use millimetres (inches when the user writes in feet and inches), the user's likely currency, and mark the prices as estimates.
 
-### 2.1 Actual timber sizes
+### 2.1 Choose how it is made
+
+Wood is one route, not the default. Build each object the way people who make that kind of object build it, from the materials and bought parts that do the job at the lowest real cost. A robot from plywood, or an e-reader in a wooden box, is a wrong guide even when every number in it is correct.
+
+| The object | The usual route | Materials and bought parts |
+|---|---|---|
+| Furniture, shelves, storage, benches, workbenches | Timber and sheet goods | Pine, plywood, MDF; screws, glue, brackets |
+| Outdoor builds: planters, raised beds, fences, sheds | Outdoor timber | Treated pine, cedar, larch; exterior screws |
+| Racks, carts, frames for heavy loads, machine frames | Metal | Slotted steel angle, steel or aluminium tube with bolt-on brackets, aluminium extrusion (2020, 2040) with T-nuts |
+| Robots and small vehicles | A bought chassis kit, or 3D-printed parts on a kit or an extrusion frame | Chassis kit (decks, motors, wheels, caster, standoffs), controller board, motor driver, sensors, battery pack |
+| Electronic devices: an e-reader, a clock, a weather station, a speaker, a game handheld, a remote | Bought modules in a 3D-printed case, or in a bought project box | Development board, display, battery with protection, PLA or PETG case, or an ABS project box |
+| Small boxes, organisers, brackets, holders | 3D print when the part is small and shaped; sheet goods or a bought box when it is large and flat | PLA, PETG; plywood, acrylic sheet |
+| Light frames outdoors or in the garden: a cover frame, a trellis | Pipe and fittings | PVC or galvanised pipe and the fittings of the same system |
+| Lamps and lights | A body of any route, with a certified pre-wired cord set or a plug-in 12 V or USB LED kit | As the body needs. The light is always bought ([safety.md](safety.md) section 10) |
+
+Rules for the choice:
+
+- **Buy before you make.** If a kit, a module or a box costs less than its materials plus the tools that make it, buy it. A round robot chassis kit with decks, motors, wheels and standoffs costs about the same as the plywood alone, and it needs no saw.
+- **Use the reader's tools.** Choose the route that needs no tool the reader does not have. A 3D-printed part needs a printer: if the reader has none, price a print service (a library, a makerspace or an online service) as an `each` material, or choose a bought box.
+- **Match the job.** The material must take the load, the heat, the water and the wear: metal for a frame that carries a machine, PETG (not PLA) for a part in a hot car or near a motor, outdoor timber outdoors.
+- **Say the route in the reply.** Give the route, the reason in one sentence, and the main alternative with its cost: "The chassis is a bought kit. A 3D-printed chassis costs about the same in filament but takes 9 hours of printer time."
+- **Mix routes when the object mixes them.** A wooden desk with a printed cable clip, or a robot kit with a printed pad holder, is normal. Each part gets the material it would really have.
+
+### 2.2 Actual timber sizes
 
 North American softwood is sold by a nominal size. The actual size is smaller:
 
@@ -55,7 +78,7 @@ North American softwood is sold by a nominal size. The actual size is smaller:
 - Some metric sizes are already actual: CLS studs (38 x 63, 38 x 89 mm), Australian framing pine (70 x 35, 90 x 35, 90 x 45 mm).
 - Use the stock lengths that the user's store lists. Do not guess them.
 
-### 2.2 Sheets
+### 2.3 Sheets
 
 | Market | Common sheet | Thickness |
 |---|---|---|
@@ -64,7 +87,7 @@ North American softwood is sold by a nominal size. The actual size is smaller:
 
 Many stores cut sheets to size. Add each cut size that the store sells as its own `stock` entry.
 
-### 2.3 Fasteners
+### 2.4 Fasteners
 
 - **Screw length:** about 2.5 times the thickness of the part the screw goes through, with at least 25 mm (1 in) in the second part. A 19 mm board takes 4 x 45 to 50 mm screws (#8 x 2 in). A 38 mm board takes 5 x 80 to 90 mm screws (#10 x 3 in).
 - **Pilot hole:** about the core diameter of the screw: 2.5 to 3 mm for a 4 mm screw in softwood, 3 mm in hardwood. A pilot hole stops a split near an end.
@@ -72,7 +95,7 @@ Many stores cut sheets to size. Add each cut size that the store sells as its ow
 - **Thin panels:** a 6 mm back takes 3 x 16 mm pan-head screws or 18-gauge brads.
 - **Wall fixings:** a screw into a wood stud holds the load. Studs are at 400 or 600 mm centres (16 or 24 in). Choose a screw that goes 30 mm (1 1/4 in) or more into the stud after the bracket and the plasterboard: a 4 x 50 mm screw through a 3 mm bracket and 12.5 mm plasterboard. Masonry needs plugs. Plasterboard alone takes only light loads on a hollow-wall anchor: not an anti-tip strap, a TV mount, a wall cabinet or a load above a bed ([safety.md](safety.md) section 6).
 
-### 2.4 Glue and finish
+### 2.5 Glue and finish
 
 | Product | Numbers to use |
 |---|---|
@@ -83,13 +106,44 @@ Many stores cut sheets to size. Add each cut size that the store sells as its ow
 
 The can is the authority. Put the numbers from the user's product in `coverage`, `coats` and `wait`.
 
-### 2.5 Prices
+### 2.6 Prices
 
 Never present an invented price as fact. Every rate the user did not give is an estimate: it shows an `est` badge. Say where the estimate comes from in `priceNote` and when in `pricesAsOf`. Set `est: false` only on a price the user gave or a quote you read.
 
+### 2.7 Kits and modules
+
+- **Model the kit as it comes.** The kit is one `each` material with its price. Each part inside it (a deck, a motor, a wheel, the standoffs) is its own material with `included: true`, so the BOQ lists it as "in the kit" and the reader can check the box contents against it. Put the screws of the kit in `fasteners` with an `included` material too.
+- **Real sizes come from the listing or the part.** Read the deck diameter, the hole pattern, the motor size and the wheel diameter in the listing or the kit drawing. If they are not there, give a typical size, mark it, and ask the reader to measure the real part before the step that depends on it.
+- **The kit's own order.** A kit has an order that works. Follow it, and add the steps that the kit leaves out: the checks, the warnings, the wire routes.
+- **Modules plug together.** Prefer modules with pin headers and screw terminals, and jumper wires, to soldering. If a module needs soldering, say so in the route, add the soldering iron to the tools, and teach the joint with a technique card.
+- **The voltages must match.** Check every module against the supply: the motor rating, the regulator input of the board, the logic level of each sensor (3.3 V or 5 V). Write the numbers in the `why` of the wiring step.
+- **Software is part of the guide.** A guide with a programmable board ships its program as a file next to the project, with the wiring list at the top. The steps name the file, the board and the upload method.
+
+### 2.8 3D printing
+
+| Number | Typical value |
+|---|---|
+| Bed size of a home printer | 220 × 220 mm; a part larger than the bed is two parts with a joint |
+| Material | PLA for indoor parts. PETG for heat (above about 50 °C), sun, water and parts near a motor |
+| Wall and infill | 3 walls and 15 to 25% infill for a case; 4 walls and 40% infill for a bracket that carries a load |
+| Clearance | 0.2 to 0.3 mm on each side for a part that fits into another part |
+| Threads | M3 brass heat-set inserts in plastic, or M3 screws into a 2.5 mm hole for light loads |
+| Time and filament | The slicer is the authority: put its grams and hours on the part |
+
+Print each part flat on its largest face, with no supports when the shape allows it. Say the print settings in the part's print settings and the time as printer time, not work time.
+
+### 2.9 Metal, pipe and plastic sheet
+
+- **Aluminium extrusion** is sold by its profile: 2020 is 20 × 20 mm with a 6 mm slot for M5 T-nuts. Cut it with a hand saw and a mitre box, or buy it cut to length.
+- **Slotted steel angle** bolts together with its own nuts and bolts. It needs no welding.
+- **PVC pipe** is sold by a nominal size. The outside diameter is fixed: US Schedule 40 1/2 in is 21.3 mm, 3/4 in is 26.7 mm, 1 in is 33.4 mm. Use the fittings of the same system.
+- **Acrylic sheet** cracks when you drill it with a wood bit at high speed. Use a bit for plastic, or a low speed and a backing board. A laser-cut service gives clean parts from a drawing.
+
 ## 3. Design the object as it is built
 
-Choose joints a beginner can make with the tools named, and say why in the step's `why`.
+Use the route from 2.1. Choose joints a beginner can make with the tools named, and say why in the step's `why`.
+
+Wood:
 
 | Joint | Tools | Use for | Note |
 |---|---|---|---|
@@ -98,6 +152,19 @@ Choose joints a beginner can make with the tools named, and say why in the step'
 | Metal brackets | Drill | Shelves, frames, repairs | Fastest. The brackets show |
 | Dowels | Drill, dowel jig | Hidden joints | Needs accurate holes |
 | Dado (housing) | Router or table saw | Shelves in a carcass | Stiffest shelf. The parts overlap, so list them in `joins` |
+
+Other routes:
+
+| Joint | Tools | Use for | Note |
+|---|---|---|---|
+| Machine screw and nut through kit holes | Screwdriver, pliers | Chassis kits, acrylic and metal sheet | Use the holes the kit has. Drill a new hole only where the kit has none |
+| Standoffs | Screwdriver | Boards and decks above a deck | Keep the pins of a board off the deck |
+| Heat-set insert and machine screw | Soldering iron, screwdriver | 3D-printed cases and brackets | Holds a screw that you remove again and again |
+| Snap fit or slide fit | None | 3D-printed lids and covers | Give 0.2 to 0.3 mm of clearance on each side |
+| T-nut and bracket | Hex key | Aluminium extrusion frames | Put the T-nuts in the slot before you close the frame |
+| Nut and bolt through slotted angle | Spanner | Steel racks and frames | Brace each frame with a corner plate |
+| Push-fit pipe fitting | Pipe cutter | Pipe frames | Use PVC cement only where the frame never comes apart |
+| Hook-and-loop tape, mounting tape | None | Battery boxes, light modules, pads | The part comes off for a charge or a wash |
 
 - **Include the parts that hold the parts:** cleats, back panels, brackets, anti-tip straps, feet and levelling shims. A back panel squares a carcass.
 - **Mind the span.** A 19 mm pine or plywood shelf that carries books sags past about 800 mm. An 18 mm MDF shelf sags past about 600 mm. Add a centre support or a front lip, or use a thicker board.
@@ -125,6 +192,9 @@ Orders that work:
 | Table, bench or frame | Cut, sand; two end frames (legs and short rails); join them with the long rails; top; finish |
 | Planter or raised bed | Cut, sand; corner posts and the first course; the other courses; bottom slats or liner; finish before any soil goes in |
 | Wall shelf | Cut, sand, finish; find the studs and mark a level line; brackets; shelf |
+| Robot or vehicle from a chassis kit | Check the kit contents; motors and wheels on the lower deck; caster; power parts (battery box, motor driver); controller on standoffs; sensors; wiring; load the program and test with the top deck off; top deck; the tool (pad, brush, gripper) |
+| Electronic device in a printed case | Print the parts; test the modules on the bench with the program loaded; insert the threads; fit the modules in the case; wire them; close the case; test again |
+| Metal or extrusion frame | Cut or check the lengths; two end frames; the long members; square the frame; braces; feet or wheels; shelves or panels |
 | Repair | Examine; remove the damaged part; prepare the joint; glue or fix; clamp and wait; finish to match. Model the object that exists as props with a label (the legs, the seat), and only the new or replaced pieces as parts. With no parts, the 3D view and the Fig 1 size come from the props in the Plan view. When a repair has parts, the 3D view and Fig 1 show only the parts, so Fig 1 gives the size of the new pieces. Say so in the reply |
 
 ## 5. Levels
@@ -156,7 +226,7 @@ Write each instruction as one STE sentence that a tired person in a garage can f
 
 - **Every quantity is computed.** Boards come from the cut packing, screws from `fasteners`, glue and sandpaper from `uses`, finish from the area x coats / coverage. If you want to type a quantity, model the thing that uses it instead.
 - **Need and purchase are two columns:** "24 pieces + 10% spare" and "1 pack of 50". The reader sees why they buy more than they use.
-- **Codes** are a group letter and a number inside the group: T timber and sheet, H hardware, C consumables, F finish, S safety, X tools, O other. A reader can tell a helper "I could not get H06", and a new timber row never changes that code.
+- **Codes** are a group letter and a number inside the group: T timber and sheet, P printing (filament), H hardware, C consumables, F finish, S safety, X tools, O other (for example a group "Electronics"). A reader can tell a helper "I could not get H06", and a new timber row never changes that code.
 - **Contingency** is 10% by default, on its own line. Prices change and cuts go wrong.
 - **Tax:** with `tax.included`, prices hold the tax. Otherwise the tax is a line on the total.
 - **Estimates are marked.** Every rate the user did not give carries `est`.
@@ -175,11 +245,12 @@ Write each instruction as one STE sentence that a tired person in a garage can f
 - Finish steps name ventilation, gloves and the rag-fire risk of oil finishes.
 - An item near a stove, a fireplace, a heater or a sauna heater keeps the clearance that the maker of the heat source gives. This is on the stove label, or in the manual of the heater. If a stove has no label, keep the item 900 mm (36 in) from the stove. An item near a fire pit keeps the distance that the local fire service gives. The step that puts the item in place has a WARNING ([safety.md](safety.md) sections 5 and 9).
 - Name the protective equipment each step needs: glasses for drills and saws, ear protection for saws and sanders, a dust mask for sanding, gloves for finishes.
+- Batteries, chargers, soldering and printers have their own rules ([safety.md](safety.md) section 12): a bought cell or pack with protection, its matching charger, no charge unattended, ventilation for solder and plastic fumes.
 - Hand off what a non-professional must not do: gas, mains wiring, structural changes, work above 2 m, permit work, asbestos and lead paint. Write the guide around it, say who does that part, and never write steps for it.
 
 ## 10. Time
 
-- Active minutes come from the steps. Waiting (glue, finish) is shown apart, because a reader plans a weekend around it.
+- Active minutes come from the steps. Waiting (glue, finish, printer time) is shown apart, because a reader plans a weekend around it.
 - The plan shows the phases as a bar scaled by minutes, with the step chips under each phase.
 - Durations under 10 minutes show to the minute. Longer ones round to 5 minutes.
 
