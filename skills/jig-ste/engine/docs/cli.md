@@ -180,7 +180,7 @@ Checks the project in guide mode, then writes one self-contained HTML page.
 | `--out file` | The page path. A folder puts the page in it with its default name |
 | `--artifact` | Writes a page body (title, the `claude:viewport-fit-sides` meta, fonts, style, body) for the Artifact tool. Its host adds the standard viewport meta. For any other host, publish the full `<id>.html` |
 | `--offline` | Puts three.js 0.160.0 into the page, so the 3D view works with no network. The page gets about 0.9 MB larger, because it stores three.js (about 700 KB) as base64. The whole page is then about 1 MB |
-| `--tabs list` | The tabs to show, from `plan,shop,cut,build`, in any order. One tab hides the tab bar |
+| `--tabs list` | The tabs to show, from `plan,shop,cut,build`, in any order. One tab hides the tab bar. A project with nothing to cut and nothing to print (a kit of bought parts) has no cut tab: `--tabs` leaves `cut` out, and `--tabs cut` alone stops with exit code 2 |
 | `--json` | Also writes the computed model as JSON next to the page |
 | `--force` | Writes the page also when the project has errors. The exit code stays 1. Never share a page built with `--force` |
 | `--strict` | STE findings and the warning `W_CLEARED_UNUSED` also stop the build |
@@ -219,6 +219,7 @@ Each command prints the report on stderr. It writes its output to stdout, or to 
 - An `--out` that is the project file stops with exit code 2 before the report prints, and the project stays as it is.
 - `plan --strict` also stops on STE findings and on `W_CLEARED_UNUSED`.
 - `--level` sets the reader level of the plan: `new` (First time: every line, technique cards, Why notes), `some` or `pro`. Default: the `level` of the project.
+- In the plan, a step with `prints` has a "Prints:" line: the printed parts and their printer time, which is part of the waiting time of the step.
 - `--start` is the first day of the build. Each trip of the shopping list gets an order-by date: the start date minus the store's lead days. A date that is not a real `YYYY-MM-DD` date stops with exit code 2.
 - Default format: `md`. Markdown output has no HTML.
 
@@ -226,12 +227,12 @@ Each command prints the report on stderr. It writes its output to stdout, or to 
 |---|---|
 | `plan` | `{ engine, meta, plan, steps, tools, techniques, safety }` |
 | `boq` | `{ engine, meta, boq, totals }` |
-| `cut` | `{ engine, meta, parts, cuts }`. Each part has `id`, `label`, `name`, `material`, `kind`, `cut`. Lengths are in mm, also in an inch project |
+| `cut` | `{ engine, meta, parts, cuts, prints }`. Each part has `id`, `label`, `name`, `material`, `kind`, `cut`, and a 3D-printed part also `print` (`grams`, `hours`, `settings`, `est`, `step`). `prints` is there only when the project has printed parts: one entry for each printed material, `{ material, name, count, grams, hours, step, parts: [{ label, name, qty, grams, hours, settings, est }] }`. Lengths are in mm, also in an inch project |
 | `buy` | `{ engine, meta, purchase, boq, totals }`. Each trip lists the `key` of its BOQ rows in `items` |
 
 `boq --format csv` writes one row for each BOQ line, then the totals. The columns: `code, group, item, spec, need, need_qty, qty, unit, rate, amount, currency, est, get, store, first_step, note`. Lines end with CRLF.
 
-- `need_qty` is in the project unit: mm or in of cut length for boards, m² or ft² for sheets, pieces for `each` materials, the material unit for `amount` materials, the count for tools. The JSON output stays in mm and m².
+- `need_qty` is in the project unit: mm or in of cut length for boards, m² or ft² for sheets, pieces for `each` materials, the material unit for `amount` materials, grams of filament for `printed` materials, the count for tools. The JSON output stays in mm and m².
 - `rate` is the price as given (up to 4 decimals in Markdown: `$0.045`). `amount` is qty × rate, rounded to the minor unit of the currency.
 - If a text cell starts with `=`, `+`, `-` or `@`, the engine puts `'` before it. It does the same for one of these characters right after a `;`, a line break or a tab. Then a spreadsheet does not run the text as a formula.
 - A line break inside a text cell is LF. Control characters become U+FFFD.
@@ -243,6 +244,8 @@ Each command prints the report on stderr. It writes its output to stdout, or to 
 - `Plan: the best plan found, not proven lowest cost. The material has more than 14 pieces, so a fast search made the plan.`: no search stopped; a fast search packs a material with more than 14 pieces. The JSON output gives `search: "exact"` or `"fast"` next to `optimal` on each board material.
 
 The totals of each material equal its BOQ amounts. The kerf and the trim show to 1/64 in ("3/32 in"), or as decimal inches when the value is not on a 1/64 in step.
+
+A project with 3D-printed parts gets the title "Cut and print list", or "Print list" when it has no part to cut (then no kerf line). The Parts table holds the cut and the bought parts. A "Printed parts" table follows it: part letter, name, quantity, grams and hours for one part, material and print settings. A value that the engine estimates from the part size has the mark `est`. Under the table, one line for each printed material gives its parts, grams, printer hours and the spools to buy, as the BOQ row.
 
 `cut --format svg` always writes files, one for each board or sheet material. Material ids that differ only in letter case (`Pine` and `pine`) would get the same file name on Windows and macOS: the command stops with exit code 2 and writes nothing.
 

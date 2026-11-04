@@ -390,7 +390,7 @@
       "additionalProperties": false
     },
     "material": {
-      "description": "A material. kind sets the other fields: linear, sheet, each or amount.",
+      "description": "A material. kind sets the other fields: linear, sheet, each, amount or printed.",
       "anyOf": [
         {
           "$ref": "#/$defs/linear"
@@ -403,6 +403,9 @@
         },
         {
           "$ref": "#/$defs/amount"
+        },
+        {
+          "$ref": "#/$defs/printed"
         }
       ]
     },
@@ -438,7 +441,7 @@
         },
         "group": {
           "type": "string",
-          "description": "BOQ group name. Default: from the kind (Timber and sheet, Hardware, Consumables, Finish).",
+          "description": "BOQ group name. Default: from the kind (Timber and sheet, Printing, Hardware, Consumables, Finish).",
           "minLength": 1
         },
         "est": {
@@ -587,7 +590,7 @@
         },
         "group": {
           "type": "string",
-          "description": "BOQ group name. Default: from the kind (Timber and sheet, Hardware, Consumables, Finish).",
+          "description": "BOQ group name. Default: from the kind (Timber and sheet, Printing, Hardware, Consumables, Finish).",
           "minLength": 1
         },
         "est": {
@@ -684,7 +687,7 @@
         },
         "group": {
           "type": "string",
-          "description": "BOQ group name. Default: from the kind (Timber and sheet, Hardware, Consumables, Finish).",
+          "description": "BOQ group name. Default: from the kind (Timber and sheet, Printing, Hardware, Consumables, Finish).",
           "minLength": 1
         },
         "est": {
@@ -791,7 +794,7 @@
         },
         "group": {
           "type": "string",
-          "description": "BOQ group name. Default: from the kind (Timber and sheet, Hardware, Consumables, Finish).",
+          "description": "BOQ group name. Default: from the kind (Timber and sheet, Printing, Hardware, Consumables, Finish).",
           "minLength": 1
         },
         "est": {
@@ -848,6 +851,103 @@
           "description": "Spare share from 0 to 1. Default: 0.1 for finishes, else 0.",
           "minimum": 0,
           "maximum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "printed": {
+      "type": "object",
+      "description": "A filament for 3D-printed parts, sold by the spool.",
+      "required": [
+        "name",
+        "kind"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name in the BOQ and the shopping list, for example \"Pine board\".",
+          "minLength": 1
+        },
+        "kind": {
+          "const": "printed",
+          "description": "printed: filament for 3D-printed parts, sold by the spool."
+        },
+        "spec": {
+          "type": "string",
+          "description": "Size or grade as the store writes it, for example \"19 x 235 mm (1x10)\"."
+        },
+        "store": {
+          "$ref": "#/$defs/id",
+          "description": "Id of the store in stores where you buy it."
+        },
+        "color": {
+          "$ref": "#/$defs/color",
+          "description": "Color in the 3D view and the cut drawings."
+        },
+        "group": {
+          "type": "string",
+          "description": "BOQ group name. Default: from the kind (Timber and sheet, Printing, Hardware, Consumables, Finish).",
+          "minLength": 1
+        },
+        "est": {
+          "type": "boolean",
+          "description": "Set false when the price is a real quote. Default: the project estimate value."
+        },
+        "note": {
+          "type": "string",
+          "description": "Note shown next to the item in the shopping list."
+        },
+        "role": {
+          "enum": [
+            "anchor"
+          ],
+          "description": "anchor: wall fixings. A tall object needs one to pass the tip-over check."
+        },
+        "spool": {
+          "type": "number",
+          "description": "Grams of filament in one spool.",
+          "exclusiveMinimum": 0,
+          "maximum": 1000000,
+          "default": 1000
+        },
+        "packName": {
+          "type": "string",
+          "description": "Name of one spool, for example \"1 kg spool\".",
+          "minLength": 1
+        },
+        "price": {
+          "type": "number",
+          "description": "Price of one spool in the project currency.",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "density": {
+          "type": "number",
+          "description": "Filament density in g/cm³: PLA 1.24, PETG 1.27, ABS 1.04.",
+          "exclusiveMinimum": 0,
+          "maximum": 1000000,
+          "default": 1.24
+        },
+        "fill": {
+          "type": "number",
+          "description": "Share of the solid part volume that the printer fills (walls and infill), from 0 to 1.",
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "default": 0.3
+        },
+        "rate": {
+          "type": "number",
+          "description": "Grams of filament the printer lays down in one hour.",
+          "exclusiveMinimum": 0,
+          "maximum": 1000000,
+          "default": 12
+        },
+        "spare": {
+          "type": "number",
+          "description": "Spare share from 0 to 1 (failed prints, purge).",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.1
         }
       },
       "additionalProperties": false
@@ -1008,6 +1108,30 @@
           "items": {
             "$ref": "#/$defs/id"
           }
+        },
+        "print": {
+          "type": "object",
+          "description": "Slicer numbers of a 3D-printed part (a part of a printed material). A missing value is estimated from the size.",
+          "properties": {
+            "grams": {
+              "type": "number",
+              "description": "Filament for one part in grams, from the slicer.",
+              "exclusiveMinimum": 0,
+              "maximum": 1000000
+            },
+            "hours": {
+              "type": "number",
+              "description": "Printer time for one part in hours, from the slicer.",
+              "exclusiveMinimum": 0,
+              "maximum": 1000000
+            },
+            "settings": {
+              "type": "string",
+              "description": "Print settings for the reader, for example \"0.2 mm layers, 20% infill, no supports\".",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false
@@ -1276,6 +1400,16 @@
             "$ref": "#/$defs/id"
           },
           "description": "true, or material ids: stock is cut in this step."
+        },
+        "prints": {
+          "type": [
+            "boolean",
+            "array"
+          ],
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "description": "true, or printed material ids: the printer makes those parts in this step. Their printer time is waiting time of the step."
         },
         "tools": {
           "type": "array",

@@ -207,6 +207,36 @@ test("build output paths: <id>.html, -3d, -artifact, --out with new folders, --j
   assert.ok(readFileSync(file, "utf8").startsWith("{"));
 });
 
+test("cut --format json: printed parts carry print, and prints lists them by material (no prints key without them)", async () => {
+  const r = await run(["cut", join(ROOT, "tests", "fixtures", "printed-hook.json"), "--format", "json", "--quiet"]);
+  assert.equal(r.code, 0, r.stderr);
+  const J = JSON.parse(r.stdout);
+  assert.deepEqual(Object.keys(J), ["engine", "meta", "parts", "cuts", "prints"]);
+  assert.deepEqual(J.parts.map((p) => [p.id, p.kind, p.print?.grams ?? null]), [["A1", "linear", null], ["B1", "printed", 18], ["B2", "printed", 18], ["C1", "printed", 7]]);
+  assert.deepEqual([J.prints[0].material, J.prints[0].count, J.prints[0].grams, J.prints[0].hours, J.prints[0].parts.map((p) => `${p.qty} × ${p.label}`)], ["pla", 3, 43, 3.8, ["2 × B", "1 × C"]]);
+  const shelfJson = JSON.parse((await run(["cut", SHELF, "--format", "json", "--quiet"])).stdout);
+  assert.deepEqual(Object.keys(shelfJson), ["engine", "meta", "parts", "cuts"]);
+  assert.ok(shelfJson.parts.every((p) => !("print" in p)));
+});
+
+test("build of a kit with nothing to cut or print: no cut tab; --tabs leaves it out, --tabs cut alone is exit 2", { skip: PAGE }, async () => {
+  const { dir, file } = fixture((P) => {
+    for (const k of Object.keys(P)) delete P[k];
+    Object.assign(P, { id: "kit-box", title: "Kit box", materials: { panel: { kind: "each", name: "Panel", price: 5 } },
+      parts: [{ id: "A1", name: "Panel", material: "panel", size: [300, 10, 300], at: [0, 0, 0] }],
+      steps: [{ id: "lay", title: "Put the panel on the floor", minutes: 1, parts: ["A1"], do: ["Put the panel on the floor."], check: "Make sure that the panel is flat." }] });
+  });
+  const page = await run(["build", file, "--report", "json"]);
+  assert.equal(page.code, 0, page.stderr);
+  assert.match(readFileSync(join(dir, "kit-box.html"), "utf8"), /data-tabs="plan,shop,build"/);
+  const cut = await run(["build", file, "--tabs", "cut"]);
+  assert.equal(cut.code, 2);
+  assert.match(cut.stderr, /--tabs cut: The project has nothing to cut and nothing to print/);
+  const three = await run(["build", file, "--tabs", "cut,build", "--report", "json"]);
+  assert.deepEqual(JSON.parse(three.stdout).outputs, [join(dir, "kit-box-3d.html")]);
+  assert.match(readFileSync(join(dir, "kit-box-3d.html"), "utf8"), /data-tabs="build"/);
+});
+
 test("build is deterministic: the same project gives the same bytes in another folder", { skip: PAGE }, async () => {
   const a = fixture(), b = fixture();
   assert.equal((await run(["build", a.file])).code, 0);

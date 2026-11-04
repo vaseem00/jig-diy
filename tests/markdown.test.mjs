@@ -116,7 +116,33 @@ test("cutMd: the parts, then each board and sheet with its cuts and waste, in pr
   const p = shelf();
   p.trim = 10;
   includes(cutMd(compute(p)), "Trim: 10 mm from the start of each board.", "| 1 | A (A1) | 900 mm | 10 mm |");
-  includes(cutMd(compute({ id: "x", title: "X", materials: {}, parts: [] })), "Nothing to cut.");
+  includes(cutMd(compute({ id: "x", title: "X", materials: {}, parts: [] })), "# Cut list: X", "Nothing to cut.");
+});
+
+test("cutMd with printed parts: Cut and print list, a Printed parts table (grams and hours each, est), totals and spools", () => {
+  const hook = () => load("./fixtures/printed-hook.json"), H = compute(hook()), md = cutMd(H);
+  assert.ok(md.startsWith("# Cut and print list: Desk hook\n\nKerf: 3 mm."));
+  includes(md, "## Parts\n\n| Part | Name | Qty | Cut size | Material |\n|---|---|---|---|---|\n| A | Plate | 1 | 300 × 90 × 18 mm | Pine board |\n\n",
+    "## Printed parts\n\n| Part | Name | Qty | Grams each | Hours each | Material | Settings |\n|---|---|---|---|---|---|---|\n",
+    "| B | Hook | 2 | 18 g est | 1.5 h est | PLA filament | 0.2 mm layers, 20% infill, no supports |\n| C | Peg | 1 | 7 g | 0.8 h | PLA filament | - |\n",
+    "PLA filament: 3 parts, 43 g of filament, 3.8 h of printer time. Buy 1 × 1 kg spool.",
+    "A value marked est is an estimate from the part size.", "## Pine board");
+  assert.ok(md.indexOf("## Printed parts") < md.indexOf("## Pine board"));
+  // printed parts only: Print list, no kerf line, no "Nothing to cut."
+  const p = hook();
+  p.parts = p.parts.filter((x) => x.material === "pla");
+  p.steps[1].parts = ["B1", "B2", "C1"];
+  for (const x of p.parts) x.print = { grams: 10, hours: 1, settings: "0.2 mm | fine" };
+  const only = cutMd(compute(p, { mode: "estimate" }));
+  assert.ok(only.startsWith("# Print list: Desk hook\n\n## Printed parts"));
+  assert.ok(!/Kerf|Nothing to cut|## Parts|est/.test(only), only);
+  includes(only, "| B | Hook | 2 | 10 g | 1 h | PLA filament | 0.2 mm \\| fine |", "PLA filament: 3 parts, 30 g of filament, 3 h of printer time.");
+  // planMd: the prints step lists the printed parts and the printer time; reportText counts them
+  includes(planMd(H), "- Time: 10 min, then wait 3 h 50 min\n- Prints: 2 × B Hook, 1 × C Peg (3 h 50 min of printer time, in the waiting time)\n",
+    "- 1 × 1 kg spool: PLA filament, 1.75 mm, black");
+  includes(reportText(H), "Counts: 4 parts, 2 steps, 0 fasteners, 1 board, 0 sheets, 3 printed parts\n");
+  includes(boqMd(H), "| **Printing** | | | | | |\n| P01 | PLA filament, 1.75 mm, black | 3 parts, 43 g + 10% spare | 1 × 1 kg spool | €21.99 est | €21.99 |", "- P01: 3.8 h of printer time.");
+  includes(buyMd(H), "## 1. Online order", "- [ ] 1 × 1 kg spool: PLA filament, 1.75 mm, black (€21.99 est, step 1)");
 });
 
 test("cutSvg: a standalone, to-scale SVG with labels and hatched waste; null for no cut plan", () => {

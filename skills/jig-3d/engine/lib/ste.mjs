@@ -34,9 +34,9 @@ disassemble disconnect divide do dowel drain draw drill drive dry dust ease empt
 finger-tighten fit flatten flip fold get give glue go grease grind groove grout halve hammer hand-tighten hang heat hit hold hone hook
 increase insert install join joint keep knock label lay lean leave let level lift load lock look loosen lower lubricate make mark mask
 measure miter mitre mix mortise mount move nail notch number offset oil open order overlap pack paint pare pass patch peel pick pin
-plane plug plumb polish pour pre-drill prepare press prime protect pull punch push put rabbet raise read ream rebate record reduce
+plane plug plumb polish pour pre-drill prepare press prime print protect pull punch push put rabbet raise read ream rebate record reduce
 release remove renew repair repeat replace reset rest return reverse rinse rip rivet roll rotate round rout route rub run sand saw
-scrape screw scribe scrub seal seat see select separate set shake sharpen shim shrink sight sink slide smooth soak solder space split
+scrape screw scribe scrub seal seat see select separate set shake sharpen shim shrink sight sink slice slide smooth soak solder space split
 spray spread square stack stain stand staple start stir stop store straighten strip support sweep switch tack take taper tap tape
 test thread tie tighten tile tilt tin torque touch trace transfer trim try turn twist unclamp unload unlock unpack unplug unscrew unwrap use
 vacuum varnish wait wash wax wear weld wet wipe wire wrap write zero`.split(/\s+/));

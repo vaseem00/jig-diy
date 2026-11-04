@@ -17,7 +17,7 @@ function arithmetic(M) {
   const T = M.totals, c = T.currency;
   for (const r of M.boq) {
     if (r.amount !== null) assert.equal(r.amount, roundMoney(r.qty * r.rate, c), `${r.code} amount = qty x rate`);
-    assert.match(r.code, /^[THCFSXO]\d{2,}$/);
+    assert.match(r.code, /^[TPHCFSXO]\d{2,}$/);
   }
   assert.equal(T.subtotal, roundMoney(M.boq.reduce((a, r) => a + (r.amount ?? 0), 0), c), "subtotal");
   assert.equal(T.contingency, roundMoney(T.subtotal * T.contingencyRate, c), "contingency");
@@ -107,6 +107,25 @@ test("groups: fixed order and letters, codes numbered inside each group, other g
   const m = ctx();
   m.materials.plug.group = "hardware";
   assert.deepEqual(buildBoq(m).rows.filter((r) => r.group === "Hardware").map((r) => `${r.code} ${r.key}`), ["H01 plug", "H02 screw", "H03 kit"]);
+});
+
+test("printed: one Printing row (P) for each printed material, after timber and before hardware; spools with spare", () => {
+  const m = ctx();
+  m.materials.pla = { kind: "printed", name: "PLA filament", spool: 1000, price: 22, spare: 0.1, est: true, store: "web" };
+  m.materials.petg = { kind: "printed", name: "PETG filament", spool: 750, price: 25, spare: 0, est: true };
+  m.needs.pla = { first: 1, count: 5, amount: 910, hours: 75.83, finish: [] };
+  m.needs.petg = { first: 0, count: 1, amount: 750, hours: 60, finish: [] };
+  const { rows } = buildBoq(m), r = byKey(rows);
+  assert.deepEqual(rows.map((x) => x.code).slice(0, 5), ["T01", "T02", "P01", "P02", "H01"]);
+  assert.deepEqual(rows.filter((x) => x.group === "Printing").map((x) => x.key), ["petg", "pla"], "by first step");
+  // 910 g x 1.1 = 1001 g -> 2 spools of 1000 g; 750 g with no spare -> exactly 1 spool of 750 g
+  assert.deepEqual([r.pla.need, r.pla.needQty, r.pla.qty, r.pla.unit, r.pla.rate, r.pla.amount, r.pla.get, r.pla.store, r.pla.note],
+    ["5 parts, 910 g + 10% spare", 910, 2, "1 kg spool", 22, 44, "buy", "web", "75.8 h of printer time."]);
+  assert.deepEqual([r.petg.need, r.petg.qty, r.petg.unit, r.petg.amount], ["1 part, 750 g", 1, "750 g spool", 25]);
+  assert.equal(GROUPS.Printing, "P");
+  assert.deepEqual(Object.keys(GROUPS), ["Timber and sheet", "Printing", "Hardware", "Consumables", "Finish", "Safety", "Tools"]);
+  // with no printed material, the codes stay as they were
+  assert.deepEqual(buildBoq(ctx()).rows.map((x) => x.code).slice(0, 3), ["T01", "T02", "H01"]);
 });
 
 test("totals: contingency, tax added or included, unknown prices, currency minor units, area", () => {

@@ -390,7 +390,7 @@ function texts(P) {
     for (const k of ["check", "why", "tip"]) put(["steps", i, k], s[k]);
     put(["steps", i, "view", "note"], s.view?.note);
   });
-  (P.parts ?? []).forEach((p, i) => put(["parts", i, "name"], p.name));
+  (P.parts ?? []).forEach((p, i) => { put(["parts", i, "name"], p.name); put(["parts", i, "print", "settings"], p.print?.settings); });
   for (const [id, m] of Object.entries(P.materials ?? {})) put(["materials", id, "name"], m?.name);
   (P.tools ?? []).forEach((t, i) => put(["tools", i, "name"], t.name));
   for (const [id, c] of Object.entries(P.techniques ?? {})) {

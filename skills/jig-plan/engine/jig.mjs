@@ -9,7 +9,7 @@ import { dirname, isAbsolute, join, parse, relative, resolve, sep } from "node:p
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
 import { compute } from "./lib/model.mjs";
-import { planMd, boqMd, boqCsv, cutMd, cutSvg, buyMd, reportText } from "./lib/markdown.mjs";
+import { planMd, boqMd, boqCsv, cutMd, cutSvg, buyMd, reportText, printList } from "./lib/markdown.mjs";
 import { lint as steLint } from "./lib/ste.mjs";
 import { SCHEMA } from "./lib/schema.mjs";
 import { ENGINE_VERSION } from "./lib/version.mjs";
@@ -80,7 +80,7 @@ export const COMMANDS = {
       out: { type: S, arg: "file", help: "The page path. Default: <id>.html next to the project (<id>-3d.html for --tabs build, <id>-artifact.html for --artifact)." },
       artifact: { type: B, help: "Write a page body (title, the claude:viewport-fit-sides meta, fonts, style, body) for the Artifact tool. Its host adds the viewport meta." },
       offline: { type: B, help: "Put three.js 0.160.0 into the page, so the 3D view works with no network (about 0.9 MB more)." },
-      tabs: { type: S, arg: "list", help: "The tabs to show, from plan,shop,cut,build. One tab hides the tab bar." },
+      tabs: { type: S, arg: "list", help: "The tabs to show, from plan,shop,cut,build. One tab hides the tab bar. A project with nothing to cut or print has no cut tab." },
       json: { type: B, help: "Also write the computed model as <page name>.json next to the page." },
       force: force("the page"),
       strict,
@@ -561,9 +561,14 @@ const RUN = {
   },
 
   async build(ctx) {
-    const v = ctx.values, tabs = tabsOf(v.tabs);
+    const v = ctx.values, asked = tabsOf(v.tabs);
     const { M, file } = await load(ctx, "guide");
     const blocked = blockers(M, v.strict);
+    const { renderPage, tabsFor } = await import("./lib/page.mjs");
+    // A project with nothing to cut or print has no cut tab: --tabs leaves it out, and --tabs cut alone is a usage error
+    // (when the project has no errors that hide its parts).
+    let tabs = asked;
+    if (asked) try { tabs = tabsFor(M, asked); } catch (e) { if (!blocked) throw usage(`--tabs ${asked.join(",")}: ${e.message}`); }
     const suffix = `${tabs && tabs.length === 1 && tabs[0] === "build" ? "-3d" : ""}${v.artifact ? "-artifact" : ""}`;
     const html = target(v.out, dirname(file), `${nameOf(M, file)}${suffix}.html`), p = parse(html);
     const model = v.json ? join(p.dir, `${p.name}.json`) : null;
@@ -574,13 +579,13 @@ const RUN = {
       ctx.log(`Stopped: the project has ${blocked}. Fix the problems above, then run the command again.\n`);
       return finish(ctx, M, false);
     }
-    const { renderPage } = await import("./lib/page.mjs");
     let three;
     if (v.offline) {
       const { loadThree } = await import("./lib/offline.mjs");
       try { three = await loadThree({ cacheDir: join(tmpdir(), "jig-three-cache") }); } catch (e) { throw fail(`three.js cannot be loaded for --offline: ${e.message}`, e); }
     }
-    const page = await renderPage(M, { artifact: !!v.artifact, offline: !!v.offline, tabs, three });
+    let page;
+    try { page = await renderPage(M, { artifact: !!v.artifact, offline: !!v.offline, tabs, three }); } catch (e) { if (/no cut tab/.test(e.message)) throw usage(`--tabs ${asked.join(",")}: ${e.message}`); throw e; }
     writeFile(html, page, dirname(file));
     ctx.outputs.push(html);
     if (model) { writeFile(model, json(M), dirname(file)); ctx.outputs.push(model); }
@@ -606,8 +611,10 @@ const RUN = {
     const v = ctx.values, format = choice("format", v.format ?? "md", ["md", "json", "svg"]);
     return data(ctx, "estimate", { render: (M, file) => {
       if (format !== "svg") {
-        const parts = M.parts.map(({ id, label, name, material, kind, cut }) => ({ id, label, name, material, kind, cut }));
-        return emit(ctx, format === "md" ? cutMd(M) : json({ ...pick(M, ["meta"]), parts, cuts: M.cuts }), v.out, `${nameOf(M, file)}-cut.${format}`, file);
+        // A printed part carries its print (grams, hours, settings); prints lists them by material (only when there are any).
+        const parts = M.parts.map(({ id, label, name, material, kind, cut, print }) => ({ id, label, name, material, kind, cut, ...(print ? { print } : {}) }));
+        const prints = printList(M);
+        return emit(ctx, format === "md" ? cutMd(M) : json({ ...pick(M, ["meta"]), parts, cuts: M.cuts, ...(prints.length ? { prints } : {}) }), v.out, `${nameOf(M, file)}-cut.${format}`, file);
       }
       // One SVG for each material: <base>-<material>.svg. Ids that differ only in case ("ply-6", "Ply-6") give one
       // file on Windows and macOS: refused on every platform, before any file is written, so a zip stays safe.

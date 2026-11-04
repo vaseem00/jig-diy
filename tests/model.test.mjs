@@ -12,6 +12,7 @@ import { lint } from "../engine/lib/ste.mjs";
 const load = (rel) => JSON.parse(readFileSync(new URL(rel, import.meta.url), "utf8"));
 const shelf = () => load("../examples/pine-bookshelf/project.json");
 const bench = () => load("./fixtures/inch-bench.json");
+const hook = () => load("./fixtures/printed-hook.json");
 const KEYS = ["engine", "format", "mode", "meta", "parts", "props", "materials", "steps", "tools", "techniques", "cuts", "boq", "purchase", "plan", "totals", "safety", "problems", "counts"];
 const RANK = { error: 0, warn: 1, ste: 2, info: 3 };
 const codes = (M, level) => M.problems.filter((p) => !level || p.level === level).map((p) => `${p.code} ${p.path}`);
@@ -488,10 +489,10 @@ test("prototype-like ids and names work: constructor, toString, __proto__", () =
 });
 
 test("compute never throws on 200 malformed projects", () => {
-  const rnd = prng(20261102), bases = [shelf(), bench()];
+  const rnd = prng(20261102), bases = [shelf(), bench(), hook()];
   for (let i = 0; i < 200; i++) {
     const mode = ["guide", "plan", "estimate"][i % 3];
-    const p = i % 25 === 0 ? structuredClone(JUNK[i % JUNK.length]) : mutate(bases[i % 2], rnd);
+    const p = i % 25 === 0 ? structuredClone(JUNK[i % JUNK.length]) : mutate(bases[i % 3], rnd);
     let M;
     assert.doesNotThrow(() => { M = compute(p, { mode, start: "2026-11-20" }); }, `case ${i}`);
     assert.deepEqual(Object.keys(M), KEYS, `case ${i}`);
@@ -502,4 +503,120 @@ test("compute never throws on 200 malformed projects", () => {
     for (const r of M.boq) assert.ok(r.amount === null || Number.isFinite(r.amount), `case ${i}: ${r.code}`);
     assert.doesNotThrow(() => JSON.parse(JSON.stringify(M)), `case ${i}`);
   }
+});
+
+// ---- 3D-printed parts
+
+test("printed: grams = volume (cm³) x density x fill to 1 g, hours = grams / rate to 0.1 h; box and cylinder", () => {
+  const p = hook();
+  delete p.parts[3].print; // the peg: a cylinder along y, 20 mm across and 50 mm long
+  const M = compute(p), part = Object.fromEntries(M.parts.map((x) => [x.id, x]));
+  // hook: 40 x 60 x 20 mm = 48 cm³ x 1.24 x 0.3 = 17.856 g -> 18 g; 18 / 12 = 1.5 h
+  assert.deepEqual(part.B1.print, { grams: 18, hours: 1.5, settings: "0.2 mm layers, 20% infill, no supports", est: { grams: true, hours: true }, step: 0 });
+  // peg: pi / 4 x 20² x 50 = 15.708 cm³ x 1.24 x 0.3 = 5.84 g -> 6 g; 6 / 12 = 0.5 h
+  assert.deepEqual([part.C1.print.grams, part.C1.print.hours], [6, 0.5]);
+  assert.equal(part.C1.kind, "printed");
+  assert.equal(part.C1.cut, null);
+  assert.ok(!("print" in part.A1), "a cut part has no print");
+  // the material density, fill and rate change the estimate
+  p.materials.pla = { ...p.materials.pla, density: 1.04, fill: 0.5, rate: 20 };
+  const N = compute(p).parts.find((x) => x.id === "B1").print;
+  assert.deepEqual([N.grams, N.hours], [25, 1.3], "48 x 1.04 x 0.5 = 24.96 g; 25 / 20 = 1.25 h");
+  // a tiny part still weighs 1 g and takes 0.1 h
+  p.parts[3].size = [1, 1, 1];
+  assert.deepEqual([compute(p).parts[3].print.grams, compute(p).parts[3].print.hours], [1, 0.1]);
+});
+
+test("printed: slicer numbers override the estimate; I_PRINT_ESTIMATE once for the project, only while a value is estimated", () => {
+  const M = compute(hook());
+  const peg = M.parts.find((x) => x.id === "C1").print;
+  assert.deepEqual([peg.grams, peg.hours, peg.est], [7, 0.8, { grams: false, hours: false }]);
+  assert.equal(find(M, "I_PRINT_ESTIMATE").length, 1);
+  has(M, "I_PRINT_ESTIMATE", "parts[1].print", "part B1");
+  assert.match(find(M, "I_PRINT_ESTIMATE")[0].msg, /printed part B is an estimate/);
+  // only grams from the slicer: hours = slicer grams / rate, and still an estimate
+  const p = hook();
+  p.parts[1].print.grams = 30;
+  p.parts[2].print.grams = 30;
+  const B = compute(p).parts.find((x) => x.id === "B1").print;
+  assert.deepEqual([B.grams, B.hours, B.est], [30, 2.5, { grams: false, hours: true }]);
+  for (const x of [p.parts[1], p.parts[2]]) x.print.hours = 2;
+  const S = compute(p);
+  assert.deepEqual(find(S, "I_PRINT_ESTIMATE"), [], "every value from the slicer");
+  assert.deepEqual(S.counts, { error: 0, warn: 0, ste: 0, info: 1 }, codes(S).join("; "));
+});
+
+test("printed: the BOQ row (grams, parts, spools with spare), group Printing P after T, needed by the prints step", () => {
+  const M = compute(hook());
+  assert.deepEqual(M.boq.map((r) => `${r.code} ${r.group} ${r.key}`), ["T01 Timber and sheet board:1000", "P01 Printing pla", "C01 Consumables glue"]);
+  const r = M.boq.find((x) => x.key === "pla");
+  // 18 + 18 + 7 = 43 g, + 10% spare = 47.3 g -> 1 spool of 1000 g
+  assert.deepEqual([r.need, r.needQty, r.qty, r.unit, r.rate, r.amount, r.get, r.first, r.store], ["3 parts, 43 g + 10% spare", 43, 1, "1 kg spool", 21.99, 21.99, "buy", 0, "online"]);
+  assert.equal(r.note, "3.8 h of printer time.");
+  assert.deepEqual(M.materials.pla, { name: "PLA filament", kind: "printed", spec: "1.75 mm, black", unit: null, color: "#333333" });
+  assert.deepEqual(M.purchase.find((t) => t.store === "online").items, ["pla"]);
+});
+
+test("printed: spools round up with the spare share; spool, packName and spare change the row", () => {
+  const p = hook();
+  Object.assign(p.materials.pla, { spool: 250, spare: 0.2, packName: "250 g reel" });
+  for (const x of [p.parts[1], p.parts[2]]) x.print.grams = 100;
+  // 100 + 100 + 7 = 207 g x 1.2 = 248.4 g -> 1 reel; 210 g x 1.2 = 252 g -> 2 reels
+  let r = compute(p).boq.find((x) => x.key === "pla");
+  assert.deepEqual([r.need, r.qty, r.unit, r.amount], ["3 parts, 207 g + 20% spare", 1, "250 g reel", 21.99]);
+  p.parts[3].print.grams = 10;
+  r = compute(p).boq.find((x) => x.key === "pla");
+  assert.deepEqual([r.qty, r.amount], [2, 43.98]);
+  delete p.materials.pla.packName;
+  assert.equal(compute(p).boq.find((x) => x.key === "pla").unit, "250 g spool");
+  delete p.materials.pla.price;
+  const U = compute(p);
+  assert.equal(U.boq.find((x) => x.key === "pla").amount, null);
+  assert.match(has(U, "W_PRICE_UNKNOWN", "materials.pla.price").hint, /one spool/);
+});
+
+test("printed: printer time is waiting time of the prints step, not work time, and not scaled by the level", () => {
+  const M = compute(hook());
+  // 1.5 + 1.5 + 0.8 = 3.8 h = 228 min, in step 1; step 2 keeps its own 30 min wait
+  assert.deepEqual(M.steps.map((s) => [s.minutes, s.wait, s.printMinutes]), [[10, 228, 228], [15, 30, undefined]]);
+  assert.deepEqual([M.plan.active, M.plan.wait], [25, 258]);
+  assert.deepEqual(M.plan.phases.map((ph) => ph.wait), [258]);
+  assert.ok(!("printMinutes" in M.steps[1]), "only a prints step carries printMinutes");
+  // prints with a material list; a list without the material gives no printer time, and a warning
+  const p = hook();
+  p.steps[0].prints = ["pla"];
+  assert.equal(compute(p).steps[0].printMinutes, 228);
+  p.steps[0].wait = 15;
+  assert.equal(compute(p).steps[0].wait, 243, "the step wait plus the printer time");
+  p.steps[0].prints = [];
+  const E = compute(p);
+  assert.deepEqual(E.steps.map((s) => s.printMinutes), [0, undefined]);
+  assert.equal(E.parts.find((x) => x.id === "B1").print.step, null);
+});
+
+test("printed: W_NO_PRINT_STEP when no step prints a printed material (plan and guide modes, with steps)", () => {
+  const p = hook();
+  delete p.steps[0].prints;
+  const M = compute(p);
+  const w = has(M, "W_NO_PRINT_STEP", "materials.pla", "material pla");
+  assert.match(w.msg, /No step prints the parts of "PLA filament" \(B and C\)/);
+  assert.match(w.hint, /"prints": true/);
+  assert.equal(M.steps[0].wait, 0, "no printer time in any step");
+  assert.equal(M.boq.find((x) => x.key === "pla").first, 1, "needed by the step that installs the parts");
+  assert.deepEqual(find(compute(p, { mode: "estimate" }), "W_NO_PRINT_STEP"), [], "estimate mode");
+  assert.equal(find(compute(p, { mode: "plan" }), "W_NO_PRINT_STEP").length, 1);
+});
+
+test("printed: print settings are reader text for the STE lint (once a label) and the hand-off screen; default finish skips printed parts", () => {
+  const p = hook();
+  for (const x of [p.parts[1], p.parts[2]]) x.print.settings = "Using supports is needed for the arm.";
+  const M = compute(p);
+  assert.deepEqual(codes(M, "ste"), ["STE_ING parts[1].print.settings", "STE_PASSIVE parts[1].print.settings"]);
+  assert.equal(M.problems.find((x) => x.code === "STE_ING").where, "part B1, print settings");
+  p.parts[1].print.settings = p.parts[2].print.settings = "Wire it into the mains supply.";
+  has(compute(p), "E_HANDOFF", "parts[1].print.settings", "part B1");
+  const f = hook();
+  f.materials.oil = { kind: "amount", name: "Oil", unit: "L", price: 9, coverage: 10 };
+  f.steps[1].finish = { material: "oil" };
+  assert.deepEqual(compute(f).steps[1].finish.parts, ["A1"]);
 });

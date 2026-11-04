@@ -495,3 +495,44 @@ test("fuzz: 200 malformed projects never throw", () => {
     }
   }
 });
+
+test("printed: kind printed with schema defaults; print only on a printed part; prints names printed materials; print in the label check", () => {
+  const p = clean();
+  p.materials.pla = { kind: "printed", name: "PLA filament", price: 20 };
+  p.parts.push({ id: "C1", label: "C", name: "Knob", material: "pla", size: [20, 20, 20], at: [100, 206, 30], print: { grams: 4, settings: "0.2 mm layers" } });
+  p.steps[1].parts.push("C1");
+  p.steps[0].prints = ["pla"];
+  let r = run(p);
+  assert.deepEqual(codes(r), []);
+  assert.deepEqual(r.project.materials.pla, { kind: "printed", name: "PLA filament", price: 20, spool: 1000, density: 1.24, fill: 0.3, rate: 12, spare: 0.1, est: true });
+  assert.deepEqual(r.project.parts[3].print, { grams: 4, settings: "0.2 mm layers" });
+  assert.deepEqual(r.project.steps[0].prints, ["pla"]);
+  // print on a cut part: an error, and the normalized part has no print
+  p.parts[0].print = { grams: 3 };
+  r = run(p);
+  assert.deepEqual(codes(r), ["E_SCHEMA parts[0].print"]);
+  assert.match(r.problems[0].msg, /material "pine-1x4" has kind linear/);
+  assert.ok(!("print" in r.project.parts[0]));
+  delete p.parts[0].print;
+  // prints names a material of another kind; an unknown field in print; a fill of 0
+  p.steps[0].prints = ["pla", "ply"];
+  p.parts[3].print = { gram: 4 };
+  p.materials.pla.fill = 0;
+  r = run(p);
+  assert.deepEqual(codes(r).sort(), ["E_REF steps[0].prints[1]", "E_SCHEMA materials.pla.fill", "E_UNKNOWN_KEY parts[3].print.gram"].sort());
+  assert.match(r.problems.find((x) => x.code === "E_UNKNOWN_KEY").hint, /Did you mean "grams"/);
+  assert.deepEqual(r.project.steps[0].prints, ["pla"]);
+  // a printed material in cuts is the wrong kind
+  p.materials.pla.fill = 0.3;
+  p.parts[3].print = { grams: 4 };
+  p.steps[0].prints = true;
+  p.steps[0].cuts = ["pla"];
+  assert.deepEqual(codes(run(p)), ["E_REF steps[0].cuts[0]"]);
+  delete p.steps[0].cuts;
+  // two parts with one label and other print numbers
+  p.parts.push({ ...p.parts[3], id: "C2", at: [200, 206, 30], print: { grams: 5 } });
+  p.steps[1].parts.push("C2");
+  r = run(p);
+  assert.deepEqual(codes(r), ["E_LABEL_MISMATCH parts[4].label"]);
+  assert.match(r.problems[0].msg, /a different print/);
+});

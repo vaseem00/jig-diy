@@ -9,7 +9,7 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import vm from "node:vm";
 import { compute } from "../engine/lib/model.mjs";
-import { renderPage, tabList, webFiles, TABS } from "../engine/lib/page.mjs";
+import { renderPage, tabList, tabsFor, webFiles, TABS } from "../engine/lib/page.mjs";
 import { THREE_FILES, THREE_BASE, loadThree } from "../engine/lib/offline.mjs";
 import { noscriptHtml } from "../engine/lib/markdown.mjs";
 import { plural as utilPlural, amount as utilAmount, round as utilRound } from "../engine/lib/util.mjs";
@@ -528,6 +528,42 @@ test("app.js sizeOf: a repair with no parts measures the props of the Plan view;
   assert.deepEqual(sizeOf({ parts: [], props: {} }), []);
 });
 
+test("the cut tab: Cut list, Print list or Cut and print; a kit with nothing to cut or print has none (page.mjs and app.js agree)", () => {
+  const HOOK = compute(load("./fixtures/printed-hook.json"));
+  const printOnly = structuredClone(HOOK), kit = structuredClone(HOOK);
+  printOnly.parts = printOnly.parts.filter((p) => p.kind === "printed");
+  kit.parts = kit.parts.filter((p) => p.kind !== "printed").map((p) => ({ ...p, kind: "each", cut: null }));
+  const repair = { ...M, parts: [] };
+  // page.mjs: the data-tabs of each page; --tabs without the cut tab, and an error when no tab is left
+  const tabsOf = (model, tabs) => /data-tabs="([^"]*)"/.exec(renderPage(model, { tabs }))[1];
+  assert.deepEqual([tabsOf(M), tabsOf(HOOK), tabsOf(printOnly), tabsOf(kit), tabsOf(repair)],
+    ["plan,shop,cut,build", "plan,shop,cut,build", "plan,shop,cut,build", "plan,shop,build", "plan,shop,build"]);
+  assert.deepEqual(tabsFor(kit, "cut,build"), ["build"]);
+  assert.deepEqual(tabsFor(HOOK, "cut"), ["cut"]);
+  assert.throws(() => tabsFor(kit, "cut"), /nothing to cut and nothing to print/);
+  assert.throws(() => renderPage(repair, { tabs: ["cut"] }), /no cut tab/);
+  // app.js: the tab name from the parts, and the cut tab dropped for a kit, also from a data-tabs that names it
+  const block = /^const CUTS = [\s\S]*?^if \(!CUTS && !PRINTS\) .*$/m.exec(app);
+  assert.ok(block, "app.js sets CUTS, PRINTS, NAMES and TABS");
+  const run = (model, tabs) => { const r = vm.runInNewContext(`${block[0]}\n({ name: NAMES.cut, tabs: TABS })`, { D: model, root: { dataset: { tabs } } }); return [r.name, r.tabs.join(",")]; };
+  assert.deepEqual(run(M, "plan,shop,cut,build"), ["Cut list", "plan,shop,cut,build"]);
+  assert.deepEqual(run(HOOK, "plan,shop,cut,build"), ["Cut and print", "plan,shop,cut,build"]);
+  assert.deepEqual(run(printOnly, "cut"), ["Print list", "cut"]);
+  assert.deepEqual(run(kit, "plan,shop,cut,build"), ["Cut list", "plan,shop,build"]);
+  assert.deepEqual(run(kit, "cut"), ["Cut list", "plan"]);
+  assert.deepEqual(run(repair, ""), ["Cut list", "plan,shop,build"]);
+  // keyboard tab navigation and the hash routes read TABS, so they skip a tab that is not there
+  assert.match(app, /const k = TABS\.indexOf\(current\), n = TABS\.length;/);
+  assert.match(app, /return \{ tab: TABS\.includes\(t\) \? t : null/);
+  // the Plan tiles: parts to cut counts cut parts only; parts to print when there are printed parts
+  assert.match(app, /cut = D\.parts\.filter\(\(p\) => p\.kind !== "each" && p\.kind !== "printed"\)\.length/);
+  assert.match(app, /<span>parts to \$\{cut > 0 \? "cut \+ print" : "print"\}<\/span>/);
+  assert.match(app, /wait time \(glue, finish\$\{printed > 0 \? ", printer" : ""\}\)/);
+  // the print list: one table of the printed parts, the settings cell may wrap
+  assert.match(app, /<th class="n">Grams each<\/th><th class="n">Hours each<\/th><th>Material<\/th><th>Settings<\/th>/);
+  assert.match(rule(".prints td.set"), /overflow-wrap:anywhere/);
+});
+
 test("live: Next and Back leave the Check box to the reader, on the last step too; a typed hash acts as a click", async (t) => {
   if (!BROWSER) return t.skip("no Chrome, Chromium or Edge on this machine");
   const r = await live("ticks", textPage(M), `
@@ -631,6 +667,25 @@ test("live: the Cut list parts table fits at 390 and 320 px (sizes wrap after a 
   assert.equal(r.fit, "", "the table fits without a wrap");
   assert.ok(r.lines.length > 0 && r.lines.every((n) => n === 1), `size cells on more than one line: ${r.lines}`);
   assert.ok(r.scroll <= 1);
+});
+
+test("live: printed parts: the Cut and print tab, the print list rows and totals, the Plan tiles; no sideways scroll at 390 px", async (t) => {
+  if (!BROWSER) return t.skip("no Chrome, Chromium or Edge on this machine");
+  const r = await live("print-list", textPage(compute(load("./fixtures/printed-hook.json"))), `
+    await until(() => $("table.prints"));
+    const cells = (tr) => [...tr.cells].map((c) => c.textContent.replace(/\\s+/g, " ").trim());
+    out({ tabs: [...document.querySelectorAll("[data-tab]")].map((b) => b.textContent), parts: [...document.querySelectorAll("table.parts tbody tr")].map((tr) => cells(tr)[0]) });
+    out({ rows: [...document.querySelectorAll("table.prints tbody tr")].map(cells) });
+    out({ sum: $(".printlist .notes").textContent.trim(), scroll: [...document.querySelectorAll("[data-panel=cut] .scroll")].map((s) => s.scrollWidth - s.clientWidth) });
+    out({ tiles: [...document.querySelectorAll(".stats div")].map((d) => d.textContent.replace(/\\s+/g, " ").trim()) });`,
+  { hash: "cut", width: 390, height: 844 });
+  assert.deepEqual(r.tabs, ["Plan", "Shop", "Cut and print", "Build"]);
+  assert.deepEqual(r.rows, [["B", "Hook", "2", "18 g est", "1.5 h est", "PLA filament", "0.2 mm layers, 20% infill, no supports"], ["C", "Peg", "1", "7 g", "0.8 h", "PLA filament", "-"]]);
+  assert.deepEqual(r.parts, ["A"], "the Parts table holds the cut parts");
+  assert.equal(r.sum, "PLA filament: 3 parts, 43 g of filament, 3.8 h of printer time. Buy 1 × 1 kg spool.");
+  assert.ok(r.tiles.includes("1 + 3parts to cut + print") && r.tiles.includes("4 h 20 minwait time (glue, finish, printer)"), r.tiles.join(" | "));
+  assert.ok(r.scroll.length === 2 && r.scroll[1] <= 1, `the print list scrolls sideways: ${r.scroll}`);
+  assert.equal(r.sidewaysScroll, false);
 });
 
 test("live: long words in the title (Fig 1), the summary, a material and a part name break inside the word at 390 and 320 px", async (t) => {

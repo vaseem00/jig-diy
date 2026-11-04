@@ -79,6 +79,24 @@ function cutOf(p, m) {
   return null;
 }
 
+// The solid volume of a part in mm³: a box, or a cylinder along the side that is not one of the two equal sides (as
+// the viewer draws it; a cylinder with no two equal sides is a box there too).
+function volumeOf({ size, shape }) {
+  const [x, y, z] = size, eq = (a, b) => Math.abs(a - b) < 1e-6, axis = shape !== "cylinder" ? -1 : eq(x, z) ? 1 : eq(x, y) ? 2 : eq(y, z) ? 0 : -1;
+  if (axis < 0) return x * y * z;
+  const d = size[(axis + 1) % 3];
+  return (Math.PI / 4) * d * d * size[axis];
+}
+
+// The print of a part of a printed material: the slicer numbers, else estimates from the size. grams = volume (cm³) x
+// density x fill, to 1 g; hours = grams / rate, to 0.1 h. est says which value is an estimate. step: the prints step.
+function printOf(p, m) {
+  const g = p.print?.grams, h = p.print?.hours;
+  const grams = Math.max(1, round(g ?? (volumeOf(p) / 1000) * m.density * m.fill, 0));
+  const hours = Math.max(0.1, round(h ?? grams / m.rate, 1));
+  return { grams, hours, settings: p.print?.settings ?? "", est: { grams: g === undefined, hours: h === undefined }, step: null };
+}
+
 // Nominal inch timber sizes and their actual sizes: a 2x4 is 1 1/2 x 3 1/2 in.
 const ACTUAL = { 1: 0.75, 2: 1.5, 3: 2.5, 4: 3.5, 6: 5.5, 8: 7.25, 10: 9.25, 12: 11.25 };
 const NOMINAL_THICK = new Set([1, 2, 4]);
@@ -184,9 +202,17 @@ export function compute(project, { mode = "guide", start = null } = {}) {
         return {
           id: p.id, label: p.label, name: p.name, material: p.material, materialName: m.name, kind: m.kind, shape: p.shape ?? "box",
           size: p.size, at: p.at ?? null, rotate: p.rotate ?? null, color: p.color ?? m.color ?? null, role: p.role ?? m.role ?? null,
-          cut: cut === BAD ? null : cut, step: null,
+          cut: cut === BAD ? null : cut, ...(m.kind === "printed" ? { print: printOf(p, m) } : {}), step: null,
         };
       });
+      // One info for the project when a printed part has no slicer grams or hours.
+      const guessed = parts.filter((p) => p.print && (p.print.est.grams || p.print.est.hours));
+      if (guessed.length) {
+        const labels = [...new Set(guessed.map((p) => p.label))], list = labels.length > 1 ? `${labels.slice(0, -1).join(", ")} and ${labels.at(-1)}` : labels[0];
+        out.push(mk("info", "I_PRINT_ESTIMATE", ["parts", partAt.get(guessed[0].id), "print"], `part ${guessed[0].id}`,
+          `The filament or the printer time of printed part${labels.length > 1 ? "s" : ""} ${list} is an estimate from the part size.`,
+          'Slice each part. Then put the slicer numbers in "print", for example "print": { "grams": 24, "hours": 1.5 }.'));
+      }
     });
 
     run("cut plan", () => {
@@ -246,8 +272,10 @@ export function compute(project, { mode = "guide", start = null } = {}) {
 
     // Needs per material: parts, fasteners, uses and finishes (area: all six faces of each finished part).
     const need = Object.create(null), finished = new Set(); // ids such as "constructor" are valid: no prototype
-    // The parts a finish covers: its list, else every part not of an each material, except finish: false.
-    const finishedParts = (f) => (f.parts ? f.parts.map((id) => byId.get(id)).filter(Boolean) : P.parts.filter((p) => mats[p.material].kind !== "each" && p.finish !== false));
+    // The parts a finish covers: its list, else every part not of an each or printed material, except finish: false.
+    const finishedParts = (f) => (f.parts ? f.parts.map((id) => byId.get(id)).filter(Boolean) : P.parts.filter((p) => !["each", "printed"].includes(mats[p.material].kind) && p.finish !== false));
+    // Printer minutes by step index: the hours of each printed part go to the first step that prints its material.
+    const printMin = new Map(), printAt = (id) => P.steps.findIndex((s) => s.prints === true || (Array.isArray(s.prints) && s.prints.includes(id)));
     run("needs", () => {
       const touch = (id, i) => {
         const n = (need[id] ??= { first: i, count: 0, amount: 0, finish: [], part: false, fastener: false });
@@ -256,6 +284,16 @@ export function compute(project, { mode = "guide", start = null } = {}) {
       };
       for (const p of parts) {
         if (p.kind === "each") { const n = touch(p.material, p.step ?? 0); n.count++; n.part = true; continue; }
+        if (p.kind === "printed") {
+          const at = printAt(p.material), first = Math.min(...[at, p.step].filter((x) => x !== null && x >= 0));
+          const n = touch(p.material, Number.isFinite(first) ? first : 0);
+          n.count++;
+          n.amount += p.print.grams;
+          n.hours = round((n.hours ?? 0) + p.print.hours, 2);
+          p.print.step = at >= 0 ? at : null;
+          if (at >= 0) printMin.set(at, round((printMin.get(at) ?? 0) + p.print.hours * 60, 2));
+          continue;
+        }
         const cutAt = P.steps.findIndex((s) => s.cuts === true || (Array.isArray(s.cuts) && s.cuts.includes(p.material)));
         const first = Math.min(...[cutAt, p.step].filter((x) => x !== null && x >= 0));
         touch(p.material, Number.isFinite(first) ? first : 0);
@@ -275,6 +313,13 @@ export function compute(project, { mode = "guide", start = null } = {}) {
       });
       uses(P.uses, 0);
       P.finish.forEach((f) => finish(f, 0));
+      // A printed material that no step prints: its printer time is in no step.
+      if (planned && P.steps.length && !lost.steps) for (const [id, m] of Object.entries(mats)) {
+        const mine = m.kind === "printed" && printAt(id) < 0 ? [...new Set(parts.filter((p) => p.material === id).map((p) => p.label))] : [];
+        if (mine.length) out.push(mk("warn", "W_NO_PRINT_STEP", ["materials", id], `material ${id}`,
+          `No step prints the parts of "${m.name}" (${mine.length > 1 ? `${mine.slice(0, -1).join(", ")} and ${mine.at(-1)}` : mine[0]}), so the plan has no printer time for them.`,
+          `Add "prints": true to the step in which the printer makes the parts, or add "${id}" to its prints list. The printer time then counts as waiting time of that step.`));
+      }
     });
 
     run("tools", () => {
@@ -291,14 +336,15 @@ export function compute(project, { mode = "guide", start = null } = {}) {
         const tool = r.key.startsWith(TOOL_KEY), k = tools.findIndex((t) => t.id === r.id);
         out.push(mk("warn", "W_PRICE_UNKNOWN", tool ? ["tools", rawTool[k] ?? k, "price"] : ["materials", r.id, "price"], `${tool ? "tool" : "material"} ${r.id}`,
           `"${r.name}" has no price, so the total leaves it out.`,
-          tool ? 'Add an estimated "price". If you have the tool, set "have": true. To borrow it, set "get": "borrow".' : 'Add an estimated "price" for one pack.'));
+          tool ? 'Add an estimated "price". If you have the tool, set "have": true. To borrow it, set "get": "borrow".' : `Add an estimated "price" for one ${mats[r.id]?.kind === "printed" ? "spool" : "pack"}.`));
       }
     });
 
     run("purchase", () => { purchase = buildPurchase(rows, P.stores, { start, currency: P.currency }); });
 
     run("plan", () => {
-      plan = buildPlan(P.steps);
+      // Printer time is machine time: waiting time of the prints step, not work time (never scaled by the level).
+      plan = buildPlan(P.steps.map((s, i) => (printMin.has(i) ? { ...s, wait: round((s.wait ?? 0) + printMin.get(i), 2) } : s)));
       if (planned) for (const sp of phaseSplits(plan.phases))
         out.push(mk("warn", "W_PHASE_SPLIT", ["steps", rawStep[sp.step], "phase"], `step ${sNo(sp.step)}`,
           `The phase "${sp.name}" starts again after another phase. Step ${sNo(sp.first)} started it first.`,
@@ -380,6 +426,14 @@ export function compute(project, { mode = "guide", start = null } = {}) {
       const rawH = align(R.handoff, P.handoff, (r, n) => isObj(r) && r.topic === n.topic && r.text === n.text);
       P.handoff.forEach((h, k) => ste(["handoff", rawH[k], "text"], `hand-off ${rawH[k] + 1}`, h.text, "description"));
       clear.forEach((c, k) => ste(["safety", "cleared", rawClear[k], "why"], `cleared entry ${rawClear[k] + 1}`, c.why, "description"));
+      // Print settings are reader text (the print list shows them), once for each label.
+      const shownSettings = new Set();
+      P.parts.forEach((p, k) => {
+        const s = p.print?.settings;
+        if (typeof s !== "string" || shownSettings.has(p.label)) return;
+        shownSettings.add(p.label);
+        ste(["parts", rawPart[k], "print", "settings"], `part ${p.id}, print settings`, s, "description");
+      });
       P.steps.forEach((s, i) => {
         const r = rawStep[i], raw = rawS(i), w = `step ${r + 1}`;
         ste(["steps", r, "title"], `${w}, title`, s.title, "title");
@@ -414,7 +468,9 @@ export function compute(project, { mode = "guide", start = null } = {}) {
         }),
         // finish: coats and the parts it covers filled in (the viewer lights them)
         ...(s.finish ? { finish: { ...s.finish, coats: s.finish.coats ?? mats[s.finish.material].coats ?? 1, parts: finishedParts(s.finish).map((p) => p.id) } } : {}),
-        minutes: s.minutes ?? 0, wait: s.wait ?? 0,
+        // printMinutes: the printer time inside wait, on a step with prints only
+        minutes: s.minutes ?? 0, wait: printMin.has(i) ? round((s.wait ?? 0) + printMin.get(i), 2) : s.wait ?? 0,
+        ...(s.prints === true || Array.isArray(s.prints) ? { printMinutes: printMin.get(i) ?? 0 } : {}),
       }));
     });
     if (rows.some((r) => r.est))

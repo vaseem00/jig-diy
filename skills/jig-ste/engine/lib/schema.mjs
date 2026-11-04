@@ -25,7 +25,7 @@ const common = (kind, description) => ({
   spec: str("Size or grade as the store writes it, for example \"19 x 235 mm (1x10)\"."),
   store: ref("id", "Id of the store in stores where you buy it."),
   color: ref("color", "Color in the 3D view and the cut drawings."),
-  group: text("BOQ group name. Default: from the kind (Timber and sheet, Hardware, Consumables, Finish)."),
+  group: text("BOQ group name. Default: from the kind (Timber and sheet, Printing, Hardware, Consumables, Finish)."),
   est: bool("Set false when the price is a real quote. Default: the project estimate value."),
   note: str("Note shown next to the item in the shopping list."),
   role: { enum: ["anchor"], description: "anchor: wall fixings. A tall object needs one to pass the tip-over check." },
@@ -103,7 +103,7 @@ export const SCHEMA = {
       note: str("Note for this trip."),
       url: str("Store web address.", { pattern: "^https?://\\S+$" }),
     }),
-    material: { description: "A material. kind sets the other fields: linear, sheet, each or amount.", anyOf: [ref("linear"), ref("sheet"), ref("each"), ref("amount")] },
+    material: { description: "A material. kind sets the other fields: linear, sheet, each, amount or printed.", anyOf: [ref("linear"), ref("sheet"), ref("each"), ref("amount"), ref("printed")] },
     linear: {
       ...obj("A material sold by length (boards, battens, rods). Give stock (board lengths) or perLength (cut-to-size price).", ["name", "kind", "section"], {
         ...common("linear", "linear: sold by length (boards, battens, rods)."),
@@ -143,6 +143,16 @@ export const SCHEMA = {
       coats: int("Coats to apply.", { minimum: 1, default: 1 }),
       spare: num("Spare share from 0 to 1. Default: 0.1 for finishes, else 0.", { minimum: 0, maximum: 1 }),
     }),
+    printed: obj("A filament for 3D-printed parts, sold by the spool.", ["name", "kind"], {
+      ...common("printed", "printed: filament for 3D-printed parts, sold by the spool."),
+      spool: pos("Grams of filament in one spool.", { default: 1000 }),
+      packName: text("Name of one spool, for example \"1 kg spool\"."),
+      price: price("Price of one spool in the project currency."),
+      density: pos("Filament density in g/cm³: PLA 1.24, PETG 1.27, ABS 1.04.", { default: 1.24 }),
+      fill: num("Share of the solid part volume that the printer fills (walls and infill), from 0 to 1.", { exclusiveMinimum: 0, maximum: 1, default: 0.3 }),
+      rate: pos("Grams of filament the printer lays down in one hour.", { default: 12 }),
+      spare: num("Spare share from 0 to 1 (failed prints, purge).", { minimum: 0, maximum: 1, default: 0.1 }),
+    }),
     tool: obj("A tool a step uses.", ["id", "name"], {
       id: ref("id", "Tool id, used in steps[].tools."),
       name: text("Tool name, for example \"Circular saw\"."),
@@ -172,6 +182,11 @@ export const SCHEMA = {
       role: { enum: ["anchor"], description: "anchor: a wall fixing for the tip-over check." },
       finish: bool("false: leave the part out of the finished area."),
       joins: ids("Parts this part may overlap on purpose (a shelf in a dado)."),
+      print: obj("Slicer numbers of a 3D-printed part (a part of a printed material). A missing value is estimated from the size.", [], {
+        grams: pos("Filament for one part in grams, from the slicer."),
+        hours: pos("Printer time for one part in hours, from the slicer."),
+        settings: text("Print settings for the reader, for example \"0.2 mm layers, 20% infill, no supports\"."),
+      }),
     }),
     prop: obj("A context box (wall, bench, floor). Never bought.", ["size"], {
       size: ref("size3", "Box size [x, y, z] in project units."),
@@ -225,6 +240,7 @@ export const SCHEMA = {
       uses: ref("uses", "Consumables used in this step: { materialId: amount }."),
       finish: ref("finish", "Finish applied in this step."),
       cuts: { type: ["boolean", "array"], items: ref("id"), description: "true, or material ids: stock is cut in this step." },
+      prints: { type: ["boolean", "array"], items: ref("id"), description: "true, or printed material ids: the printer makes those parts in this step. Their printer time is waiting time of the step." },
       tools: ids("Tool ids."),
       teach: ids("Technique card ids."),
       warn: list(ref("warn"), "Warnings shown before the instructions."),

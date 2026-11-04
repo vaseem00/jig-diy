@@ -35,7 +35,7 @@ test("project.schema.json equals JSON.stringify(SCHEMA, null, 2) + newline, UTF-
 test("draft 2020-12, required top-level fields", () => {
   assert.equal(SCHEMA.$schema, "https://json-schema.org/draft/2020-12/schema");
   assert.deepEqual(SCHEMA.required, ["id", "title", "materials", "parts"]);
-  assert.deepEqual(SCHEMA.$defs.material.anyOf.map((r) => deref(r).properties.kind.const), ["linear", "sheet", "each", "amount"]);
+  assert.deepEqual(SCHEMA.$defs.material.anyOf.map((r) => deref(r).properties.kind.const), ["linear", "sheet", "each", "amount", "printed"]);
 });
 
 test("only keywords validate.mjs interprets; refs resolve; patterns compile", () => {

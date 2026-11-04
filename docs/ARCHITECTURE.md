@@ -156,7 +156,7 @@ Limits that keep every value finite and safe as a key: ids of parts, steps and t
 
 ### 4.3 Materials
 
-Common fields: `name` (required), `kind` (required: `linear` \| `sheet` \| `each` \| `amount`), `spec`, `store`, `price` (`each` and `amount` only; on `linear` and `sheet` it is the error `E_UNKNOWN_KEY`, because their prices go on `stock` or `perLength`), `color` (`#rrggbb`), `group` (BOQ group name), `est`, `note`, `role` (`anchor` marks wall fixings).
+Common fields: `name` (required), `kind` (required: `linear` \| `sheet` \| `each` \| `amount` \| `printed`), `spec`, `store`, `price` (`each`, `amount` and `printed` only; on `linear` and `sheet` it is the error `E_UNKNOWN_KEY`, because their prices go on `stock` or `perLength`), `color` (`#rrggbb`), `group` (BOQ group name), `est`, `note`, `role` (`anchor` marks wall fixings).
 
 | kind | Extra fields | Quantity comes from |
 |---|---|---|
@@ -164,8 +164,11 @@ Common fields: `name` (required), `kind` (required: `linear` \| `sheet` \| `each
 | `sheet` | `thick` (required), `stock: [{ w, h, price }]` (required), `grain: bool` (default false) | Parts. One side matches `thick`; the other two are the piece. Guillotine-packed at lowest cost. With `grain: true`, a piece keeps its long side along the sheet's long side unless the part says `grain: "across"` or `"any"`. |
 | `each` | `pack` (default 1), `unit` (default "piece"), `packName`, `spare` (default 0.1 for fasteners, else 0), `len`, `d` (fastener length and diameter), `head: "flat" \| "pan" \| "hex"`, `included` | Parts made of it + step fasteners + `uses`. `included: true` lists it as "in the kit" with no purchase. |
 | `amount` | `unit` (required: "L", "ml", "kg", "g", "sheet", "m", "roll"...), `pack` (amount per pack, default 1), `packName`, `coverage` (area per ONE `unit`: m² for mm projects, ft² for in projects; required when used as a finish), `coats` (default 1), `spare` (default 0.1 for finishes, else 0) | `uses` amounts + finishes (finished surface area x coats / coverage). |
+| `printed` | `spool` (grams in one spool, default 1000), `packName`, `density` (g/cm³, default 1.24), `fill` (share of the solid volume printed, walls and infill, more than 0 to 1, default 0.3), `rate` (grams per printer hour, default 12), `spare` (default 0.1) | Parts made of it: the sum of their grams (part `print`, else the estimate). One BOQ row, group Printing. |
 
-Packs to buy = ceil(need x (1 + spare) / pack). A coverage above 1 with unit `ml` or `g` is a warning (probably meant per L or kg).
+Packs to buy = ceil(need x (1 + spare) / pack). Spools to buy = ceil(grams x (1 + spare) / spool). A coverage above 1 with unit `ml` or `g` is a warning (probably meant per L or kg).
+
+A part of a `printed` material takes `print: { grams?, hours?, settings? }` (slicer numbers for one part; `settings` is reader text, linted as a description and read by the hand-off screen). A missing value is an estimate: grams = solid volume (the `size` box, or the cylinder of `shape: "cylinder"`) in cm³ x density x fill, rounded to 1 g (at least 1); hours = grams / rate, rounded to 0.1 h (at least 0.1). Any estimate gives one `I_PRINT_ESTIMATE` for the project. `print` on another part is `E_SCHEMA`. Parts that share a label share `print`.
 
 ### 4.4 Tools
 
@@ -179,7 +182,7 @@ Packs to buy = ceil(need x (1 + spare) / pack). A coverage above 1 with unit `ml
 
 ### 4.5 Parts
 
-`{ id, label?, name, material, size: [x, y, z], at?: [x, y, z], shape?: "box" | "cylinder", rotate?: [rx, ry, rz], color?, rip?: bool, grain?: "along" | "across" | "any", role?: "anchor", finish?: bool, joins?: [partIds] }`
+`{ id, label?, name, material, size: [x, y, z], at?: [x, y, z], shape?: "box" | "cylinder", rotate?: [rx, ry, rz], color?, rip?: bool, grain?: "along" | "across" | "any", role?: "anchor", finish?: bool, joins?: [partIds], print?: { grams?, hours?, settings? } }`
 
 - `id` unique. `label` (default `id`) is the letter the reader sees, shared by identical parts. Parts that share a label must share name, material and size.
 - `name`: one word used for it everywhere ("Side", "Shelf").
@@ -189,6 +192,7 @@ Packs to buy = ceil(need x (1 + spare) / pack). A coverage above 1 with unit `ml
 - `finish: false` leaves the part out of the finished area.
 - `joins` lists parts this part may overlap on purpose (a shelf in a dado, a tenon in a mortise). Other overlaps over 1 mm are `E_GEOMETRY`.
 - A part of an `each` material (bracket, hinge, ready-made leg) is counted, not cut.
+- A part of a `printed` material is printed, not cut (section 4.3). The default finish leaves it out, as an `each` part.
 
 ### 4.6 Props
 
@@ -211,12 +215,13 @@ Packs to buy = ceil(need x (1 + spare) / pack). A coverage above 1 with unit `ml
 | `uses` | `{ materialId: amount }` consumables |
 | `finish` | `{ material, coats?, parts?: ids }` (default: every non-`each` part with `finish !== false`) |
 | `cuts` | `true` or material ids: stock is cut here (sets "needed by" in the purchase plan) |
+| `prints` | `true` or `printed` material ids: the printer makes those parts here. The first such step of a material gets the printer hours of its parts as waiting time (machine time, never scaled by the level) and sets "needed by" of the filament. A printed material that no step prints is `W_NO_PRINT_STEP` (plan, guide) |
 | `tools`, `teach` | Tool ids; technique ids |
 | `warn` | `[{ type: "warning" \| "caution", text }]`, shown before the instructions |
 | `do` | Instructions: string, or `{ t, new: true }` for a line shown only at "First time" |
 | `check` | The inspection that ends the step. Missing: warning `W_NO_CHECK` |
 | `why`, `tip` | Descriptive notes (why: First time only; tip: First time and Some experience) |
-| `pose` | `"kit"` lays the cut parts flat on the floor (prepare steps) |
+| `pose` | `"kit"` lays the cut and printed parts flat on the floor (prepare steps) |
 | `focus` | Part ids lit in the kit pose |
 | `from` | `[dx, dy, dz]`: the path new parts arrive along |
 | `view` | `{ az, el, zoom, note }`: az 0 front, 90 right side, 180 back; el degrees; zoom > 1 closer; `note` (120 characters or fewer, STE description) is a page-only line under the 3D view, at every level, never in print, `plan.md` or the no-script copy ("The picture shows the cube upright.") |
@@ -249,10 +254,13 @@ All lengths in the model are millimetres; areas m² (also `areaDisplay` in the p
   engine: ENGINE_VERSION, format: 1, mode: "guide",
   meta: { id, title, summary, level, units, currency, tax, priceNote, pricesAsOf, estimate, kerf, trim },
   parts: [{ id, label, name, material, materialName, kind, shape, size, at, rotate, color, role,
-            cut: { length, width, thick } | { a, b, thick } | null, step }],
+            cut: { length, width, thick } | { a, b, thick } | null,
+            print?: { grams, hours, settings, est: { grams, hours }, step },   // printed parts only; step: the prints step or null
+            step }],
   props: { [id]: { size, at, color, shape, rotate, hero, label } },
   materials: { [id]: { name, kind, spec, unit, color } },
-  steps: [{ ...step, index, fasteners: [{ material, at, dir, len, d, head, color, count }], finish: { material, coats, parts }, minutes, wait }],
+  steps: [{ ...step, index, fasteners: [{ material, at, dir, len, d, head, color, count }], finish: { material, coats, parts }, minutes, wait,
+            printMinutes? }],   // a step with prints: its printer minutes, which wait includes
   tools: [{ ...tool, first }],
   techniques: { [id]: { name, why, warn, do, tools } },          // only those taught, with {kerf} filled
   cuts: [ { material, name, kind: "linear", color, optimal, search, boards: [{ stock: { length, price }, cuts: [{ id, label, len, at }], used, waste }] }
@@ -276,7 +284,8 @@ Cleared hits: one entry for each topic that a `safety.cleared` entry clears. `to
 
 BOQ:
 
-- Groups in order, with code letters: Timber and sheet `T`, Hardware `H`, Consumables `C`, Finish `F`, Safety `S`, Tools `X`; any other group name gets `O` and sorts last.
+- Groups in order, with code letters: Timber and sheet `T`, Printing `P`, Hardware `H`, Consumables `C`, Finish `F`, Safety `S`, Tools `X`; any other group name gets `O` and sorts last. A project with no printed material has no `P` rows, so its codes are as before.
+- A printed material row: `need` "3 parts, 43 g + 10% spare", `needQty` the grams, `qty` the spools, `unit` the `packName` or "1 kg spool", `rate` the spool price, `note` the printer hours.
 - Codes are numbered inside each group (`H01`, `H02`) so adding a timber row never renumbers hardware.
 - `amount` is `null` when the price is unknown.
 - `first` is the index of the first step that needs the row (0 when there are no steps).
@@ -303,10 +312,10 @@ Errors block `build`. STE findings and `W_CLEARED_UNUSED` block `build` only und
 
 | Code | Level | When |
 |---|---|---|
-| `E_SCHEMA` | error | Wrong type, missing required field, value out of range, unknown enum (with "did you mean") |
+| `E_SCHEMA` | error | Wrong type, missing required field, value out of range, unknown enum (with "did you mean"); `print` on a part that is not of a `printed` material |
 | `E_UNKNOWN_KEY` | error | Unknown field (with "did you mean"); catches typos such as `kind: "linar"` → error via enum, `meterials` → error |
 | `E_DUP_ID` | error | Duplicate part, step, tool or technique id, or one id twice in a step's `parts` or `teach` |
-| `E_LABEL_MISMATCH` | error | Parts share a label but differ in name, material or size |
+| `E_LABEL_MISMATCH` | error | Parts share a label but differ in name, material, size or `print` |
 | `E_REF` | error | Unknown material, part, tool, technique, prop or step reference |
 | `E_SECTION` | error | Part size does not match the linear section / sheet thickness. When every part of a linear material misses a section that looks nominal (an inch 1x/2x/4x size, or every part the same 6-19 mm under it), one error at `materials.<id>.section` with the actual size |
 | `E_TOO_LONG` | error | Piece longer than the longest stock (after trim) |
@@ -330,11 +339,13 @@ Errors block `build`. STE findings and `W_CLEARED_UNUSED` block `build` only und
 | `W_COUNTED_FASTENER` | warn | Guide mode, a fastener with `count` and no position (not drawn) |
 | `W_TIP_SMALL` | warn | Height under 600 mm (24 in), height/depth above `safety.tipRatio`, no anchor (a lamp, a box): make the base wider or deeper, or add weight |
 | `W_CLEARED_UNUSED` | warn | A `safety.cleared` entry clears nothing: the screen finds no text of its topic (for `lead-paint`, no old-paint text either), `handoff` names the topic, or an earlier entry clears it. Path `safety.cleared[k]`. Blocks under `--strict` |
+| `W_NO_PRINT_STEP` | warn | Plan or guide mode with steps: no step has `prints` for a printed material, so its printer time is in no step. Path `materials.<id>` |
 | `STE_LENGTH` `STE_WORD` `STE_ING` `STE_PASSIVE` `STE_VERB_FIRST` `STE_TWO_ACTIONS` `STE_CONDITION_LAST` `STE_WARN_NO_RISK` | ste | Writing rules (section 7, ste). `STE_WARN_NO_RISK` is for kind `warning` only: no sentence after the command gives the risk |
 | `I_ESTIMATE` | info | Prices are estimates |
 | `I_TIP_UNCHECKED` | info | Not estimate mode (in practice plan mode), a part has no `at` and nothing is anchored: the tip-over rule could not run |
 | `I_OLD_PAINT` | info | A reader text strips, sands, scrapes, heats, burns or removes old paint, or names old paint with a heat gun, a scraper, a sander or a stripper, and no `lead-paint` hand-off (an entry or an `E_HANDOFF`) or `lead-paint` cleared entry covers it: ask the age of the paint |
 | `I_HANDOFF_CLEARED` | info | A topic in `safety.cleared` and not in `handoff` has screen hits: one info for the topic, at its first hit. The message names the matched words, the topic and the `why`; the hint says to make sure the guide has no such work, else to remove the entry and add the hand-off |
+| `I_PRINT_ESTIMATE` | info | A printed part has no slicer `grams` or `hours`, so the engine estimates them from its size. One info for the project, at `parts[k].print` of the first such part; the hint asks for the slicer numbers |
 | `I_RIP_SHARE` | info | 2 or more rip strips of one linear material fit side by side across one board, and strips side by side give a cheaper plan or fewer boards at no extra cost; the plan cuts each from its own board length, and the hint names the saving |
 
 ## 7. Engine modules
@@ -350,15 +361,15 @@ All in `engine/lib/`, pure (no I/O) unless noted. Named exports only.
 | `validate.mjs` | `validate(project, { mode, techniques }) → { project: normalized, problems }` (`techniques`: the built-in card ids) | Types, ranges, enums, required, unique ids, references, label consistency, unknown keys with did-you-mean. Normalizes: defaults, unit conversion to mm, fastener `repeat` expansion, `label` default |
 | `geometry.mjs` | `boxOf(part)`, `bounds(items)`, `overlaps(parts, tol)`, `supports(parts, props, tol)`, `fastenerHits(fastener, parts, tol)`, `tipCheck(parts, props)` | Rotated parts use their rotated axis-aligned bounds |
 | `pack.mjs` | `packLinear(pieces, stock, { kerf, trim, fmt }) → { boards, cost, problems, optimal, search }`, `packSheets(pieces, stock, { kerf, grain, fmt }) → { sheets, cost, problems }`, `expandPerLength({ price, per, max, step }, digits)` (prices rounded to `digits`, the currency's minor unit) | Linear: exact minimum cost (branch and bound, `search: "exact"`) for up to 14 pieces per material, with a 1.5M node cap (`optimal: false` when capped), else best-fit decreasing by cost per mm with a local improvement pass (`search: "fast"`, `optimal` only when the plan meets the lower bound); never worse than first-fit decreasing. When stock exists but no length is longer than the trim, `E_TOO_LONG` says so. Sheets: guillotine packing, both orientations when grain allows, cheapest sheet that holds each layout; never worse than shelf packing. Problems carry the part id; the model adds the path. Sheet areas are mm² (the model converts to m²) |
-| `boq.mjs` | `buildBoq({ materials, tools, needs, cuts, area, units, currency, contingency, tax }) → { rows, totals }`, `GROUPS`, `OTHER`, `TOOL_KEY` | Section 5.2 |
+| `boq.mjs` | `buildBoq({ materials, tools, needs, cuts, area, units, currency, contingency, tax }) → { rows, totals }`, `GROUPS`, `OTHER`, `TOOL_KEY` | Section 5.2. A printed material's need is `{ count (parts), amount (grams), hours }` |
 | `purchase.mjs` | `buildPurchase(rows, stores, { start, currency }) → trips`, `orderBy(start, lead)`, `ANY_STORE`, `BORROW` | Section 5.2 |
 | `plan.mjs` | `buildPlan(steps) → plan`, `timeFor(minutes, level)`, `phaseSplits(phases)`, `LEVELS`, `DEFAULT_PHASE` | Consecutive phases. A step with no phase is in phase "Build" |
 | `safety.mjs` | `safetyChecks(project, ctx) → { problems, summary }`, `HANDOFF_TOPICS`, `PPE_FOR`, `topicOf(name)` (the topic id of an id or alias, else null; `validate.mjs` uses it for `safety.cleared`) | Power-tool WARNING, tip-over (the size leaves out parts with role `anchor`), hand-off screen with `safety.cleared`, `I_OLD_PAINT`, PPE notes by tool, material and finish. A `HANDOFF_TOPICS` entry has `patterns` and can have `skip`: a match that lies inside a skip match does not count (plug-in use of the mains, a distance from a gas heater). The screen reads each text with every white-space run as one space. `PPE_FOR` rules: saw, drill, sanding, mdf, noise, solder, heat, gloves, epoxy, solvent, flame, oil |
 | `ste.mjs` | `lint(text, kind, { names, verbs }) → [{ code, msg, hint }]`, `sentences(text)`, `LIMITS`, `REPLACE`, `VERBS` | Every sentence of procedure text is checked for verb-first and two-actions; titles are linted as procedure; passive needs be + past participle (known list or -ed); a warning needs a risk sentence after its command (a sentence that is not a command, one with can, could, may, might, will or would, or a statement in the present simple: "Oil rags catch fire."). A later sentence that starts with Then, Also, Always or Never before a verb is still a command. A clause after the command (that, if, when, where, while, once, unless ...) does not make it a statement ("Hold the board where it is flat."), and a hazard word with a bare object is a command ("Sand edges by hand.") |
 | `techniques.mjs` | `TECHNIQUES`, `fillTechnique(card, { kerf, units })` | Every line passes the linter |
 | `model.mjs` | `compute(project, { mode, start }) → model` | Runs: validate → cuts → pack → BOQ → purchase → plan → safety → geometry (guide) → STE. Collects problems, sorts them error → warn → ste → info, fills `counts` |
-| `markdown.mjs` | `planMd(model, { level })`, `boqMd(model)`, `boqCsv(model)`, `cutMd(model)`, `cutSvg(model, material)`, `buyMd(model)`, `reportText(model)`, `noscriptHtml(model)` | Plain Markdown, no HTML except `noscriptHtml` |
-| `page.mjs` | `renderPage(model, { artifact, offline, tabs, three, web })`, `tabList(tabs)`, `webFiles()`, `TABS` | Reads its own `../web/*` once (the optional `web` override keeps tests pure); `three` = inlined sources for offline |
+| `markdown.mjs` | `planMd(model, { level })`, `boqMd(model)`, `boqCsv(model)`, `cutMd(model)`, `cutSvg(model, material)`, `buyMd(model)`, `reportText(model)`, `noscriptHtml(model)`, `printList(model)` | Plain Markdown, no HTML except `noscriptHtml`. `printList` gives the printed parts by material: `[{ material, name, count, grams, hours, step, parts: [{ label, name, qty, grams, hours, settings, est }] }]` (`cutMd` and `cut --format json` use it). `cutMd` is titled "Cut list", "Print list" (printed parts only, no kerf line) or "Cut and print list"; its Parts table leaves out the printed parts, which get a "Printed parts" table |
+| `page.mjs` | `renderPage(model, { artifact, offline, tabs, three, web })`, `tabList(tabs)`, `tabsFor(model, tabs)`, `webFiles()`, `TABS` | Reads its own `../web/*` once (the optional `web` override keeps tests pure); `three` = inlined sources for offline. `tabsFor` leaves out `cut` when every part is of an `each` material (or there is no part), and throws when no tab is left; `renderPage` uses it |
 | `offline.mjs` | `THREE_VERSION`, `THREE_BASE`, `THREE_FILES` (url, sha384), `THREE_NOTICE`, `THREE_LICENSE` (the three.js r160 LICENSE text that `--offline` pages carry), `loadThree({ cacheDir, fetch, files })` | I/O. Fetches from jsDelivr only when `--offline`, verifies sha384, caches (never through a symbolic or hard link) |
 | `capture.mjs` | `findBrowser()`, `browserWarnings()`, `browserArgs(profile, { platform, root })`, `removeStaleProfiles()`, `capture(url, opts)`, `captureUrl(url, hash)`, `CaptureError` | I/O. Headless Chrome/Edge over the DevTools protocol, Node's built-in WebSocket. `browserArgs` gives the browser switches: headless, the fresh profile, software WebGL, and the switches that ask for no background networking, component update, sync, pings or optimization-guide downloads (Chrome still sends its update, component, sign-in, time and device check-in requests). The result carries `route` (the page's `location.hash`). `browserWarnings` lists a `JIG_BROWSER` or `CHROME_PATH` that names a missing file; stale `jig-capture-*` profiles older than 1 hour are removed from `opts.tmp` (the profile parent folder, default `tmpdir()`). It refuses to write the image through a folder that is a symbolic link or a junction below the first root that holds the path (the page folder, else the current folder), found by name or by folder identity |
 | `load.mjs` | `loadProject(file)`, `decodeText(buf, name)`, `parseJson(text, name)`, `jsonErrorAt(s)`, `LoadError` | I/O. `.json` → JSON.parse with line/column on error; `.mjs`/`.js` → dynamic import. `decodeText` reads UTF-8 (with or without a BOM) and UTF-16 LE or BE with a BOM |
@@ -371,7 +382,7 @@ All in `engine/lib/`, pure (no I/O) unless noted. Named exports only.
 |---|---|---|
 | `new <id> [--units mm\|in] [--dir path] [--title text]` | - | Writes a starter `project.json` (from `templates/starter.json`). Refuses to overwrite (exit 3) |
 | `check <project>` | guide | Validates and computes; prints the report. `--strict` |
-| `build <project>` | guide | Check, then write the guide page. `--out file`, `--artifact`, `--offline`, `--tabs plan,shop,cut,build`, `--json`, `--force`, `--strict` |
+| `build <project>` | guide | Check, then write the guide page. `--out file`, `--artifact`, `--offline`, `--tabs plan,shop,cut,build`, `--json`, `--force`, `--strict`. A project with nothing to cut or print has no cut tab: `--tabs` drops `cut`, and `--tabs cut` alone is exit 2 |
 | `plan <project>` | plan | Step-by-step plan, `--level new\|some\|pro`, `--format md\|json`, `--out`, `--force`, `--strict` |
 | `boq <project>` | estimate | `--format md\|csv\|json`, `--out`, `--force` |
 | `cut <project>` | estimate | `--format md\|json\|svg`, `--out`, `--force` (svg writes one file per material: `cut.svg` gives `cut-<material>.svg`) |
@@ -429,6 +440,8 @@ Report (`--report json`): `{ ok, engine, command, project: { id, title }, counts
 - The BOQ tax row reads "includes €45.89" when the prices include the tax, else the amount.
 - Money uses the fixed decimals table of `locale.mjs` (`DIGITS`), not the browser's ICU data.
 - `--tabs` limits the tabs. A single tab hides the tab bar.
+- The cut tab is "Cut list" (only cut stock), "Print list" (only 3D-printed parts) or "Cut and print" (both). A project with nothing to cut and nothing to print (a kit of bought parts, a repair with no parts) has no cut tab: `renderPage` leaves it out of `data-tabs`, and `app.js` drops it from its tab list too, so the tab bar, the arrow keys and the `#cut` route skip it. The Print list card has one row per printed label: part letter, name, qty, grams and hours for one part (an estimate has an `est` mark), material and settings, then one line for each printed material with its totals and the spools to buy. Under 601 px wide each row stacks, with the column name before each value. The Parts table holds the cut and bought parts only.
+- The Plan tiles: "parts to cut" counts the parts of `linear` and `sheet` materials. With printed parts the tile reads "parts to print", or "parts to cut + print" ("1 + 3") when both exist, and the wait tile names the printer. A step with `prints` has a "Print:" pill with its printed parts and printer time.
 - `--artifact` writes a body fragment (title, the `claude:viewport-fit-sides` meta, the Google Fonts links, style, body) for the Artifact tool. The host's page skeleton adds the standard viewport meta.
 
 ## 10. Distribution and versioning

@@ -6,6 +6,23 @@ The format follows [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/
 
 ## [Unreleased]
 
+### Added
+
+**3D-printed parts**
+
+A build can now use 3D-printed parts next to cut stock and bought parts, for example a kit with modules and printed brackets. Every number still comes from the one model.
+
+| Item | Does |
+|---|---|
+| Material kind `printed` | A filament sold by the spool: `spool` (grams, default 1000), `price` for one spool, `packName`, `density` (g/cm³, default 1.24), `fill` (default 0.3), `rate` (grams per printer hour, default 12), `spare` (default 0.1) |
+| Part field `print` | `{ grams?, hours?, settings? }` on a part of a printed material: the slicer numbers for one part and the print settings for the reader. A missing value is an estimate from the part size (box or cylinder): grams = cm³ x density x fill, to 1 g; hours = grams / rate, to 0.1 h |
+| Step field `prints` | `true` or printed material ids: the printer makes those parts in this step. Their printer hours are waiting time of the step, never work time. The purchase plan needs the filament by this step |
+| BOQ group Printing (`P`) | One row for each printed material, between Timber and sheet (`T`) and Hardware (`H`): parts and grams, spools with the spare share, the printer hours in the note. A project with no printed parts keeps its codes |
+| Print list | The cut tab is "Cut list", "Print list" or "Cut and print", with a table of the printed parts (grams and hours for one part, material, settings). A project with nothing to cut or print has no cut tab, also with `--tabs`. `cut` prints a "Printed parts" section, and `cut --format json` gives `prints`. The Plan tiles count parts to cut and parts to print. The kit pose lays the printed parts on the floor |
+| New codes | `W_NO_PRINT_STEP` (no step prints a printed material), `I_PRINT_ESTIMATE` (a grams or hours value is an estimate). `print` on a part that is not printed is `E_SCHEMA` |
+
+The STE linter accepts "print" and "slice" as command verbs. Print settings are read as reader text: the STE lint (as a description) and the hand-off screen.
+
 ## [1.0.0] - 2026-11-04
 
 The first public release. Jig turns a DIY project into one interactive build guide: a step-by-step plan, a bill of quantities, a purchase plan, a to-scale cut list and a 3D viewer that assembles the object part by part. The text follows the writing rules of ASD-STE100 Simplified Technical English, and a level switch serves a first-timer and an expert. Nine Agent Skills share one engine. [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) is the contract for this release.

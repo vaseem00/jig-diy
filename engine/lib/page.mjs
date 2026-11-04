@@ -32,6 +32,15 @@ export function tabList(tabs = TABS) {
   return out;
 }
 
+// The tabs a page of this model shows (tabList order). A project with nothing to cut and nothing to print (a kit of
+// bought parts, a repair with no parts) has no cut tab. Throws when no tab is left.
+export function tabsFor(model, tabs = TABS) {
+  const list = tabList(tabs), cut = (model?.parts ?? []).some((p) => p.kind !== "each");
+  const out = cut ? list : list.filter((t) => t !== "cut");
+  if (!out.length) throw new Error("The project has nothing to cut and nothing to print, so the page has no cut tab. Use plan, shop or build.");
+  return out;
+}
+
 // The import map. Online: jsDelivr with an integrity entry per exact file URL. Offline: each specifier as a data: URL.
 function importMap(offline, three) {
   if (!offline) return { imports: { three: THREE_FILES[0].url, "three/addons/": `${THREE_BASE}/examples/jsm/` }, integrity: Object.fromEntries(THREE_FILES.map((f) => [f.url, `sha384-${f.sha384}`])) };
@@ -43,10 +52,10 @@ function importMap(offline, three) {
 // renderPage(model, { artifact, offline, tabs, three, web }) -> HTML string. artifact: a body fragment for the Artifact
 // tool (title, the claude:viewport-fit-sides meta, fonts, style, body; the host adds the standard viewport meta). offline: three = { [specifier]: source } from loadThree(), the
 // three.js MIT licence text in a comment, no Google Fonts. tabs: subset of plan, shop, cut, build. web: { "app.js",
-// "viewer.js", "page.css" } to override the files.
+// "viewer.js", "page.css" } to override the files. A model with nothing to cut or print gets no cut tab (tabsFor).
 export function renderPage(model, { artifact = false, offline = false, tabs = TABS, three = null, web = null } = {}) {
   if (!model || typeof model !== "object" || !model.meta) throw new Error("renderPage needs a computed model: call compute(project) first.");
-  const list = tabList(tabs), files = web ?? webFiles();
+  const list = tabsFor(model, tabs), files = web ?? webFiles();
   const app = lf(files["app.js"]), viewer = lf(files["viewer.js"]), css = lf(files["page.css"]);
   if (/<\/script/i.test(app + viewer) || /<\/style/i.test(css)) throw new Error("The page runtime holds a closing script or style tag.");
   // The page leaves out safety.cleared: the overrides of the hand-off screen are for the reviewer (the safety review),
