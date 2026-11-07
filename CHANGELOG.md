@@ -28,7 +28,7 @@ Ideas from machine explainers (the teardown skill, after whaleyxbt/claude-motion
 
 ### Changed
 
-- Below 421 px wide, the "Reset view" button reads "Reset", so the 5 viewer buttons stay on one row from 360 px.
+- In a viewer under 681 px wide (the steps view on a desktop, a phone), the "Reset view" button reads "Reset", so the 5 viewer buttons and a short readout stay on one row. A container query on the viewer decides it.
 - `method.md` section 11 has the rules "The part doing the work opens up" and "Show it working". `verify.md` section 3.1 has the review loop with the sheet.
 
 ## [1.1.0] - 2026-11-04
