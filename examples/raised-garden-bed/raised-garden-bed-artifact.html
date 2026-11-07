@@ -81,7 +81,7 @@ input[type="checkbox"]{accent-color:var(--ok)}
 /* a long word in the title breaks inside the word in the Fig 1 caption too, so the Plan tab fits a 320 px screen */
 .fig span{min-width:0;overflow-wrap:anywhere}
 /* the Plan view tour line, then the Try it sliders: one for each motion of the finished object */
-.tourline{margin:8px 2px 0;min-height:1.45em;font:500 12px/1.45 var(--mono);color:var(--text);overflow-wrap:anywhere}
+.tourline{margin:8px 2px 0;min-height:2.9em;font:500 12px/1.45 var(--mono);color:var(--text);overflow-wrap:anywhere}
 .try{margin:14px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
 .try h3{margin:0 0 6px;font-size:14px}
 .motion{display:grid;grid-template-columns:minmax(0,8em) minmax(0,1fr) 5.5em;align-items:center;gap:10px;padding:4px 0}
@@ -905,9 +905,10 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin, onTour }
   for (const m of motions) { setMotion(m, 1); m.list.forEach((p) => tourBox.union(new T.Box3().setFromObject(p.mesh))); setMotion(m, 0); }
   let touring = false, tourT = 0, held = REDUCED.matches, idle = 0, lastCaption = null;
   const glide = { t: -1, pos: new T.Vector3(), target: new T.Vector3() };
-  // the camera of the tour at time t: one full turn round the object in one loop, at the Plan view height
+  // the camera of the tour at time t: it sways 38 degrees each way round the front of the object, at the Plan view
+  // height, once in one loop (a full turn would go behind a wall prop and show the back of the work)
   function tourCamera(t) {
-    const az = (32 + (360 * t) / TOUR) * RAD, el = 22 * RAD, c = tourBox.getCenter(new T.Vector3());
+    const az = (32 + 38 * Math.sin((2 * Math.PI * t) / TOUR)) * RAD, el = 22 * RAD, c = tourBox.getCenter(new T.Vector3());
     const back = new T.Vector3(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el)), fit = fitDistance(tourBox, c, back);
     c.addScaledVector(fit.up, -LIFT * fit.d * fit.tv);
     return { pos: back.multiplyScalar(fit.d).add(c), target: c };
@@ -1195,7 +1196,18 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin, onTour }
       new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; if (onScreen) { claim(); wake(); } }).observe(host);
       matchMedia("(prefers-color-scheme: dark)").addEventListener("change", retheme);
       new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-      if (still) { tourT = Number.isFinite(TOUR_AT) && TOUR_AT > 0 ? TOUR_AT : 0; tourPose(tourT); }
+      if (still) {
+        tourT = Number.isFinite(TOUR_AT) && TOUR_AT > 0 ? TOUR_AT : 0;
+        tourPose(tourT);
+        // a capture steps the still tour frame by frame: dispatchEvent(new CustomEvent("jig:tour", { detail: seconds }))
+        addEventListener("jig:tour", (e) => {
+          const t = Number(e.detail);
+          if (!Number.isFinite(t) || t < 0) return;
+          tourT = t;
+          tourPose(t);
+          if (R.owner === api) { R.r.render(scene, camera); need = false; }
+        });
+      }
       else if (hero && !held && !REDUCED.matches) startTour();
       else if (hero) onSpin?.(false);
       host.dataset.ready = "";
@@ -1815,8 +1827,8 @@ const onSpin = (on) => { const b = $('[data-v="spin"]'); if (b) { b.textContent 
 // the tour line under the Plan view: the step that goes in, or the motion and the value its parts show
 const onTour = (c) => {
   const line = $("[data-tourline]"), m = c.kind === "motion" ? MOTIONS.find((x) => x.id === c.id) : null;
-  if (m) showMotion(m, c.k);
-  else if (c.kind !== "off") MOTIONS.forEach((x) => showMotion(x, 0)); // the tour holds every other motion at rest
+  // the tour moves one motion at a time and holds every other motion at rest
+  if (c.kind !== "off") MOTIONS.forEach((x) => showMotion(x, x === m ? c.k : 0));
   if (line) line.textContent = c.kind === "step" ? `Step ${c.step + 1} · ${c.text}` : m ? `${m.name} · ${motionValue(m, c.k)}${c.text ? ` · ${c.text}` : ""}` : "";
 };
 const heroHost = $('[data-viewer="hero"]'), stepsHost = $('[data-viewer="steps"]');

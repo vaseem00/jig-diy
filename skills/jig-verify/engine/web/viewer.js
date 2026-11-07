@@ -509,9 +509,10 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin, onTour }
   for (const m of motions) { setMotion(m, 1); m.list.forEach((p) => tourBox.union(new T.Box3().setFromObject(p.mesh))); setMotion(m, 0); }
   let touring = false, tourT = 0, held = REDUCED.matches, idle = 0, lastCaption = null;
   const glide = { t: -1, pos: new T.Vector3(), target: new T.Vector3() };
-  // the camera of the tour at time t: one full turn round the object in one loop, at the Plan view height
+  // the camera of the tour at time t: it sways 38 degrees each way round the front of the object, at the Plan view
+  // height, once in one loop (a full turn would go behind a wall prop and show the back of the work)
   function tourCamera(t) {
-    const az = (32 + (360 * t) / TOUR) * RAD, el = 22 * RAD, c = tourBox.getCenter(new T.Vector3());
+    const az = (32 + 38 * Math.sin((2 * Math.PI * t) / TOUR)) * RAD, el = 22 * RAD, c = tourBox.getCenter(new T.Vector3());
     const back = new T.Vector3(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el)), fit = fitDistance(tourBox, c, back);
     c.addScaledVector(fit.up, -LIFT * fit.d * fit.tv);
     return { pos: back.multiplyScalar(fit.d).add(c), target: c };
@@ -799,7 +800,18 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin, onTour }
       new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; if (onScreen) { claim(); wake(); } }).observe(host);
       matchMedia("(prefers-color-scheme: dark)").addEventListener("change", retheme);
       new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-      if (still) { tourT = Number.isFinite(TOUR_AT) && TOUR_AT > 0 ? TOUR_AT : 0; tourPose(tourT); }
+      if (still) {
+        tourT = Number.isFinite(TOUR_AT) && TOUR_AT > 0 ? TOUR_AT : 0;
+        tourPose(tourT);
+        // a capture steps the still tour frame by frame: dispatchEvent(new CustomEvent("jig:tour", { detail: seconds }))
+        addEventListener("jig:tour", (e) => {
+          const t = Number(e.detail);
+          if (!Number.isFinite(t) || t < 0) return;
+          tourT = t;
+          tourPose(t);
+          if (R.owner === api) { R.r.render(scene, camera); need = false; }
+        });
+      }
       else if (hero && !held && !REDUCED.matches) startTour();
       else if (hero) onSpin?.(false);
       host.dataset.ready = "";

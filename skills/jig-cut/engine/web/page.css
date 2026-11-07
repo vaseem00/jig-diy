@@ -77,7 +77,7 @@ input[type="checkbox"]{accent-color:var(--ok)}
 /* a long word in the title breaks inside the word in the Fig 1 caption too, so the Plan tab fits a 320 px screen */
 .fig span{min-width:0;overflow-wrap:anywhere}
 /* the Plan view tour line, then the Try it sliders: one for each motion of the finished object */
-.tourline{margin:8px 2px 0;min-height:1.45em;font:500 12px/1.45 var(--mono);color:var(--text);overflow-wrap:anywhere}
+.tourline{margin:8px 2px 0;min-height:2.9em;font:500 12px/1.45 var(--mono);color:var(--text);overflow-wrap:anywhere}
 .try{margin:14px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
 .try h3{margin:0 0 6px;font-size:14px}
 .motion{display:grid;grid-template-columns:minmax(0,8em) minmax(0,1fr) 5.5em;align-items:center;gap:10px;padding:4px 0}

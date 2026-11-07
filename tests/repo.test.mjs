@@ -1540,7 +1540,7 @@ test("build-examples: builds the page and the Artifact page of each example, str
 // On the real repo, not in checkRepo(): the fixture tests put other files at a fixture root on purpose.
 test("the repo root holds only the expected entries", () => {
   const top = walk(ROOT).filter((e) => !e.rel.includes("/")).map((e) => e.rel).sort();
-  const want = [".claude-plugin", ".editorconfig", ".gitattributes", ".github", ".gitignore", "CHANGELOG.md", "CODE_OF_CONDUCT.md", "CONTRIBUTING.md",
+  const want = [".claude-plugin", ".editorconfig", ".gitattributes", ".github", ".gitignore", ".nojekyll", "CHANGELOG.md", "CODE_OF_CONDUCT.md", "CONTRIBUTING.md",
     "GEMINI.md", "LICENSE", "README.md", "SECURITY.md", "THIRD_PARTY_NOTICES.md", "assets", "docs", "engine", "evals", "examples", "gemini-extension.json",
     "plugin.json", "scripts", "skills", "skills.sh.json", "tests"].sort();
   assert.deepEqual(top, want, "an unexpected entry at the repo root: delete it, or add it to this list on purpose");
