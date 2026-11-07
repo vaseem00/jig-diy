@@ -13,7 +13,7 @@ const load = (rel) => JSON.parse(readFileSync(new URL(rel, import.meta.url), "ut
 const shelf = () => load("../examples/pine-bookshelf/project.json");
 const bench = () => load("./fixtures/inch-bench.json");
 const hook = () => load("./fixtures/printed-hook.json");
-const KEYS = ["engine", "format", "mode", "meta", "parts", "props", "materials", "steps", "tools", "techniques", "cuts", "boq", "purchase", "plan", "totals", "safety", "problems", "counts"];
+const KEYS = ["engine", "format", "mode", "meta", "parts", "props", "materials", "motions", "steps", "tools", "techniques", "cuts", "boq", "purchase", "plan", "totals", "safety", "problems", "counts"];
 const RANK = { error: 0, warn: 1, ste: 2, info: 3 };
 const codes = (M, level) => M.problems.filter((p) => !level || p.level === level).map((p) => `${p.code} ${p.path}`);
 const find = (M, code) => M.problems.filter((p) => p.code === code);

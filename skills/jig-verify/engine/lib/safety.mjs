@@ -372,6 +372,7 @@ function whereOf([a, b, c, d], P) {
   if (a === "steps") return `step ${b + 1}${tail}`;
   if (a === "parts") return `part ${P.parts?.[b]?.id ?? b + 1}`;
   if (a === "tools") return `tool ${P.tools?.[b]?.id ?? b + 1}`;
+  if (a === "motions") return `motion ${(P.motions ?? []).find((m) => (m.raw ?? -1) === b)?.id ?? b + 1}`;
   if (a === "materials") return `material ${b}`;
   if (a === "techniques") return `technique ${b}${tail}`;
   if (a === "safety" && b === "cleared" && typeof c === "number") return `cleared entry ${c + 1}`;
@@ -391,6 +392,7 @@ function texts(P) {
     put(["steps", i, "view", "note"], s.view?.note);
   });
   (P.parts ?? []).forEach((p, i) => { put(["parts", i, "name"], p.name); put(["parts", i, "print", "settings"], p.print?.settings); });
+  (P.motions ?? []).forEach((m, i) => { const k = m.raw ?? i; put(["motions", k, "name"], m.name); put(["motions", k, "text"], m.text); });
   for (const [id, m] of Object.entries(P.materials ?? {})) put(["materials", id, "name"], m?.name);
   (P.tools ?? []).forEach((t, i) => put(["tools", i, "name"], t.name));
   for (const [id, c] of Object.entries(P.techniques ?? {})) {

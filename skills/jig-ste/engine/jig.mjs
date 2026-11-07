@@ -145,6 +145,10 @@ export const COMMANDS = {
       select: { type: S, arg: "css", help: "Clip the image to the first element that matches. Default: the full page." },
       wait: { type: S, arg: "ms", help: "The time to wait after the page loads. Default: 4000, so that WebGL starts." },
       "reduced-motion": { type: B, help: "The page sees the reduced-motion setting." },
+      tour: { type: S, arg: "s", help: "Show the Plan view tour at this time in seconds. Default: the tour holds still at 0 s, the finished object." },
+      sheet: { type: B, help: "Make one review sheet: every route as a tile with its name. Default routes: each tab, then every step." },
+      routes: { type: S, arg: "list", help: "With --sheet: the routes to show, separated by commas, for example plan,build/2,build/5." },
+      cols: { type: S, arg: "n", help: "With --sheet: the tiles in one row. Default: 3." },
     },
     example: "capture pine-bookshelf/pine-bookshelf.html --hash build/4 --out shots/step-04.png",
   },
@@ -525,6 +529,59 @@ function safetyMd(M, findings) {
 
 const pick = (M, keys) => Object.fromEntries([["engine", M.engine], ...keys.map((k) => [k, M[k]])]);
 
+// The routes of a built jig page, from its own file: each tab it has, then every step (build/1 ...). null when the file
+// is not a jig page.
+function pageRoutes(file) {
+  let html;
+  try { html = readFileSync(file, "utf8"); } catch { return null; }
+  const data = /<script type="application\/json" id="jig-data">([\s\S]*?)<\/script>/.exec(html);
+  if (!data) return null;
+  let M;
+  try { M = JSON.parse(data[1]); } catch { return null; }
+  const tabs = (/data-tabs="([^"]*)"/.exec(html)?.[1] ?? TABS.join(" ")).split(/[\s,]+/).filter((t) => TABS.includes(t));
+  const steps = Array.isArray(M.steps) ? M.steps : [];
+  return [...tabs.filter((t) => t !== "build"), ...(tabs.includes("build") ? steps.map((s, i) => `build/${i + 1}`) : [])]
+    .map((hash) => ({ hash, label: hash.startsWith("build/") ? `${hash.slice(6)} · ${oneLine(String(steps[Number(hash.slice(6)) - 1]?.title ?? "")).slice(0, 48)}` : hash }));
+}
+
+// capture --sheet: every route as a tile in one image, for the review loop (engine/docs/verify.md).
+async function sheet(ctx, src, url, opts) {
+  const v = ctx.values;
+  if (opts.select !== undefined) throw usage("--select does not work with --sheet. Each tile is the window.");
+  if (opts.hash !== undefined) throw usage("--hash does not work with --sheet. Use --routes.");
+  const cols = number("cols", v.cols, { min: 1, max: 12, int: true, dflt: 3 });
+  let routes;
+  if (v.routes !== undefined) {
+    routes = v.routes.split(",").map((r) => r.trim().replace(/^#/, "")).filter(Boolean).map((hash) => ({ hash, label: hash }));
+    if (!routes.length) throw usage("--routes has no route. Give routes separated by commas, for example plan,build/2.");
+  } else {
+    routes = url ? null : pageRoutes(resolve(src));
+    if (!routes) throw usage(url ? "A sheet of a URL needs --routes." : `The page "${src}" is not a jig guide page. Give --routes.`);
+  }
+  const img = url ? target(v.out, cwd(), "capture-sheet.png") : target(v.out, dirname(resolve(src)), `${parse(src).name}-sheet.png`);
+  if (!/\.(png|webp)$/i.test(img)) throw usage(`--out must end in .png or .webp. Found: "${v.out}".`);
+  const { captureSheet, findBrowser, browserWarnings } = await import("./lib/capture.mjs");
+  for (const w of browserWarnings()) ctx.log(w);
+  if (!findBrowser()) throw fail("No Chrome, Chromium or Edge found. Install one, or set JIG_BROWSER to the browser program.");
+  let r;
+  try {
+    r = await captureSheet(url ?? pathToFileURL(resolve(src)).href, { ...opts, wait: v.wait === undefined ? undefined : opts.wait,
+      out: img, cols, hashes: routes.map((x) => x.hash), labels: routes.map((x) => x.label) });
+  } catch (e) {
+    if (e?.name === "CaptureError") throw fail(e.message, e);
+    throw e;
+  }
+  ctx.outputs.push(r.out);
+  const plain = (h) => String(h ?? "").replace(/^#/, "").replace(/^build\/0+(?=\d)/, "build/");
+  const moved = r.shots.filter((s) => plain(s.route) !== plain(s.hash) && !(plain(s.hash) === "build" && /^build\/\d+$/.test(plain(s.route))));
+  ctx.log([`Wrote ${show(r.out)} (${plural(r.shots.length, "tile")}).`,
+    ...moved.map((s) => `Route: ${s.route || "(none)"} (asked for #${plain(s.hash)})`),
+    `Console errors: ${r.consoleErrors.length || "none"}`, ...r.consoleErrors.map((e) => `  ${e.split("\n")[0]}`),
+    `Sideways scroll: ${r.sideways.length ? r.sideways.join(", ") : "no"}`, ""].join("\n"));
+  return finish(ctx, null, !r.consoleErrors.length && !moved.length,
+    { capture: { sheet: true, routes: r.shots, routeMismatch: moved.length > 0, consoleErrors: r.consoleErrors, sidewaysScroll: r.sideways.length > 0 } });
+}
+
 const RUN = {
   async new(ctx) {
     const v = ctx.values, id = one(ctx, "id");
@@ -683,9 +740,12 @@ const RUN = {
       wait: number("wait", v.wait, { min: 0, max: 120000, int: true, dflt: 4000 }),
       theme: v.theme === undefined ? undefined : choice("theme", v.theme, ["light", "dark"]),
       select: v.select, reducedMotion: !!v["reduced-motion"], hash: v.hash?.replace(/^#/, "") || undefined,
+      tour: v.tour === undefined ? undefined : number("tour", v.tour, { min: 0, max: 3600, dflt: 0 }),
     };
     const url = /^(https?|file):/i.test(src) ? src : null;
     if (!url && !existsSync(resolve(src))) throw fail(`The page "${src}" does not exist.`);
+    if (!v.sheet && (v.routes !== undefined || v.cols !== undefined)) throw usage("--routes and --cols need --sheet.");
+    if (v.sheet) return sheet(ctx, src, url, opts);
     const slug = opts.hash ? `-${opts.hash.replace(/[^A-Za-z0-9]+/g, "-")}` : "";
     const img = url ? target(v.out, cwd(), `capture${slug}.png`) : target(v.out, dirname(resolve(src)), `${parse(src).name}${slug}.png`);
     if (!/\.(png|webp)$/i.test(img)) throw usage(`--out must end in .png or .webp. Found: "${v.out}".`);

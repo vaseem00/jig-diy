@@ -318,7 +318,8 @@ The linter cannot see meaning. [ste.md](ste.md) has the rules that you check you
 
 ```
 node engine/jig.mjs capture <page.html|url> [--out file] [--hash route] [--width px] [--height px] [--scale n]
-                            [--theme light|dark] [--select css] [--wait ms] [--reduced-motion]
+                            [--theme light|dark] [--select css] [--wait ms] [--reduced-motion] [--tour s]
+node engine/jig.mjs capture <page.html|url> --sheet [--routes list] [--cols n] [--out file] [--width px] [--height px] [--theme light|dark]
 ```
 
 Opens the page in headless Chrome, Chromium or Edge, writes an image, and prints the console errors and whether the page scrolls sideways.
@@ -334,13 +335,18 @@ Opens the page in headless Chrome, Chromium or Edge, writes an image, and prints
 | `--select css` | the full page | Clips the image to the first element that matches. The element scrolls into view first |
 | `--wait ms` | 4000 | The time to wait after the page loads. WebGL needs time to start and the parts need time to fly in |
 | `--reduced-motion` | off | The page sees `prefers-reduced-motion: reduce` |
+| `--tour s` | 0 | The Plan view shows its tour at this time in seconds: a motion part way open, or a step as its parts go in. The tour holds still, so two captures are the same |
+| `--sheet` | off | One review sheet: each route as a tile of the window size, with its name in the corner, in one browser session. Default routes: each tab of the page, then every step |
+| `--routes list` | every tab and step | With `--sheet`: the routes, separated by commas: `plan,build/2,build/5`. A URL needs it |
+| `--cols n` | 3 | With `--sheet`: the tiles in one row, 1 to 12 |
 
 How it works:
 
 - The search for a browser looks first at the `JIG_BROWSER` variable, then at `CHROME_PATH`. Then it looks in the standard install folders of Chrome, Chromium and Edge. A variable that names a missing file prints a warning on stderr, and the search goes on.
 - The browser starts with a new temporary profile. The command removes the profile at the end, also after Ctrl+C. It also removes `jig-capture-*` profiles older than 1 hour that a stopped capture left. WebGL runs in software (SwiftShader), so the 3D view draws with no graphics card.
 - The browser opens the page file or the URL that you give it. The capture command gives the browser switches that turn off its sync, pings and optimization-guide downloads. These switches do not stop all background traffic. Each time it starts, the browser still sends its own background requests to its maker (Google or Microsoft). With Chrome, this is about 10 requests: update checks, component downloads, a sign-in check, a time check and a device check-in. These requests carry no project data.
-- The page opens with `?capture` added to its address, so the 3D viewer keeps its last frame for the image. The hash stays.
+- The page opens with `?capture` added to its address, so the 3D viewer keeps its last frame for the image, and the Plan view tour holds still at `--tour` (0 s: the finished object). The hash stays.
+- `--sheet` opens the page one time, then sets each route as the hash and waits 2500 ms (`--wait` sets both waits). Each tile is the window, not the full page. The default image is `<page name>-sheet.png`. `--select` and `--hash` do not work with `--sheet` (exit code 2). The exit code is 1 when the page has console errors or a route shows another view. Read every tile: the sheet is the review loop of [verify.md](verify.md).
 - Console errors are `console.error` calls, failed `console.assert` calls, uncaught exceptions, and browser errors. Failed network requests do not count: a guide with no network says in its viewer slot why the 3D view is empty.
 - Without `--select`, the image is the full page height (16000 px or less) at the window width.
 - The exit code is 1 when the page has console errors. Sideways scroll prints `Sideways scroll: yes` but does not change the exit code.

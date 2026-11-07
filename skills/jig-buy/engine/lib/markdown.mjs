@@ -119,7 +119,18 @@ export function planMd(M, { level } = {}) {
     if (s.why && lv === "new") L.push(`**Why:** ${t(s.why)}`, "");
     if (s.tip && lv !== "pro") L.push(`**Tip:** ${t(s.tip)}`, "");
   });
+  const moves = motionLines(M);
+  if (moves.length) L.push("## What moves", "", ...moves.map((x) => `- ${t(x)}`), "");
   return `${L.join("\n").trimEnd()}\n`;
+}
+
+// One line for each motion of the finished object: "Door (part F): turns 100 degrees. The door turns open."
+export function motionLines(M) {
+  return (M.motions ?? []).map((m) => {
+    const labels = [...new Set(m.parts.map((id) => M.parts.find((p) => p.id === id)?.label ?? id))];
+    const how = m.kind === "turn" ? `turns ${round(Math.abs(m.travel), 1)} degrees` : `slides ${fmtLen(Math.abs(m.travel), M.meta.units)}`;
+    return `${m.name} (${labels.length > 1 ? "parts" : "part"} ${labels.join(", ")}): ${how}.${m.text ? ` ${m.text}` : ""}`;
+  });
 }
 
 // Totals lines: [label, amount text].
@@ -393,5 +404,7 @@ export function noscriptHtml(M) {
     }
     H.push("</ol>");
   }
+  const moves = motionLines(M);
+  if (moves.length) H.push("<h2>What moves</h2>", `<ul>${moves.map((x) => `<li>${e(x)}</li>`).join("")}</ul>`);
   return H.filter(Boolean).join("\n");
 }

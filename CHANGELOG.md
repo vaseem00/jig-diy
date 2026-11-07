@@ -6,6 +6,31 @@ The format follows [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-07
+
+### Added
+
+**Show it working: motions and the Plan view tour**
+
+Ideas from machine explainers (the teardown skill, after whaleyxbt/claude-motion): the page shows the object work, one number drives each moving part, and the page tours itself until the reader takes over.
+
+| Item | Does |
+|---|---|
+| Project field `motions` | `[{ id, name, kind: "slide" \| "turn", parts, axis: "x" \| "y" \| "z", travel, pivot?, text? }]`: parts of the finished object that move (a drawer, a lid, a door, a wheel). A slide's travel is a length in the project unit; a turn's travel is degrees about a line through `pivot` |
+| Plan view tour | The Plan view runs by itself as a pure function of time: the finished object turns once round, each motion opens and closes, then the object goes together step by step. The lit part is the part that moves or goes in now. A line under the view names the step or the motion and its value. A click, drag, key or slider hands control to the reader; 25 s of quiet gives it back; Pause holds it. Frame 0 is the finished object. Under reduced motion it does not start by itself |
+| Try it | One slider for each motion under Fig 1, with the value (mm, in or degrees) from the same `travel` that poses the parts |
+| `W_MOTION_HIT` | Guide mode: at 25, 50, 75 or 100% of its travel, a moving part goes more than 1 mm into a part or prop that does not move with it |
+| `plan.md` and the no-script copy | A "What moves" list: "Door (part F): turns 100 degrees. The door turns open." |
+| X-ray | A viewer button and the step field `view.xray`: the parts built before show as glass, so work inside a case or behind a panel shows. The reader's choice holds for every step |
+| `capture --sheet` | Every tab and step as a named tile in one image, from one browser session: the review loop in one picture. `--routes` and `--cols` choose the tiles |
+| `capture --tour <s>` | Holds the Plan view tour at a time, so a capture of a motion or of a step going in is the same every time |
+| Quality tiers | The viewer lowers its pixel ratio, then its shadow map, then its shadows, when frames in motion take more than 24 ms (a laptop's built-in graphics). Shaders compile before the first frame |
+
+### Changed
+
+- Below 421 px wide, the "Reset view" button reads "Reset", so the 5 viewer buttons stay on one row from 360 px.
+- `method.md` section 11 has the rules "The part doing the work opens up" and "Show it working". `verify.md` section 3.1 has the review loop with the sheet.
+
 ## [1.1.0] - 2026-11-04
 
 ### Added
@@ -124,6 +149,7 @@ The private first version, a single personal skill at `~/.claude/skills/jig`. It
 - One `jig` skill: SKILL.md, a model in `kit/model.mjs`, an STE linter, technique cards, a three.js viewer, a page builder (`scripts/build.mjs`) and references.
 - The pine bookshelf example as a `project.mjs` module with its built pages.
 
-[Unreleased]: https://github.com/vaseem00/jig-diy/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/vaseem00/jig-diy/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/vaseem00/jig-diy/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/vaseem00/jig-diy/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/vaseem00/jig-diy/releases/tag/v1.0.0

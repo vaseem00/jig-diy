@@ -266,5 +266,20 @@ The 3D answers four questions for each step: which part, where, which way round,
 - **Context props, not parts.** A wall, a bench or a floor goes in `props` and shows only on the steps that list it, and in the Plan view unless `hero: false`.
 - **The picture shows the assembled orientation.** The 3D stays upright, so each step reads as progress. Write the text to agree with it: "Stand the frame upright with the back toward you." If the real work must happen on the floor or on the back, say so in the text, and set the step's `view.note` to "The picture shows the <object> upright." The note shows only under the 3D view. Never mention the picture in `do`, `check`, `why` or `tip`: print and `plan.md` have no picture.
 - **Apart and Show finished** answer "how do the parts meet" and "where does this step lead".
+- **The part doing the work opens up.** When this step's parts sit inside parts built before (wiring in a case, a shelf pin behind a side, a bracket under a top), set `view.xray: true`: the parts built before show as glass and the lit parts show through them. A camera that sees inside beats ten orbits round the outside. The reader can turn X-ray on or off on any step.
 
 If a step's picture does not answer the four questions, fix the camera or the step before you add words.
+
+### 11.1 Show it working
+
+A reader trusts a build when they see the finished object work: the drawer slides out its full travel and clears the frame, the lid opens and stops, the wheel turns. Add a `motion` (format.md section 9.3) for each part that moves after the build. The Plan view then tours itself: the finished object turns once round, each motion opens and closes, then the object goes together step by step, and the loop starts again. Any click, drag, key or slider hands control to the reader; 25 s of quiet hands it back. Pause stops the tour until Play.
+
+These rules come from machine explainers whose every gauge reads the model that moves the parts:
+
+- **Start from the real thing.** Take the travel and the pivot from the real hardware: the drawer slide length on its packet, the hinge pin centre from the hinge drawing, the wheel axle from the kit's dimension drawing. Never guess a travel from a picture.
+- **One number drives each motion.** The 3D, the slider and the value under it all come from `travel`. Check one by hand: a 70 mm wheel that turns 360 degrees rolls 220 mm (70 x 3.14).
+- **Fix a collision with a number.** `W_MOTION_HIT` means the motion drives a part into another. Change the travel, the pivot or the part position. Never turn the camera away from it.
+- **One accent, and it means something.** In the tour, the lit part is the part that moves now, or the part that goes in now. Nothing else is lit.
+- **Hold each state long enough to read.** A tour state holds 1 s for a short line, plus 0.25 s for each word after three. The engine times the tour from the step titles and the motion texts, so short titles give a brisk tour.
+- **Frame 0 is the finished object.** The tour starts on the finished object, so a capture, a share card or a reader who looks for one second sees what they build.
+- **A screen capture holds still.** `capture --tour <s>` shows the tour at one time, so a review sees the same frame each time.

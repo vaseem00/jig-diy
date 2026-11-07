@@ -16,7 +16,7 @@ description: >-
 license: MIT
 compatibility: Requires Node.js 22 or later. The guide page loads three.js 0.160.0 from cdn.jsdelivr.net and fonts from fonts.googleapis.com when it opens. Captures need Chrome, Chromium or Edge.
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   pack: jig-diy
   author: vaseem00
 ---
@@ -63,7 +63,7 @@ If your agent does not fill in `${CLAUDE_SKILL_DIR}`, use the folder that holds 
 | `capture <page> --hash build/4 --wait 4000 --out shots/step-04.png` | Opens the page in headless Chrome or Edge, writes the image, and prints the console errors and any sideways scroll |
 | `cut <project>`, `boq <project>` | The cut plan and the bill of quantities, to compare with the page |
 
-- `capture` options: `--hash plan|shop|cut|build/<n>`, `--width 390 --height 844` for a phone, `--theme dark`, `--reduced-motion`, `--select <css>`, `--scale 2`, `--wait <ms>`. It needs Chrome or Edge on the machine, and exits with 1 when the page has console errors, or when the page shows another step than `--hash` asked for (`Route: #build/10 (asked for #build/99)`).
+- `capture` options: `--hash plan|shop|cut|build/<n>`, `--width 390 --height 844` for a phone, `--theme dark`, `--reduced-motion`, `--select <css>`, `--scale 2`, `--wait <ms>`, `--tour <s>` (the Plan tour held at that time). `--sheet` (with `--routes plan,build/2` and `--cols 4`) writes one review image of every tab and step, each tile named. It needs Chrome or Edge on the machine, and exits with 1 when the page has console errors, or when the page shows another step than `--hash` asked for (`Route: #build/10 (asked for #build/99)`).
 - `--report json` prints a machine report on stdout: `{ ok, counts, problems, totals, outputs }`.
 - Exit codes: 0 done, 1 problems block the command (or console errors on `capture`), 2 a wrong command or flag, 3 a file that cannot be read or written.
 - [engine/docs/cli.md](engine/docs/cli.md) has every option.
@@ -83,8 +83,9 @@ If your agent does not fill in `${CLAUDE_SKILL_DIR}`, use the folder that holds 
    node "${CLAUDE_SKILL_DIR}/engine/jig.mjs" check pine-bookshelf/project.json
    ```
 4. **Is the page current?** Copy the project into an empty scratch folder, build it there with the same options, and compare the two files ([engine/docs/verify.md](engine/docs/verify.md) section 2 has the commands for PowerShell and POSIX shells). If they differ, review the fresh build and report the difference as a fault.
-5. **Capture.** Take the set in [engine/docs/verify.md](engine/docs/verify.md) section 3: the three tabs, every step, three phone views, three dark views and one reduced-motion view.
+5. **Capture.** Start with one review sheet of every tab and step (`--sheet`), and read every tile. Then take the rest of the set in [engine/docs/verify.md](engine/docs/verify.md) section 3: three phone views, three dark views, one reduced-motion view, full captures where a tile looks wrong, and the Plan tour inside each motion (`--hash plan --tour <s>`).
    ```
+   node "${CLAUDE_SKILL_DIR}/engine/jig.mjs" capture pine-bookshelf/pine-bookshelf.html --sheet --cols 4 --out pine-bookshelf/shots/sheet.png
    node "${CLAUDE_SKILL_DIR}/engine/jig.mjs" capture pine-bookshelf/pine-bookshelf.html --hash plan --wait 4000 --out pine-bookshelf/shots/plan.png
    node "${CLAUDE_SKILL_DIR}/engine/jig.mjs" capture pine-bookshelf/pine-bookshelf.html --hash build/4 --wait 4000 --out pine-bookshelf/shots/step-04.png
    node "${CLAUDE_SKILL_DIR}/engine/jig.mjs" capture pine-bookshelf/pine-bookshelf.html --hash shop --width 390 --height 844 --theme dark --out pine-bookshelf/shots/phone-dark-shop.png
@@ -93,7 +94,7 @@ If your agent does not fill in `${CLAUDE_SKILL_DIR}`, use the folder that holds 
 6. **Read each image** against the checklist in [engine/docs/verify.md](engine/docs/verify.md) section 4. Answer each question yes or no, with the image that shows it.
 7. **Cross-check the numbers.** Compare the Plan stats and the Shop totals with `totals` in the report: subtotal + contingency + tax (when not included) = total. Compare the boards and sheets on the Cut list tab with `cut`. Each length must show in the project's unit.
 8. **Give the verdict:** PASS or FIX, with the faults in order: safety, wrong numbers, faults that confuse the reader, looks. [references/verdict.md](references/verdict.md) has the format.
-9. **After the fixes,** build again, capture the changed views again, and read them.
+9. **After the fixes,** build again, make the sheet again, and read it. Stop when a full pass finds nothing.
 
 ## What to tell the user
 

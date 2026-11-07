@@ -53,6 +53,7 @@ function whereOf(seg, P) {
   }
   if (n && a === "parts") return named(P?.parts, "part");
   if (n && a === "tools") return named(P?.tools, "tool");
+  if (n && a === "motions") return named(P?.motions, "motion");
   if (n && a === "steps") return `step ${b + 1}${tail}`;
   if (n && a === "finish") return `finish ${b + 1}`;
   if (n && a === "handoff") return `hand-off ${b + 1}`;
@@ -329,6 +330,27 @@ function checks(R, units, mode, techniques, ctx) {
   uses(R.uses, ["uses"]);
   items(R.finish).forEach(([i, f]) => finish(f, ["finish", i]));
 
+  // motions: unique ids, known parts, a part in one motion only, a pivot on a turn and only there, a travel that moves
+  const mIds = new Map(), moved = new Map();
+  items(R.motions).forEach(([i, m]) => {
+    if (!isObj(m)) return;
+    const at = (...k) => ["motions", i, ...k];
+    if (typeof m.id === "string") {
+      if (mIds.has(m.id)) report(ctx, "error", "E_DUP_ID", at("id"), `The motion id "${m.id}" is used again. Motion ${mIds.get(m.id) + 1} in the list has it too.`, "Give each motion its own id.");
+      else mIds.set(m.id, i);
+    }
+    refs(m.parts, at("parts"), "part", true);
+    for (const [j, id] of items(m.parts)) {
+      if (typeof id !== "string" || !known.part?.has(id)) continue;
+      if (moved.has(id) && moved.get(id) !== i) err(ctx, at("parts", j), `Part "${id}" is in motion ${moved.get(id) + 1} too.`, "Put each part in one motion only. Make one motion for the parts that move together.");
+      else moved.set(id, i);
+    }
+    if (m.kind === "turn" && m.pivot === undefined) err(ctx, at("pivot"), "The turn has no pivot.", 'Add "pivot": [x, y, z], a point on the turn axis, for example the centre of the hinge pin.');
+    if (m.kind === "slide" && m.pivot !== undefined) err(ctx, at("pivot"), "A slide has no pivot.", 'Remove "pivot", or set "kind": "turn".');
+    if (m.travel === 0) err(ctx, at("travel"), "The travel 0 does not move the parts.", "Give the distance of the slide, or the angle of the turn in degrees.");
+    if (m.kind === "turn" && typeof m.travel === "number" && Math.abs(m.travel) > 360) err(ctx, at("travel"), `The turn of ${m.travel} degrees is more than one full turn.`, "Give an angle from -360 to 360 degrees.");
+  });
+
   // safety.cleared: a hand-off topic as in handoff (an id or an alias), and a reason that is more than spaces. A
   // handoff entry may name other work ("Chimney sweep"); a cleared entry must name a topic of the screen.
   const topics = Object.entries(HANDOFF_TOPICS).flatMap(([id, t]) => [id, ...t.aliases]);
@@ -485,6 +507,18 @@ function normalize(c, ctx, techniques, problems) {
     return n;
   });
 
+  // motions: lengths in mm (the travel of a slide, the pivot); raw: the index in the project file. A motion with no
+  // known part, a turn with no pivot or no travel is left out (checks reported it).
+  const motions = [], seenM = new Set(), movedP = new Set();
+  (c.motions ?? []).forEach((m, raw) => {
+    if (seenM.has(m.id)) return;
+    seenM.add(m.id);
+    const list = uniq(m.parts.filter((id) => partIds.has(id) && !movedP.has(id)));
+    if (!list.length || m.travel === 0 || (m.kind === "turn" && (!m.pivot || Math.abs(m.travel) > 360))) return;
+    list.forEach((id) => movedP.add(id));
+    motions.push({ ...m, parts: list, travel: m.kind === "slide" ? L(m.travel) : m.travel, ...(m.kind === "turn" ? { pivot: V(m.pivot) } : {}), raw });
+  });
+
   let kerf = c.kerf === undefined ? L(KERF[units]) : L(c.kerf);
   if (kerf > MAX_KERF) {
     err(problems, ["kerf"], `The kerf ${fmtLen(kerf, units, { den: 64 })} is more than ${MAX_KERF} mm.`, "Use the width of the saw cut, for example 3 mm (1/8 in).");
@@ -495,7 +529,7 @@ function normalize(c, ctx, techniques, problems) {
     jig: c.jig, id: c.id ?? "", title: c.title ?? "", summary: c.summary, level: c.level, units, currency: c.currency,
     ...(c.tax ? { tax: c.tax } : {}), priceNote: c.priceNote, ...(c.pricesAsOf ? { pricesAsOf: c.pricesAsOf } : {}),
     estimate: est, kerf, trim: L(c.trim), contingency: c.contingency, terms: c.terms, verbs: c.verbs,
-    stores, materials, tools, parts, props, techniques: techs, steps,
+    stores, materials, tools, parts, props, techniques: techs, steps, motions,
     uses: usesOf(c.uses ?? {}), finish: (c.finish ?? []).map(finishOf).filter(Boolean), handoff: c.handoff ?? [],
     safety: c.safety ?? { tipRatio: SCHEMA.properties.safety.properties.tipRatio.default },
   };

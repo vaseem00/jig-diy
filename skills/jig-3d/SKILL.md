@@ -13,7 +13,7 @@ description: >-
 license: MIT
 compatibility: Requires Node.js 22 or later. The guide page loads three.js 0.160.0 from cdn.jsdelivr.net and fonts from fonts.googleapis.com when it opens. Screen captures need Chrome, Chromium or Edge.
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   pack: jig-diy
   author: vaseem00
 ---
@@ -96,7 +96,7 @@ One HTML file with the Build tab only, and no tab bar. The 3D viewer sits beside
    ```
    node "${CLAUDE_SKILL_DIR}/engine/jig.mjs" build bedside-table/project.json --tabs build --strict
    ```
-9. **Look at every step.** Capture each step and read every PNG. Capture one step at phone width and one in dark theme too.
+9. **Look at every step.** Make one review sheet of every step (`capture <page> --sheet`) and read every tile. Capture one step at phone width and one in dark theme too. If a step's parts are inside parts built before, set `view.xray: true` for it.
    ```
    node "${CLAUDE_SKILL_DIR}/engine/jig.mjs" capture bedside-table/bedside-table-3d.html --hash build/3 --out bedside-table/shots/step-03.png
    node "${CLAUDE_SKILL_DIR}/engine/jig.mjs" capture bedside-table/bedside-table-3d.html --hash build/3 --width 390 --theme dark --out bedside-table/shots/step-03-phone-dark.png
