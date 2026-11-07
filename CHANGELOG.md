@@ -15,7 +15,7 @@ The format follows [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/
 
 ### Changed
 
-- The Plan view tour sways 38 degrees each way round the front of the object, not a full turn, so the camera never goes behind a wall prop.
+- The Plan view tour sways 25 degrees each way round the front of the object, not a full turn, so the camera never goes behind a wall prop.
 - The tour line under the Plan view keeps room for two lines, so the page does not jump when a long caption wraps.
 - While the tour plays one motion, the other sliders show 0.
 
