@@ -272,7 +272,7 @@ If a step's picture does not answer the four questions, fix the camera or the st
 
 ### 11.1 Show it working
 
-A reader trusts a build when they see the finished object work: the drawer slides out its full travel and clears the frame, the lid opens and stops, the wheel turns. Add a `motion` (format.md section 9.3) for each part that moves after the build. The Plan view then tours itself: the finished object turns once round, each motion opens and closes, then the object goes together step by step, and the loop starts again. Any click, drag, key or slider hands control to the reader; 25 s of quiet hands it back. Pause stops the tour until Play.
+A reader trusts a build when they see the finished object work: the drawer slides out its full travel and clears the frame, the lid opens and stops, the wheel turns. Add a `motion` (format.md section 9.3) for each part that moves after the build. The Plan view then tours itself: the finished object sways round its front, each motion opens and closes, then the object goes together step by step, and the loop starts again. Any click, drag, key or slider hands control to the reader; 25 s of quiet hands it back. Pause stops the tour until Play.
 
 These rules come from machine explainers whose every gauge reads the model that moves the parts:
 

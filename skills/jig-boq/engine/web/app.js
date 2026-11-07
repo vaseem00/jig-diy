@@ -607,8 +607,8 @@ const onSpin = (on) => { const b = $('[data-v="spin"]'); if (b) { b.textContent 
 // the tour line under the Plan view: the step that goes in, or the motion and the value its parts show
 const onTour = (c) => {
   const line = $("[data-tourline]"), m = c.kind === "motion" ? MOTIONS.find((x) => x.id === c.id) : null;
-  if (m) showMotion(m, c.k);
-  else if (c.kind !== "off") MOTIONS.forEach((x) => showMotion(x, 0)); // the tour holds every other motion at rest
+  // the tour moves one motion at a time and holds every other motion at rest
+  if (c.kind !== "off") MOTIONS.forEach((x) => showMotion(x, x === m ? c.k : 0));
   if (line) line.textContent = c.kind === "step" ? `Step ${c.step + 1} · ${c.text}` : m ? `${m.name} · ${motionValue(m, c.k)}${c.text ? ` · ${c.text}` : ""}` : "";
 };
 const heroHost = $('[data-viewer="hero"]'), stepsHost = $('[data-viewer="steps"]');

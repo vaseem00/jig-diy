@@ -6,6 +6,19 @@ The format follows [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/
 
 ## [Unreleased]
 
+### Added
+
+- README: looping demos of the Plan view tour, the motions, a kit robot build and X-ray, captured frame by frame from real guide pages, with live links to every example on GitHub Pages.
+- `scripts/anim-webp.mjs`: joins still WebP frames into one animated WebP, with no dependencies.
+- `captureMany` shots can take `tour`: the still Plan view tour of a capture steps to that time (the `jig:tour` event), so one browser session records a tour frame by frame. Option `quality` sets the WebP quality.
+- `docs/demos/smart-floor-robot.html`, a guide built from a chassis kit, modules and printed parts, as a live demo.
+
+### Changed
+
+- The Plan view tour sways 25 degrees each way round the front of the object, not a full turn, so the camera never goes behind a wall prop.
+- The tour line under the Plan view keeps room for two lines, so the page does not jump when a long caption wraps.
+- While the tour plays one motion, the other sliders show 0.
+
 ## [1.2.0] - 2026-11-07
 
 ### Added
@@ -17,7 +30,7 @@ Ideas from machine explainers (the teardown skill, after whaleyxbt/claude-motion
 | Item | Does |
 |---|---|
 | Project field `motions` | `[{ id, name, kind: "slide" \| "turn", parts, axis: "x" \| "y" \| "z", travel, pivot?, text? }]`: parts of the finished object that move (a drawer, a lid, a door, a wheel). A slide's travel is a length in the project unit; a turn's travel is degrees about a line through `pivot` |
-| Plan view tour | The Plan view runs by itself as a pure function of time: the finished object turns once round, each motion opens and closes, then the object goes together step by step. The lit part is the part that moves or goes in now. A line under the view names the step or the motion and its value. A click, drag, key or slider hands control to the reader; 25 s of quiet gives it back; Pause holds it. Frame 0 is the finished object. Under reduced motion it does not start by itself |
+| Plan view tour | The Plan view runs by itself as a pure function of time: the finished object sways round its front, each motion opens and closes, then the object goes together step by step. The lit part is the part that moves or goes in now. A line under the view names the step or the motion and its value. A click, drag, key or slider hands control to the reader; 25 s of quiet gives it back; Pause holds it. Frame 0 is the finished object. Under reduced motion it does not start by itself |
 | Try it | One slider for each motion under Fig 1, with the value (mm, in or degrees) from the same `travel` that poses the parts |
 | `W_MOTION_HIT` | Guide mode: at 25, 50, 75 or 100% of its travel, a moving part goes more than 1 mm into a part or prop that does not move with it |
 | `plan.md` and the no-script copy | A "What moves" list: "Door (part F): turns 100 degrees. The door turns open." |

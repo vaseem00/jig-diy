@@ -14,11 +14,15 @@
 [![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-d97757.svg)](#claude-code)
 [![skills.sh](https://skills.sh/b/vaseem00/jig-diy)](https://skills.sh/vaseem00/jig-diy)
 
-[What it does](#what-it-does) · [Quick start](#quick-start) · [Skills](#the-nine-skills) · [Install](#install) · [Examples](#examples) · [How it works](#how-it-works) · [Privacy](#what-it-fetches-and-stores) · [Limits](#limits-and-safety)
+[What it does](#what-it-does) · [See it work](#see-it-work) · [Quick start](#quick-start) · [Skills](#the-nine-skills) · [Install](#install) · [Examples](#examples) · [How it works](#how-it-works) · [Privacy](#what-it-fetches-and-stores) · [Limits](#limits-and-safety)
+
+**Try a guide in your browser:** [Pine bookshelf](https://vaseem00.github.io/jig-diy/examples/pine-bookshelf/pine-bookshelf.html) · [Smart floor robot](https://vaseem00.github.io/jig-diy/docs/demos/smart-floor-robot.html) · [Raised garden bed](https://vaseem00.github.io/jig-diy/examples/raised-garden-bed/raised-garden-bed.html) · [Plywood storage cube](https://vaseem00.github.io/jig-diy/examples/plywood-storage-cube/plywood-storage-cube.html)
+
+[![The Plan view of the smart floor robot guide tours itself. The cover lifts 60 mm and drops back, then each wheel turns one full turn. The part that moves is lit. The line under the view names the motion and its value, and the Try it sliders under it move with the parts.](.github/assets/demo-motions.webp)](https://vaseem00.github.io/jig-diy/docs/demos/smart-floor-robot.html)
+
+<sub>The Plan view of a guide tours itself, and the Try it sliders drive each moving part with its real value. Click the picture to open the live guide.</sub>
 
 </div>
-
-![The Plan tab of the pine bookshelf guide. The finished bookshelf turns slowly in 3D. Beside it are the work time, the waiting time, the cost, the part count, the step count and the tools to get, then the build phases on a timeline with one chip for each step.](.github/assets/plan.webp)
 
 ## What it does
 
@@ -26,12 +30,63 @@ A jig holds the work and guides the tool, so every person who uses it gets the s
 
 The guide is one HTML page with four tabs:
 
-- **Plan.** The finished object in 3D, the work time, the waiting time, the cost and the tools, then the phases on a timeline.
+- **Plan.** A 3D tour that runs by itself: the finished object sways round, each moving part (a drawer, a lid, a wheel) opens and closes, then the object goes together step by step. Any click hands control to you, and a "Try it" slider drives each moving part. Beside it: the work time, the waiting time, the cost and the tools, then the phases on a timeline.
 - **Shop.** Online orders first, then one trip for each store, in the order the steps need the items. Below that, the full bill of quantities (BOQ) with codes, exact need, packs to buy, rates, contingency and tax.
 - **Cut list.** Every board and sheet to buy, drawn to scale, with each cut, the saw kerf and the waste.
-- **Build.** A 3D viewer that assembles the object part by part. The new parts arrive lit and lettered, and rings show where each screw goes. The step card shows the WARNINGs first, then short numbered instructions and a check.
+- **Build.** A 3D viewer that assembles the object part by part. The new parts arrive lit and lettered, and rings show where each screw goes. X-ray turns the parts built before into glass, so work inside a case shows. The step card shows the WARNINGs first, then short numbered instructions and a check.
 
 A level switch (First time, Some experience, Experienced) changes the depth of the text, not the steps. Warnings and checks show at every level. The writing follows the rules of ASD-STE100 Simplified Technical English: a command verb first, one instruction for each sentence, 20 words or fewer.
+
+## See it work
+
+Each loop below is a frame-by-frame capture of a real guide page, made by the engine's own `capture` command. Open the live page to drive it yourself: drag to turn, scroll to zoom, press the buttons.
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**The tour builds the object**
+
+[![The Plan view of the pine bookshelf guide goes together by itself: the sides, the shelves and the back panel arrive one step at a time, lit in the accent colour, while the camera sways round the front. The line under the view names each step.](.github/assets/demo-tour.webp)](https://vaseem00.github.io/jig-diy/examples/pine-bookshelf/pine-bookshelf.html)
+
+The bookshelf goes together step by step, with the step name under the view. Any click stops the tour; 25 s of quiet starts it again.<br>[Open the live guide](https://vaseem00.github.io/jig-diy/examples/pine-bookshelf/pine-bookshelf.html)
+
+</td>
+<td width="50%" valign="top">
+
+**Moving parts, with real numbers**
+
+[![The smart floor robot: the cover lifts 60 mm and drops back, then the left wheel and the right wheel each turn one full turn. The sliders under the view show 60 mm and 360 degrees as the parts move.](.github/assets/demo-motions.webp)](https://vaseem00.github.io/jig-diy/docs/demos/smart-floor-robot.html)
+
+A `motions` entry gives each moving part its real travel: the cover lifts 60 mm, and a wheel turns 360°. The slider and the 3D read the same number. If a motion hits another part, the engine warns `W_MOTION_HIT`.<br>[Open the live guide](https://vaseem00.github.io/jig-diy/docs/demos/smart-floor-robot.html)
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+**A robot from a kit and modules**
+
+[![The smart floor robot goes together in the dark theme: the base plate, the gearmotors and encoders, the wheels, the boards, the sensor bar and the 3D-printed cover arrive one step at a time.](.github/assets/demo-robot-build.webp)](https://vaseem00.github.io/jig-diy/docs/demos/smart-floor-robot.html)
+
+Jig builds each object the real way: furniture from timber, a robot from a chassis kit, modules and 3D-printed parts. This is the dark theme.<br>[Open the live guide](https://vaseem00.github.io/jig-diy/docs/demos/smart-floor-robot.html)
+
+</td>
+<td width="50%" valign="top">
+
+**X-ray shows the work inside**
+
+[![Step 9 of the smart floor robot, first solid, then in X-ray: the boards built before turn to glass, and the two bump switches and the voltage sensor of this step stay lit with their letters.](.github/assets/demo-xray.webp)](https://vaseem00.github.io/jig-diy/docs/demos/smart-floor-robot.html#build/9)
+
+At step 9 the X-ray button turns the parts built before into glass, so the new switches and sensor show. A step can open in X-ray with `view.xray`.<br>[Open step 9 live](https://vaseem00.github.io/jig-diy/docs/demos/smart-floor-robot.html#build/9)
+
+</td>
+</tr>
+</table>
+
+![The Plan tab of the pine bookshelf guide: the 3D view with the tour line under it, and beside it the work time, the waiting time, the cost, the part count, the step count and the tools to get, then the build phases on a timeline with one chip for each step.](.github/assets/plan.webp)
+
+The live pages load three.js and the fonts from a CDN, and they keep your ticks in your own browser only. The robot guide is a demo of the page: its firmware and print files are not in this repo.
 
 ## Quick start
 
@@ -63,7 +118,7 @@ Each skill is a folder in `skills/` with its own copy of the engine, so you can 
 | `jig-3d` | `/jig:jig-3d` | `jig-3d` | Only the 3D assembly viewer, part by part | `<id>-3d.html` |
 | `jig-ste` | `/jig:jig-ste` | `jig-ste` | Write, rewrite and lint any procedure in ASD-STE100 style | Findings and rewritten text |
 | `jig-safety` | `/jig:jig-safety` | `jig-safety` | A safety review: WARNING and CAUTION, protective equipment, tip-over, hand-off topics | Findings and fixes |
-| `jig-verify` | `/jig:jig-verify` | `jig-verify` | Check a built guide page: captures, console errors, sideways scroll, contrast, checklist | Captures and a verdict |
+| `jig-verify` | `/jig:jig-verify` | `jig-verify` | Check a built guide page: a review sheet of every tab and step, captures, console errors, sideways scroll, contrast, checklist | Captures and a verdict |
 
 You do not have to name a skill. Describe what you want, and the agent picks the skill whose description matches. In Claude Code, a bare name such as `/jig-boq` also works unless another command already uses it.
 
@@ -190,13 +245,24 @@ Each skill folder holds everything it needs: `SKILL.md`, its references and its 
 
 Each example is a project file and the guide page built from it. The tests rebuild every page and compare it byte for byte with the committed file.
 
-| Example | Shows | Files |
-|---|---|---|
-| Pine bookshelf | The reference project: boards in millimetres, the finish from the surface area, and a wall-fixing step against tip-over | [project](examples/pine-bookshelf/project.json) · [guide](examples/pine-bookshelf/pine-bookshelf.html) |
-| Raised garden bed | Imperial units: every length in inches, shown as fractions to 1/16 | [project](examples/raised-garden-bed/project.json) · [guide](examples/raised-garden-bed/raised-garden-bed.html) |
-| Plywood storage cube | Sheet goods: plywood parts packed onto full sheets with guillotine cuts | [project](examples/plywood-storage-cube/project.json) · [guide](examples/plywood-storage-cube/plywood-storage-cube.html) |
+| Example | Shows | Try it | Files |
+|---|---|---|---|
+| Pine bookshelf | The reference project: boards in millimetres, the finish from the surface area, and a wall-fixing step against tip-over | [live](https://vaseem00.github.io/jig-diy/examples/pine-bookshelf/pine-bookshelf.html) | [project](examples/pine-bookshelf/project.json) · [guide](examples/pine-bookshelf/pine-bookshelf.html) |
+| Raised garden bed | Imperial units: every length in inches, shown as fractions to 1/16 | [live](https://vaseem00.github.io/jig-diy/examples/raised-garden-bed/raised-garden-bed.html) | [project](examples/raised-garden-bed/project.json) · [guide](examples/raised-garden-bed/raised-garden-bed.html) |
+| Plywood storage cube | Sheet goods: plywood parts packed onto full sheets with guillotine cuts | [live](https://vaseem00.github.io/jig-diy/examples/plywood-storage-cube/plywood-storage-cube.html) | [project](examples/plywood-storage-cube/project.json) · [guide](examples/plywood-storage-cube/plywood-storage-cube.html) |
+| Smart floor robot (demo page) | A chassis kit, modules and 3D-printed parts; three motions (the cover and both wheels); the Print list; X-ray | [live](https://vaseem00.github.io/jig-diy/docs/demos/smart-floor-robot.html) | [guide](docs/demos/smart-floor-robot.html) |
 
-To open a guide, download the HTML file and open it in a browser. To rebuild every example, run `node scripts/build-examples.mjs`.
+The "live" links open each page on GitHub Pages. To open a guide on your own machine, download the HTML file and open it in a browser. To rebuild every example, run `node scripts/build-examples.mjs`.
+
+### Make your own demo loop
+
+The loops in this README come from the engine. `capture --tour <s>` holds the Plan view tour at one time, a capture session can step it frame by frame, and `scripts/anim-webp.mjs` joins the frames into one animated WebP, with no ffmpeg:
+
+```
+node engine/jig.mjs capture my-guide.html --hash plan --tour 2.5 --out shots/plan-2.5s.png
+node engine/jig.mjs capture my-guide.html --sheet --cols 4          # every tab and step in one review image
+node scripts/anim-webp.mjs demo.webp --ms 200 frames/*.webp
+```
 
 ## How it works
 
@@ -210,7 +276,7 @@ project.json
   -> purchase   online orders first, one trip for each store, order-by dates
   -> plan       phases, work time and waiting time at each level
   -> safety     WARNING on power-tool steps, tip-over, hand-off topics, PPE
-  -> geometry   overlaps, floating parts, screw positions
+  -> geometry   overlaps, floating parts, screw positions, motion clearance
   -> STE lint   every sentence of reader text
   -> page       one HTML file: Plan, Shop, Cut list, Build
 ```
@@ -263,6 +329,7 @@ No number is typed twice, so the list of screws always matches the screws in the
 - **Big projects start small.** For a shed, a deck or a kitchen, Jig proposes one sub-assembly as a guide and lists what the full version adds.
 - **Prices and times are estimates** unless you give them. The page marks each estimated price `est`, and it changes the times for the level of the reader. Check prices at your store before you buy.
 - **Parts are boxes and cylinders**, at true size and with optional rotation. Curved parts and cut joinery (dovetails, mortises) show as simple shapes.
+- **Motions are simple slides and turns.** Each moving part slides along one axis or turns about one axis line. Linkages where one part drives another are not modelled. The clearance check uses boxes, so a turned part can report a hit that is not there.
 - **Cut plans are good, not always best.** Board cuts are exact up to 14 pieces of one material, then a heuristic takes over. The `cut` output says for each board material whether its plan is proven lowest cost. Rip strips are not put side by side across one board. Sheets use guillotine cuts.
 - **STE-style, not certified STE.** The linter checks the rules that a script can test. It does not hold the ASD-STE100 dictionary.
 - **English only.** The page text and the writing rules are in English.
@@ -284,6 +351,7 @@ evals/                 The `claude plugin eval` suite
 tests/                 node:test suite
 scripts/               sync-engine, build-examples, bump-version, set-owner, check-repo
 docs/                  ARCHITECTURE.md, design-notes.md, PUBLISHING.md
+docs/demos/            Built guide pages for the live demos on GitHub Pages
 .github/               CI, issue forms, pull request template, README images
 ```
 

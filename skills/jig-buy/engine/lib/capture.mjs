@@ -209,10 +209,11 @@ export async function captureSheet(url, { out, hashes, labels, cols = 3, tmp = t
   }
 }
 
-// captureMany(url, shots, opts) -> one result for each shot { hash, out }, in one browser session. The first shot
-// opens the page; each later one sets location.hash and waits opts.wait (default 2500 ms). Every result carries the
+// captureMany(url, shots, opts) -> one result for each shot { hash, out, tour? }, in one browser session. The first
+// shot opens the page; each later one sets location.hash and waits opts.wait (default 2500 ms), or, with tour, steps the
+// still Plan view tour to that time. opts.quality: the WebP quality, 0 to 100 (default 90). Every result carries the
 // console errors of the whole session so far.
-export async function captureMany(url, shots, { width = 1280, height = 900, scale = 1, theme, select, viewport = false, wait, tour, reducedMotion = false, browser, timeout = 60000, tmp = tmpdir() } = {}) {
+export async function captureMany(url, shots, { width = 1280, height = 900, scale = 1, theme, select, viewport = false, wait, tour, quality = 90, reducedMotion = false, browser, timeout = 60000, tmp = tmpdir() } = {}) {
   if (!Array.isArray(shots) || !shots.length) throw new CaptureError("No shot to capture.");
   for (const s of shots) if (!/\.(webp|png)$/i.test(s.out ?? "")) throw new CaptureError(`The output "${s.out ?? ""}" must end in .png or .webp.`);
   const exe = browser ?? findBrowser();
@@ -271,9 +272,14 @@ export async function captureMany(url, shots, { width = 1280, height = 900, scal
     };
     for (let n = 0; n < shots.length; n++) {
       const { hash, out } = shots[n], format = /\.webp$/i.test(out) ? "webp" : "png", file = resolve(out);
-      if (n > 0) {
+      if (n > 0 && shots[n].tour === undefined) {
         await evaluate(`location.hash = ${JSON.stringify(String(hash ?? "").replace(/^#/, ""))}`);
         await sleep(wait ?? 2500);
+      }
+      // a shot with tour: the Plan view tour steps to that time (the page holds it still), and the frame is drawn at once
+      if (Number.isFinite(shots[n].tour)) {
+        await evaluate(`dispatchEvent(new CustomEvent("jig:tour", { detail: ${Number(shots[n].tour)} }))`);
+        await sleep(60);
       }
       const sidewaysScroll = await evaluate("document.documentElement.scrollWidth > document.documentElement.clientWidth + 1");
       const route = await evaluate("location.hash"); // a jig page rewrites a step or tab that it does not have
@@ -289,7 +295,7 @@ export async function captureMany(url, shots, { width = 1280, height = 900, scal
       if (!(box.width > 0 && box.height > 0)) throw new CaptureError(`The element "${select}" has no size on the page.`);
       if (select) await sleep(150);
       const clip = { x: Math.max(0, box.x), y: Math.max(0, box.y), width: box.width, height: Math.min(box.height, Math.floor(16000 / scale)), scale: 1 };
-      const shot = await send("Page.captureScreenshot", { format, ...(format === "webp" ? { quality: 90 } : {}), clip, captureBeyondViewport: true });
+      const shot = await send("Page.captureScreenshot", { format, ...(format === "webp" ? { quality } : {}), clip, captureBeyondViewport: true });
       // Never write through a link: a linked folder, a symbolic link, or a hard link (a file with more than one name).
       const shell = shellCwd(), rel = shell && relative(process.cwd(), file);
       const linked = linkedFolder(file, [pageDir(url), process.cwd()])
