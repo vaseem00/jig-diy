@@ -19,6 +19,7 @@ Quotations are short and come from the source named. Where a source was read onl
 11. What Jig did not take
 12. Lessons from 0.1
 13. Known limits of 1.0
+14. teardown: show it working (1.2)
 
 ## 1. The problem
 
@@ -172,3 +173,29 @@ An audit of the private 0.1 skill found the defects that shaped 1.0. The [CHANGE
 - The STE linter checks the writing rules, not the dictionary.
 - Prices and times are estimates unless the user gives them.
 - The page and the rules are in English only.
+
+## 14. teardown: show it working (1.2)
+
+The teardown skill builds a 3D simulator of a real machine (a V8, a landing gear, a walking linkage) as one page, and records the same page as a film. Its kit, capture and review rules come from whaleyxbt/claude-motion (MIT). Jig 1.2 read its source and took the ideas that serve a builder, not its code.
+
+| teardown idea | What Jig took |
+|---|---|
+| One input drives everything: the crank angle poses every piston, and every gauge reads the same function | One share k drives each `motion`; the 3D, the slider and the value under it all come from `travel`. "Check one number by hand" is in method.md |
+| The machine runs: the visitor presses a button and sees it work | The Plan view shows each motion working, and a Try it slider drives it |
+| Left alone, the page tours itself with an operator's cursor; a click hands control over; 25 s of quiet hands it back | The Plan view tour, with the same hand-over and the same 25 s |
+| `render(t)` is a pure function of time, so a capture at any t is exact | `tourPose(t)` in the viewer; `capture --tour <s>` holds it still |
+| Frame 0 is the thumbnail and must show the machine | The tour starts on the finished object |
+| The part doing the work opens up: isolate, cut, x-ray | X-ray: the parts built before show as glass (`view.xray`) |
+| One accent, and it means something: the part working now | The lit part in the tour is the part that moves or goes in now |
+| Hold each state 1 s plus 0.25 s for each word after three | The tour times each state from its step title or motion text |
+| Fix a collision with a number, never with the camera | `W_MOTION_HIT`, with a fix that changes travel, pivot or position |
+| A review loop: a sheet of one tile for each beat, read every tile, fix, repeat until a pass finds nothing | `capture --sheet`: every tab and step as a named tile |
+| Test on an integrated GPU; quality tiers; warm the shaders before the first frame | Three quality tiers on frame time; `compileAsync` before the first frame |
+
+What Jig did not take, and why:
+
+- **The film and the score.** A frame-exact MP4 with a synthesised soundtrack needs ffmpeg and Python, and Jig has no dependencies. A guide is read in a garage, not watched. The pure `tourPose(t)` keeps the door open for a later `film` command.
+- **The director.** Cuts on the beat, punch-ins, glitches and big captions sell a film. They would distract a reader who builds.
+- **Callouts in the picture.** teardown labels parts with leaders in the frame. Jig keeps its rule that words stay out of the 3D: letters and rings only, and the tour line under the view.
+- **Post-processing.** Ambient occlusion and bloom cost a slow GPU more than they give a build step, and they make the page heavier.
+- **Real-time physics of a mechanism.** A linkage solver poses parts that depend on each other. Jig motions are independent slides and turns: enough for drawers, lids, doors and wheels, the parts a DIY build has.

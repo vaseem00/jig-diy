@@ -123,6 +123,23 @@ node "$JIG" capture "$PAGE" --hash build/4 --reduced-motion --out "$SHOTS/still-
 
 Read every image you make. A capture that nobody reads checks nothing. Note the console errors and the sideways scroll that each capture prints.
 
+### 3.1 The review loop: one sheet a pass
+
+A sheet puts every tab and every step on one image, each tile named in its corner, from one browser session. It is the fast way to read the whole guide, and to read it again after each fix:
+
+```
+node $jig capture $page --sheet --cols 4 --out "$shots/sheet.png"
+node $jig capture $page --sheet --routes build/3,build/4,build/5 --width 390 --height 844 --theme dark --out "$shots/sheet-phone-dark.png"
+```
+
+1. Make the sheet. Read every tile against the checklist (section 4).
+2. Zoom in where a tile looks wrong: one full capture with `--hash`, or `--select "[data-viewer=steps]" --scale 2` for the 3D only.
+3. Fix the project, build again, and go back to 1. Stop when a full pass finds nothing.
+
+A guide with motions has a tour on the Plan view. Read it at the moments that matter: `--hash plan --tour <s>` with a time in each motion (open, at about 2 s into it) and in the first assembly step. Each motion must stay in the frame and clear the parts that do not move.
+
+Test the page on a laptop's built-in graphics too, not only on a desktop graphics card. The viewer lowers its quality on its own when frames take longer than 24 ms: first the pixel ratio, then the shadow map, then the shadows. A page that stutters at the lowest tier has too many parts in one view: show fewer with the steps, not with a smaller picture.
+
 ## 4. The checklist
 
 Answer each question with yes or no, and give the image that shows it.
@@ -134,6 +151,7 @@ Answer each question with yes or no, and give the image that shows it.
 - Do the phases read left to right, with a chip for each step?
 - Does the safety summary list the protective equipment, the power tools and each hand-off?
 - If the project has a hand-off, does the page say it near the start?
+- With motions: does the line under the view name each motion and its value while it plays, and does the Try it slider move the same parts to the same value? Does each motion clear the parts that do not move, and stay in the frame?
 
 **Each build step**
 
@@ -141,6 +159,7 @@ Answer each question with yes or no, and give the image that shows it.
 - Is the camera on the side where the work happens, with the screw heads toward the reader?
 - Do the rings sit on the screw heads, and hide behind parts?
 - Is nothing from a later step visible?
+- When this step's parts are inside parts built before, are they visible? If not, set `view.xray: true` for the step, or move the camera.
 - Where the picture differs from the step text (the object upright, the work on its back), does a view note under the 3D view say what the picture shows? The note shows at every level, and print preview leaves it out.
 - Do the WARNING and CAUTION boxes come before the instructions?
 - Does each step that uses a power tool show a WARNING?

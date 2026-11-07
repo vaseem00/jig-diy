@@ -8,7 +8,7 @@ import { buildBoq, TOOL_KEY } from "./boq.mjs";
 import { buildPurchase } from "./purchase.mjs";
 import { buildPlan, phaseSplits } from "./plan.mjs";
 import { safetyChecks } from "./safety.mjs";
-import { overlaps, supports, fastenerHits } from "./geometry.mjs";
+import { overlaps, supports, fastenerHits, motionClash } from "./geometry.mjs";
 import { lint } from "./ste.mjs";
 import { TECHNIQUES, fillTechnique } from "./techniques.mjs";
 import { fmtLen, fmtMoney, minorUnits } from "./locale.mjs";
@@ -368,6 +368,16 @@ export function compute(project, { mode = "guide", start = null } = {}) {
         out.push(mk("error", "E_GEOMETRY", ["parts", partAt.get(o.b), "at"], `part ${o.b}`, `Parts ${o.a} and ${o.b} overlap by ${dims(o.overlap)}.`,
           `Set the "at" of part ${o.b} from the face of part ${o.a}. If the overlap is a real joint (a dado, a tenon), add "${o.a}" to the joins of part ${o.b}.`));
       if (lost.parts || lost.props) return;
+      // A motion that drives its parts into a part or a prop that does not move with them (bounds at 25, 50, 75 and
+      // 100% of the travel). Bounds of a turned part are larger than the part, so this is a warning.
+      for (const m of P.motions) {
+        const hit = motionClash(placed, Object.fromEntries(Object.entries(P.props).filter(([, p]) => p.at)), m);
+        if (!hit) continue;
+        const amount = m.kind === "slide" ? fmt(Math.abs(m.travel * hit.k)) : `${round(Math.abs(m.travel * hit.k), 1)} degrees`;
+        out.push(mk("warn", "W_MOTION_HIT", ["motions", m.raw], `motion ${m.id}`,
+          `At ${Math.round(hit.k * 100)}% of its travel (${amount}), part ${hit.a} of the motion "${m.name}" goes ${dims(hit.overlap)} into ${hit.prop ? "prop" : "part"} ${hit.b}.`,
+          m.kind === "slide" ? `Make the travel shorter, or move part ${hit.b} out of the path.` : `Check the pivot: it is the centre of the hinge pin or the axle. Else make the angle smaller, or move part ${hit.b} out of the path.`));
+      }
       for (const id of supports(placed, P.props))
         out.push(mk("warn", "W_FLOATING", ["parts", partAt.get(id), "at"], `part ${id}`, `Part ${id} touches no other part, no prop and not the floor.`,
           "Adjust its \"at\" so that it rests on the part that holds it. If it hangs on a wall or a bench, add that as a prop."));
@@ -446,6 +456,7 @@ export function compute(project, { mode = "guide", start = null } = {}) {
         ste(["steps", r, "tip"], `${w}, tip`, s.tip, "description");
         ste(["steps", r, "view", "note"], `${w}, view note`, s.view?.note, "description");
       });
+      P.motions.forEach((m) => ste(["motions", m.raw, "text"], `motion ${m.id}, text`, m.text, "description"));
       for (const id of taught) {
         if (!Object.hasOwn(P.techniques, id) || !techniques[id]) continue;
         const c = techniques[id], raw = isObj(R.techniques?.[id]) ? R.techniques[id] : {}, w = `technique ${id}`;
@@ -493,6 +504,8 @@ export function compute(project, { mode = "guide", start = null } = {}) {
     materials: fatal ? {} : Object.fromEntries(Object.entries(mats).map(([id, m]) => [id, {
       name: m.name, kind: m.kind, spec: m.spec ?? "", unit: m.kind === "each" || m.kind === "amount" ? m.unit ?? "piece" : null, color: m.color ?? null,
     }])),
+    // motions: lengths in mm; travel of a slide in mm, of a turn in degrees
+    motions: fatal ? [] : P.motions.map((m) => ({ id: m.id, name: m.name, kind: m.kind, parts: m.parts, axis: m.axis, travel: m.travel, pivot: m.pivot ?? null, text: m.text ?? "" })),
     steps, tools, techniques, cuts, boq: rows, purchase, plan, totals, safety, problems, counts,
   };
 }

@@ -80,6 +80,14 @@ input[type="checkbox"]{accent-color:var(--ok)}
 .fig{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;font:500 11px/1.3 var(--mono);color:var(--muted);margin:8px 2px 0}
 /* a long word in the title breaks inside the word in the Fig 1 caption too, so the Plan tab fits a 320 px screen */
 .fig span{min-width:0;overflow-wrap:anywhere}
+/* the Plan view tour line, then the Try it sliders: one for each motion of the finished object */
+.tourline{margin:8px 2px 0;min-height:1.45em;font:500 12px/1.45 var(--mono);color:var(--text);overflow-wrap:anywhere}
+.try{margin:14px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.try h3{margin:0 0 6px;font-size:14px}
+.motion{display:grid;grid-template-columns:minmax(0,8em) minmax(0,1fr) 5.5em;align-items:center;gap:10px;padding:4px 0}
+.motion label{font-size:13px;overflow-wrap:anywhere}
+.motion input{width:100%;min-width:0;accent-color:var(--accent)}
+.motion output{font:500 12px/1.3 var(--mono);color:var(--muted);text-align:right}
 /* a step's view note sits under the 3D view; with no picture (still loading, or no 3D) it has nothing to tell */
 .vnote{margin:8px 2px 0;font-size:13px;line-height:1.45;color:var(--muted);overflow-wrap:anywhere}
 .viewer:not([data-ready])+.vnote{display:none}
@@ -204,7 +212,7 @@ code.c{font:500 11px/1 var(--mono);color:var(--muted)}
 .print-only{display:none}
 @media print{
 :root:root:root{--page:#fff;--card:#fff;--ink:#000;--text:#1d1b18;--muted:#4a463f;--line:#999;--control:#777;--faint:#eee;--accent:#8f3609;--accent-ink:#fff;--warn:#8a1d13;--warn-bg:#fff;--caution:#5c3d00;--caution-bg:#fff;--ok:#1f5a2a;color-scheme:light}
-.tabs,.top .level,.viewer,.vbar,.fig,.vnote,.rail,.build,.nav,.chips,[data-live]{display:none!important}
+.tabs,.top .level,.viewer,.vbar,.fig,.vnote,.tourline,.try,.rail,.build,.nav,.chips,[data-live]{display:none!important}
 [data-panel]{display:block!important;margin-bottom:24px}
 .print-only{display:block}
 .grid2{display:block}
@@ -283,6 +291,9 @@ details.tech summary::after,details.tech[open] summary::after{content:none}
 .prints td:nth-child(3){grid-column:3;grid-row:1;text-align:right}
 .prints td[data-l]::before{content:attr(data-l) ": ";color:var(--muted)}
 }
+/* a viewer under 680 px wide (the steps view on a desktop, a phone) shows "Reset view" as "Reset", so 5 buttons and a short readout fit on one row */
+.viewer{container-type:inline-size}
+@container (max-width:680px){.vtools .wide{display:none}}
 @media (max-width:520px){.viewer{aspect-ratio:1/1}.readout{display:none}.vtools{gap:3px}.vtools button{padding:6px 5px;font-size:10.5px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stats b{font-size:19px}.stats div{padding:10px}h2{font-size:21px}.card{padding:16px 14px}}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style>
@@ -384,17 +395,22 @@ details.tech summary::after,details.tech[open] summary::after{content:none}
 <p><strong>Why:</strong> Most furniture falls forward when a child climbs it. The strap stops this.</p>
 </li>
 </ol></div></noscript>
-<script type="application/json" id="jig-data">{"engine":"1.1.0","format":1,"mode":"guide","meta":{"id":"pine-bookshelf","title":"Pine bookshelf","summary":"A floor bookshelf with four shelves. You cut six parts from two pine boards, attach them with screws and glue, and attach a thin back panel.","level":"new","units":"mm","currency":"USD","tax":null,"priceNote":"Example US prices (November 2026). Replace them with the prices at your store.","pricesAsOf":"2026-11-02","estimate":true,"kerf":3,"trim":0},"parts":[{"id":"A1","label":"A","name":"Side","material":"pine-1x10","materialName":"Pine board","kind":"linear","shape":"box","size":[19,900,235],"at":[0,0,0],"rotate":null,"color":"#d9b88a","role":null,"cut":{"length":900,"width":235,"thick":19},"step":3},{"id":"A2","label":"A","name":"Side","material":"pine-1x10","materialName":"Pine board","kind":"linear","shape":"box","size":[19,900,235],"at":[781,0,0],"rotate":null,"color":"#d9b88a","role":null,"cut":{"length":900,"width":235,"thick":19},"step":5},{"id":"B1","label":"B","name":"Shelf","material":"pine-1x10","materialName":"Pine board","kind":"linear","shape":"box","size":[762,19,235],"at":[19,60,0],"rotate":null,"color":"#d9b88a","role":null,"cut":{"length":762,"width":235,"thick":19},"step":3},{"id":"B2","label":"B","name":"Shelf","material":"pine-1x10","materialName":"Pine board","kind":"linear","shape":"box","size":[762,19,235],"at":[19,330,0],"rotate":null,"color":"#d9b88a","role":null,"cut":{"length":762,"width":235,"thick":19},"step":6},{"id":"B3","label":"B","name":"Shelf","material":"pine-1x10","materialName":"Pine board","kind":"linear","shape":"box","size":[762,19,235],"at":[19,600,0],"rotate":null,"color":"#d9b88a","role":null,"cut":{"length":762,"width":235,"thick":19},"step":6},{"id":"B4","label":"B","name":"Shelf","material":"pine-1x10","materialName":"Pine board","kind":"linear","shape":"box","size":[762,19,235],"at":[19,881,0],"rotate":null,"color":"#d9b88a","role":null,"cut":{"length":762,"width":235,"thick":19},"step":4},{"id":"C1","label":"C","name":"Back panel","material":"ply-6","materialName":"Plywood","kind":"sheet","shape":"box","size":[800,900,6],"at":[0,0,-6],"rotate":null,"color":"#e6cfa4","role":null,"cut":{"a":900,"b":800,"thick":6},"step":7},{"id":"D1","label":"D","name":"Shelf bracket","material":"anti-tip","materialName":"Anti-tip furniture kit","kind":"each","shape":"box","size":[40,3,30],"at":[380,900,0],"rotate":null,"color":"#9aa3ab","role":"anchor","cut":null,"step":9},{"id":"E1","label":"E","name":"Wall bracket","material":"anti-tip","materialName":"Anti-tip furniture kit","kind":"each","shape":"box","size":[40,30,3],"at":[380,920,-9],"rotate":null,"color":"#9aa3ab","role":"anchor","cut":null,"step":9}],"props":{"wall":{"size":[2000,1500,60],"at":[-600,0,-69],"color":"#e8e3da","shape":"box","rotate":null,"hero":true,"label":"Wall"}},"materials":{"pine-1x10":{"name":"Pine board","kind":"linear","spec":"19 × 235 mm (1×10)","unit":null,"color":"#d9b88a"},"ply-6":{"name":"Plywood","kind":"sheet","spec":"6 mm birch","unit":null,"color":"#e6cfa4"},"screw-4x50":{"name":"Wood screw","kind":"each","spec":"4 × 50 mm, countersunk","unit":"piece","color":"#8f959c"},"screw-3x16":{"name":"Wood screw","kind":"each","spec":"3 × 16 mm, pan head","unit":"piece","color":"#8f959c"},"glue":{"name":"Wood glue","kind":"amount","spec":"PVA, interior","unit":"ml","color":null},"sand-120":{"name":"Sandpaper","kind":"each","spec":"120 grit","unit":"sheets","color":null},"sand-180":{"name":"Sandpaper","kind":"each","spec":"180 grit","unit":"sheets","color":null},"sand-240":{"name":"Sandpaper","kind":"each","spec":"240 grit","unit":"sheets","color":null},"poly":{"name":"Wipe-on polyurethane","kind":"amount","spec":"satin, water-based","unit":"L","color":null},"rags":{"name":"Lint-free cloth","kind":"each","spec":"cotton","unit":"cloth","color":null},"anti-tip":{"name":"Anti-tip furniture kit","kind":"each","spec":"2 brackets, strap, screws, wall plugs","unit":"piece","color":"#9aa3ab"},"kit-screw":{"name":"Kit screw","kind":"each","spec":"in the anti-tip kit","unit":"piece","color":"#8f959c"}},"steps":[{"id":"cut","title":"Cut the parts","phase":"Prepare","minutes":45,"cuts":true,"tools":["tape","pencil","square","saw","trestles","clamps","glasses","ears"],"teach":["measure-mark","cut-straight"],"do":["Put the boards on the two trestles.","Mark each cut from the cut list.",{"t":"Measure each length two times before you cut.","new":true},"Cut each part on the waste side of the line.","Write the part letter on the back face of each part."],"check":"Make sure that you have two parts A, four parts B and one part C.","why":"Parts with letters are easy to find. Two measurements stop most errors.","tip":"Cut the two long sides first. If you make an error, you can use the board for a shelf.","pose":"kit","index":0,"fasteners":[],"wait":0},{"id":"sand","title":"Sand the parts","phase":"Prepare","minutes":40,"uses":{"sand-120":2,"sand-180":2},"tools":["block","mask"],"teach":["sand"],"do":["Sand the front faces and the front edges with 120 grit.","Sand the same faces with 180 grit.","Remove the dust with a dry cloth."],"check":"Make sure that no saw marks show on the front edges.","why":"Flat parts are easier to sand than a box. The finish shows each scratch.","pose":"kit","focus":["A1","A2","B1","B2","B3","B4"],"index":1,"fasteners":[],"wait":0},{"id":"mark","title":"Drill the sides","phase":"Prepare","minutes":35,"tools":["tape","pencil","square","drill","bits","glasses"],"teach":["pilot-hole","countersink"],"do":["Put the two sides A next to each other with the bottom ends aligned.","Mark the shelf lines at 60, 330, 600 and 881 mm from the bottom end.","Draw each line across both sides with the square.","Mark three holes 10 mm above each line, at 40, 118 and 195 mm from the back edge.","Drill a 3 mm pilot hole at each mark.","Countersink each hole on the outer face."],"check":"Make sure that each side has 12 holes and that the holes on the two sides align.","why":"Holes in the two sides at the same positions make the shelves level.","pose":"kit","focus":["A1","A2"],"index":2,"fasteners":[],"wait":0},{"id":"bottom","title":"Attach the bottom shelf","phase":"Build","minutes":20,"parts":["A1","B1"],"fasteners":[{"material":"screw-4x50","at":[0,69.5,40],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,69.5,117.5],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,69.5,195],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1}],"uses":{"glue":5},"tools":["drill","clamps","glasses"],"teach":["glue-joint","clamp"],"warn":[{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Stand side A on its bottom end.","Apply glue to one end of shelf B.","Align the bottom face of shelf B with the lowest line.","Clamp the shelf to the side.","Install three 50 mm screws through the side into the shelf."],"check":"Make sure that the front edge of the shelf is flush with the front edge of the side.","why":"The glue makes the joint stiff. The screws hold it while the glue dries.","tip":"Drive the screws slowly. Stop when the head is flush with the face.","index":3,"wait":0},{"id":"top","title":"Attach the top shelf","phase":"Build","minutes":15,"parts":["B4"],"fasteners":[{"material":"screw-4x50","at":[0,890.5,40],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,890.5,117.5],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,890.5,195],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1}],"uses":{"glue":5},"tools":["drill","clamps","glasses"],"warn":[{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Apply glue to one end of a second shelf B.","Align its top face with the top end of the side.","Install three 50 mm screws through the side into the shelf."],"check":"Make sure that the top shelf is flush with the top end.","index":4,"wait":0},{"id":"side","title":"Attach the second side","phase":"Build","minutes":20,"parts":["A2"],"fasteners":[{"material":"screw-4x50","at":[800,69.5,40],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,69.5,117.5],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,69.5,195],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,890.5,40],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,890.5,117.5],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,890.5,195],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1}],"uses":{"glue":10},"tools":["drill","clamps","glasses"],"teach":["clamp"],"warn":[{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Apply glue to the free ends of the two shelves.","Put the second side A on the shelf ends.","Align the holes with the shelf lines.","Install three screws into each shelf."],"check":"Make sure that the frame stands flat on the floor.","index":5,"wait":0},{"id":"middle","title":"Install the middle shelves","phase":"Build","minutes":25,"parts":["B2","B3"],"fasteners":[{"material":"screw-4x50","at":[0,339.5,40],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,339.5,117.5],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,339.5,195],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,339.5,40],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,339.5,117.5],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,339.5,195],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,609.5,40],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,609.5,117.5],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,609.5,195],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,609.5,40],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,609.5,117.5],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,609.5,195],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1}],"uses":{"glue":20},"tools":["drill","clamps","glasses"],"warn":[{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Apply glue to the two ends of a shelf B.","Slide the shelf between the sides to its line.","Install three screws through each side into the shelf.","Do the same steps for the last shelf."],"check":"Make sure that each shelf is level.","tip":"Put a scrap block under the shelf at the line height. The block holds the shelf while you drive the screws.","index":6,"wait":0},{"id":"back","title":"Attach the back panel","phase":"Build","minutes":30,"parts":["C1"],"fasteners":[{"material":"screw-3x16","at":[9.5,150,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[9.5,450,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[9.5,750,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[790.5,150,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[790.5,450,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[790.5,750,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[200,69.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[400,69.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[600,69.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[200,339.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[400,339.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[600,339.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[200,609.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[400,609.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[600,609.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[200,890.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[400,890.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[600,890.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1}],"tools":["tape","drill","clamps","glasses"],"teach":["square-diagonals"],"warn":[{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Stand the frame upright with the back toward you.","Measure the two diagonals of the frame.","Push the top of the frame to the side until the two diagonals are equal.","Clamp the back panel C to the frame with its edges aligned.","Install 18 short screws through the panel into the sides and the shelves."],"check":"Make sure that the two diagonals are equal within 2 mm.","why":"The back panel locks the frame square. Without it, the shelf can lean to one side.","view":{"az":205,"el":24},"index":7,"wait":0},{"id":"finish","title":"Apply the finish","phase":"Finish","minutes":60,"wait":240,"uses":{"sand-240":1,"rags":2},"finish":{"material":"poly","coats":2,"parts":["A1","A2","B1","B2","B3","B4","C1"]},"tools":["gloves"],"teach":["finish-wipe"],"do":["Remove all dust with a dry cloth.","Apply the first coat to all faces.","Wait 2 hours.","Sand lightly with 240 grit.","Apply the second coat."],"check":"Make sure that the finish is dry and smooth before you put books on the shelves.","index":8,"fasteners":[]},{"id":"wall","title":"Attach the shelf to the wall","phase":"Finish","minutes":20,"parts":["D1","E1"],"fasteners":[{"material":"kit-screw","at":[392,903,15],"dir":[0,-1,0],"len":16,"d":4,"head":null,"color":"#8f959c","count":1},{"material":"kit-screw","at":[408,903,15],"dir":[0,-1,0],"len":16,"d":4,"head":null,"color":"#8f959c","count":1},{"material":"screw-4x50","at":[392,935,-6],"dir":[0,0,-1],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[408,935,-6],"dir":[0,0,-1],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1}],"tools":["finder","drill","level","pencil","glasses"],"teach":["find-stud"],"warn":[{"type":"warning","text":"Attach the shelf to the wall before you load it. A free bookshelf can fall on a child."},{"type":"warning","text":"Do not drill above, below or beside a socket or a switch. Cables run there."},{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Put the shelf against the wall in its final position.","Find a stud behind the top of the shelf.","Attach the shelf bracket D to the top shelf with two screws.","Attach the wall bracket E to the stud with two 50 mm screws.","Connect the two brackets with the strap."],"check":"Pull the top of the shelf. Make sure that the shelf does not move.","why":"Most furniture falls forward when a child climbs it. The strap stops this.","view":{"az":25,"el":32,"zoom":5},"props":["wall"],"index":9,"wait":0}],"tools":[{"id":"tape","name":"Tape measure","have":true,"get":"buy","days":1,"qty":1,"power":false,"ppe":false,"est":true,"first":0},{"id":"pencil","name":"Pencil","have":true,"get":"buy","days":1,"qty":1,"power":false,"ppe":false,"est":true,"first":0},{"id":"square","name":"Speed square","have":false,"get":"buy","price":9.98,"days":1,"qty":1,"store":"hardware","power":false,"ppe":false,"est":true,"first":0},{"id":"saw","name":"Circular saw","spec":"fine blade, 40 teeth or more","have":false,"get":"borrow","days":1,"qty":1,"power":true,"ppe":false,"est":true,"first":0},{"id":"trestles","name":"Two trestles","have":false,"get":"borrow","days":1,"qty":1,"power":false,"ppe":false,"est":true,"first":0},{"id":"clamps","name":"Bar clamp","spec":"600 mm","have":false,"get":"buy","price":12.97,"days":1,"qty":2,"store":"hardware","power":false,"ppe":false,"est":true,"first":0},{"id":"drill","name":"Cordless drill","have":true,"get":"buy","days":1,"qty":1,"power":true,"ppe":false,"est":true,"first":2},{"id":"bits","name":"Drill bit set","spec":"3 mm bit and countersink bit","have":false,"get":"buy","price":8.97,"days":1,"qty":1,"store":"hardware","power":false,"ppe":false,"est":true,"first":2},{"id":"block","name":"Sanding block","have":false,"get":"buy","price":4.48,"days":1,"qty":1,"store":"hardware","power":false,"ppe":false,"est":true,"first":1},{"id":"glasses","name":"Safety glasses","have":false,"get":"buy","price":6.97,"days":1,"qty":1,"store":"hardware","power":false,"ppe":true,"est":true,"first":0},{"id":"ears","name":"Ear protection","have":false,"get":"buy","price":9.97,"days":1,"qty":1,"store":"hardware","power":false,"ppe":true,"est":true,"first":0},{"id":"mask","name":"Dust mask","spec":"N95","have":false,"get":"buy","price":7.48,"days":1,"qty":1,"store":"hardware","power":false,"ppe":true,"est":true,"first":1},{"id":"gloves","name":"Nitrile gloves","have":false,"get":"buy","price":5.98,"days":1,"qty":1,"store":"online","power":false,"ppe":true,"est":true,"first":8},{"id":"finder","name":"Stud finder","spec":"with cable and pipe detection","have":false,"get":"borrow","days":1,"qty":1,"power":false,"ppe":false,"est":true,"first":9},{"id":"level","name":"Spirit level","have":true,"get":"buy","days":1,"qty":1,"power":false,"ppe":false,"est":true,"first":9}],"techniques":{"measure-mark":{"name":"Measure and mark","why":"The saw blade removes 3 mm of wood. The X tells you which side of the line to cut on.","warn":[],"do":["Hook the tape on the square end of the board.","Read the tape at eye level.","Make a small V mark with a sharp pencil.","Put the square against the edge of the board.","Draw a line through the V along the square.","Write an X on the waste side of the line."],"tools":["Tape measure","Pencil","Square"]},"cut-straight":{"name":"Cut on the line","why":"The blade removes 3 mm of wood. A cut on the waste side keeps the part at its full length.","warn":[{"type":"warning","text":"Wear safety glasses. The saw can throw chips into your eyes."},{"type":"warning","text":"Wear ear protection. A loud saw can hurt your ears."},{"type":"warning","text":"Keep your hands 150 mm from the blade. The blade can cut your fingers."},{"type":"warning","text":"Stand to the side of the saw line. A saw that jumps back can hit you."},{"type":"warning","text":"Support the board so that the cut stays open. A cut that closes on the blade makes the saw jump back toward you."},{"type":"warning","text":"Do not lock or remove the lower blade guard. The guard covers the blade after the cut."}],"do":["Clamp the board to a bench or a sawhorse, with the line near the support.","Put a second support under a long waste piece, near the line.","Do not cut between two supports that are far apart.","Align the blade with the waste side of the line.","Let the saw reach full speed before it touches the wood.","Push the saw slowly along the line.","Let a short waste piece fall. Do not hold it.","Before you lift the saw, let the blade stop."],"tools":["Saw","Clamp"]},"sand":{"name":"Sand a face","why":"Each finer grit removes the scratches of the grit before it.","warn":[{"type":"warning","text":"Wear a dust mask. Fine dust can hurt your lungs."},{"type":"caution","text":"Do not sand across the grain. Cross scratches show through the finish."}],"do":["Wrap the sandpaper around a flat block.","Sand along the grain with a medium grit.","Remove the dust with a dry cloth.","Sand again with a finer grit."],"tools":["Sanding block","Sandpaper","Dust mask"]},"pilot-hole":{"name":"Drill a pilot hole","why":"A pilot hole gives the screw a path. Without it, the wood can split near an edge.","warn":[{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Select a drill bit that is a little smaller than the screw shaft.","Mark the hole position with a pencil.","Clamp small parts before you drill.","Hold the drill at 90° to the face.","Drill to the depth of the screw."],"tools":["Drill","Drill bit"]},"countersink":{"name":"Countersink the hole","why":"The cone lets the screw head sit flush with the face.","warn":[{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Put the countersink bit in the pilot hole.","Drill until the cone is as wide as the screw head.","Remove the dust from the hole."],"tools":["Drill","Countersink bit"]},"glue-joint":{"name":"Glue a joint","why":"Too much glue makes a weak, wet joint. Dry glue stains do not take the finish.","warn":[],"do":["Apply a thin line of glue to one face.","Spread the glue with your finger or a scrap.","Put the parts together in 10 minutes or less.","Wipe off the extra glue with a wet cloth."],"tools":["Wet cloth"]},"clamp":{"name":"Clamp two parts","why":"The scrap blocks prevent dents in the face.","warn":[{"type":"caution","text":"Do not tighten the clamp too much. Too much force pushes out all the glue."}],"do":["Put a scrap block between each clamp jaw and the wood.","Tighten the clamp until the joint closes.","When a thin line of glue comes out, stop."],"tools":["Clamps","Scrap blocks"]},"square-diagonals":{"name":"Square a frame","why":"A square frame has two equal diagonals. Shelves and doors then fit.","warn":[],"do":["Measure the frame from corner to corner.","Measure the other diagonal.","If the two lengths are not equal, push the long diagonal corners together.","Measure again until the two lengths are equal within 2 mm."],"tools":["Tape measure"]},"finish-wipe":{"name":"Apply a wipe-on finish","why":"Thin coats dry hard and even. A thick coat stays soft and runs.","warn":[{"type":"warning","text":"Wear nitrile gloves. The finish can hurt your skin."},{"type":"warning","text":"Open a window. Finish fumes can make you ill."},{"type":"warning","text":"Put used rags flat outdoors to dry, or in a closed metal can of water. Oily rags can catch fire."}],"do":["Stir the can for 1 minute.","Apply a thin coat with a lint-free cloth.","Wait for the time on the can.","Sand lightly with fine sandpaper between coats."],"tools":["Lint-free cloth","Gloves"]},"find-stud":{"name":"Find a stud in the wall","why":"A screw in a stud holds the load. A screw in plasterboard (drywall) alone can pull out.","warn":[{"type":"warning","text":"Do not drill above, below or beside a socket or a switch. Cables run there."},{"type":"warning","text":"Use a cable and pipe detector before you drill. A drill can hit a cable or a pipe."}],"do":["Move a cable and pipe detector over the area.","Mark each cable and pipe that the detector finds.","Do not drill within 150 mm of a ceiling or a corner.","Move a stud finder slowly along the wall.","Mark the two edges of the stud.","Drill a 2 mm test hole between the marks.","If the bit goes into wood, use that position."],"tools":["Cable and pipe detector","Stud finder","Drill"]}},"cuts":[{"material":"pine-1x10","name":"Pine board","kind":"linear","color":"#d9b88a","optimal":true,"search":"exact","boards":[{"stock":{"length":2440,"price":27.98},"cuts":[{"id":"A1","label":"A","len":900,"at":0},{"id":"B1","label":"B","len":762,"at":903},{"id":"B2","label":"B","len":762,"at":1668}],"used":2430,"waste":10},{"stock":{"length":2440,"price":27.98},"cuts":[{"id":"A2","label":"A","len":900,"at":0},{"id":"B3","label":"B","len":762,"at":903},{"id":"B4","label":"B","len":762,"at":1668}],"used":2430,"waste":10}]},{"material":"ply-6","name":"Plywood","kind":"sheet","color":"#e6cfa4","sheets":[{"stock":{"w":1220,"h":1220,"price":24},"cuts":[{"id":"C1","label":"C","x":0,"y":0,"w":900,"h":800,"rotated":false}],"usedArea":0.72,"waste":0.7684}]}],"boq":[{"code":"T01","group":"Timber and sheet","key":"pine-1x10:2440","id":"pine-1x10","name":"Pine board","spec":"19 × 235 mm (1×10), 2440 mm long","need":"6 pieces, 4848 mm","needQty":4848,"qty":2,"unit":"board","rate":27.98,"amount":55.96,"est":true,"store":"lumber","first":0,"note":"","get":"buy"},{"code":"T02","group":"Timber and sheet","key":"ply-6:1220x1220","id":"ply-6","name":"Plywood","spec":"6 mm birch, 1220 × 1220 mm","need":"1 piece, 0.72 m²","needQty":0.72,"qty":1,"unit":"sheet","rate":24,"amount":24,"est":true,"store":"lumber","first":0,"note":"","get":"buy"},{"code":"H01","group":"Hardware","key":"screw-4x50","id":"screw-4x50","name":"Wood screw","spec":"4 × 50 mm, countersunk","need":"26 pieces + 10% spare","needQty":26,"qty":1,"unit":"pack of 50","rate":8.98,"amount":8.98,"est":true,"store":"hardware","first":3,"note":"","get":"buy"},{"code":"H02","group":"Hardware","key":"screw-3x16","id":"screw-3x16","name":"Wood screw","spec":"3 × 16 mm, pan head","need":"18 pieces + 10% spare","needQty":18,"qty":1,"unit":"pack of 100","rate":6.5,"amount":6.5,"est":true,"store":"hardware","first":7,"note":"","get":"buy"},{"code":"H03","group":"Hardware","key":"anti-tip","id":"anti-tip","name":"Anti-tip furniture kit","spec":"2 brackets, strap, screws, wall plugs","need":"2 pieces","needQty":2,"qty":1,"unit":"kit","rate":9.97,"amount":9.97,"est":true,"store":"hardware","first":9,"note":"","get":"buy"},{"code":"H04","group":"Hardware","key":"kit-screw","id":"kit-screw","name":"Kit screw","spec":"in the anti-tip kit","need":"2 pieces, in the kit","needQty":2,"qty":2,"unit":"piece","rate":0,"amount":0,"est":false,"store":"hardware","first":9,"note":"","get":"kit"},{"code":"C01","group":"Consumables","key":"sand-120","id":"sand-120","name":"Sandpaper","spec":"120 grit","need":"2 sheets","needQty":2,"qty":1,"unit":"pack of 5","rate":5.48,"amount":5.48,"est":true,"store":"online","first":1,"note":"","get":"buy"},{"code":"C02","group":"Consumables","key":"sand-180","id":"sand-180","name":"Sandpaper","spec":"180 grit","need":"2 sheets","needQty":2,"qty":1,"unit":"pack of 5","rate":5.48,"amount":5.48,"est":true,"store":"online","first":1,"note":"","get":"buy"},{"code":"C03","group":"Consumables","key":"glue","id":"glue","name":"Wood glue","spec":"PVA, interior","need":"40 ml","needQty":40,"qty":1,"unit":"237 ml bottle","rate":5.97,"amount":5.97,"est":true,"store":"hardware","first":3,"note":"","get":"buy"},{"code":"C04","group":"Consumables","key":"sand-240","id":"sand-240","name":"Sandpaper","spec":"240 grit","need":"1 sheet","needQty":1,"qty":1,"unit":"pack of 5","rate":5.48,"amount":5.48,"est":true,"store":"online","first":8,"note":"","get":"buy"},{"code":"F01","group":"Finish","key":"poly","id":"poly","name":"Wipe-on polyurethane","spec":"satin, water-based","need":"0.72 L + 10% spare","needQty":0.723,"qty":1,"unit":"0.946 L can","rate":16.98,"amount":16.98,"est":true,"store":"hardware","first":8,"note":"3.98 m² × 2 coats ÷ 11 m² per L. The area counts every face of each finished part, so it is an upper bound.","get":"buy"},{"code":"F02","group":"Finish","key":"rags","id":"rags","name":"Lint-free cloth","spec":"cotton","need":"2 cloths","needQty":2,"qty":1,"unit":"pack of 10","rate":6.49,"amount":6.49,"est":true,"store":"online","first":8,"note":"","get":"buy"},{"code":"S01","group":"Safety","key":"tool/glasses","id":"glasses","name":"Safety glasses","spec":"","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":6.97,"amount":6.97,"est":true,"store":"hardware","first":0,"note":"","get":"buy"},{"code":"S02","group":"Safety","key":"tool/ears","id":"ears","name":"Ear protection","spec":"","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":9.97,"amount":9.97,"est":true,"store":"hardware","first":0,"note":"","get":"buy"},{"code":"S03","group":"Safety","key":"tool/mask","id":"mask","name":"Dust mask","spec":"N95","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":7.48,"amount":7.48,"est":true,"store":"hardware","first":1,"note":"","get":"buy"},{"code":"S04","group":"Safety","key":"tool/gloves","id":"gloves","name":"Nitrile gloves","spec":"","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":5.98,"amount":5.98,"est":true,"store":"online","first":8,"note":"","get":"buy"},{"code":"X01","group":"Tools","key":"tool/square","id":"square","name":"Speed square","spec":"","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":9.98,"amount":9.98,"est":true,"store":"hardware","first":0,"note":"","get":"buy"},{"code":"X02","group":"Tools","key":"tool/saw","id":"saw","name":"Circular saw","spec":"fine blade, 40 teeth or more","need":"borrow 1","needQty":1,"qty":1,"unit":"each","rate":0,"amount":0,"est":false,"store":null,"first":0,"note":"","get":"borrow"},{"code":"X03","group":"Tools","key":"tool/trestles","id":"trestles","name":"Two trestles","spec":"","need":"borrow 1","needQty":1,"qty":1,"unit":"each","rate":0,"amount":0,"est":false,"store":null,"first":0,"note":"","get":"borrow"},{"code":"X04","group":"Tools","key":"tool/clamps","id":"clamps","name":"Bar clamp","spec":"600 mm","need":"buy 2","needQty":2,"qty":2,"unit":"each","rate":12.97,"amount":25.94,"est":true,"store":"hardware","first":0,"note":"","get":"buy"},{"code":"X05","group":"Tools","key":"tool/block","id":"block","name":"Sanding block","spec":"","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":4.48,"amount":4.48,"est":true,"store":"hardware","first":1,"note":"","get":"buy"},{"code":"X06","group":"Tools","key":"tool/bits","id":"bits","name":"Drill bit set","spec":"3 mm bit and countersink bit","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":8.97,"amount":8.97,"est":true,"store":"hardware","first":2,"note":"","get":"buy"},{"code":"X07","group":"Tools","key":"tool/finder","id":"finder","name":"Stud finder","spec":"with cable and pipe detection","need":"borrow 1","needQty":1,"qty":1,"unit":"each","rate":0,"amount":0,"est":false,"store":null,"first":9,"note":"","get":"borrow"}],"purchase":[{"store":"online","name":"Online order","online":true,"lead":3,"note":"Order 3 days before you start.","url":null,"orderBy":null,"items":["sand-120","sand-180","sand-240","rags","tool/gloves"],"subtotal":28.91},{"store":"hardware","name":"Hardware store","online":false,"lead":0,"note":"","url":null,"orderBy":null,"items":["tool/glasses","tool/ears","tool/square","tool/clamps","tool/mask","tool/block","tool/bits","screw-4x50","glue","screw-3x16","poly","anti-tip"],"subtotal":122.19},{"store":"lumber","name":"Timber yard","online":false,"lead":0,"note":"Pick straight boards. Look along each edge before you buy it.","url":null,"orderBy":null,"items":["pine-1x10:2440","ply-6:1220x1220"],"subtotal":79.96},{"store":"_borrow","name":"Borrow","online":false,"lead":0,"note":"Ask a friend, a neighbour or a tool library.","url":null,"orderBy":null,"items":["tool/saw","tool/trestles","tool/finder"],"subtotal":0}],"plan":{"phases":[{"name":"Prepare","steps":[0,1,2],"minutes":120,"wait":0},{"name":"Build","steps":[3,4,5,6,7],"minutes":110,"wait":0},{"name":"Finish","steps":[8,9],"minutes":80,"wait":240}],"active":310,"wait":240,"levels":{"new":1.5,"some":1.2,"pro":1}},"totals":{"subtotal":231.06,"contingencyRate":0.1,"contingency":23.11,"taxRate":0,"taxLabel":null,"taxIncluded":false,"tax":0,"total":254.17,"currency":"USD","area":3.977,"areaDisplay":"3.98 m²","unknownPrices":0},"safety":{"tip":{"height":900,"depth":241,"ratio":3.73,"anchored":true,"limit":2},"ppe":["glasses","ears","mask","gloves"],"handoffs":[],"power":["saw","drill"],"notes":["When you use a saw or a router, wear safety glasses and ear protection. The tool can throw chips, and the noise can hurt your ears.","When you drill, wear safety glasses. The bit can throw chips into your eyes.","When you sand, wear a dust mask. Fine dust can hurt your lungs."]},"problems":[{"level":"info","code":"I_ESTIMATE","path":"estimate","where":"project","msg":"The prices are estimates.","hint":"Replace them with the prices at your store. Set \"est\": false on each price that you confirm."}],"counts":{"error":0,"warn":0,"ste":0,"info":1}}</script>
+<script type="application/json" id="jig-data">{"engine":"1.2.0","format":1,"mode":"guide","meta":{"id":"pine-bookshelf","title":"Pine bookshelf","summary":"A floor bookshelf with four shelves. You cut six parts from two pine boards, attach them with screws and glue, and attach a thin back panel.","level":"new","units":"mm","currency":"USD","tax":null,"priceNote":"Example US prices (November 2026). Replace them with the prices at your store.","pricesAsOf":"2026-11-02","estimate":true,"kerf":3,"trim":0},"parts":[{"id":"A1","label":"A","name":"Side","material":"pine-1x10","materialName":"Pine board","kind":"linear","shape":"box","size":[19,900,235],"at":[0,0,0],"rotate":null,"color":"#d9b88a","role":null,"cut":{"length":900,"width":235,"thick":19},"step":3},{"id":"A2","label":"A","name":"Side","material":"pine-1x10","materialName":"Pine board","kind":"linear","shape":"box","size":[19,900,235],"at":[781,0,0],"rotate":null,"color":"#d9b88a","role":null,"cut":{"length":900,"width":235,"thick":19},"step":5},{"id":"B1","label":"B","name":"Shelf","material":"pine-1x10","materialName":"Pine board","kind":"linear","shape":"box","size":[762,19,235],"at":[19,60,0],"rotate":null,"color":"#d9b88a","role":null,"cut":{"length":762,"width":235,"thick":19},"step":3},{"id":"B2","label":"B","name":"Shelf","material":"pine-1x10","materialName":"Pine board","kind":"linear","shape":"box","size":[762,19,235],"at":[19,330,0],"rotate":null,"color":"#d9b88a","role":null,"cut":{"length":762,"width":235,"thick":19},"step":6},{"id":"B3","label":"B","name":"Shelf","material":"pine-1x10","materialName":"Pine board","kind":"linear","shape":"box","size":[762,19,235],"at":[19,600,0],"rotate":null,"color":"#d9b88a","role":null,"cut":{"length":762,"width":235,"thick":19},"step":6},{"id":"B4","label":"B","name":"Shelf","material":"pine-1x10","materialName":"Pine board","kind":"linear","shape":"box","size":[762,19,235],"at":[19,881,0],"rotate":null,"color":"#d9b88a","role":null,"cut":{"length":762,"width":235,"thick":19},"step":4},{"id":"C1","label":"C","name":"Back panel","material":"ply-6","materialName":"Plywood","kind":"sheet","shape":"box","size":[800,900,6],"at":[0,0,-6],"rotate":null,"color":"#e6cfa4","role":null,"cut":{"a":900,"b":800,"thick":6},"step":7},{"id":"D1","label":"D","name":"Shelf bracket","material":"anti-tip","materialName":"Anti-tip furniture kit","kind":"each","shape":"box","size":[40,3,30],"at":[380,900,0],"rotate":null,"color":"#9aa3ab","role":"anchor","cut":null,"step":9},{"id":"E1","label":"E","name":"Wall bracket","material":"anti-tip","materialName":"Anti-tip furniture kit","kind":"each","shape":"box","size":[40,30,3],"at":[380,920,-9],"rotate":null,"color":"#9aa3ab","role":"anchor","cut":null,"step":9}],"props":{"wall":{"size":[2000,1500,60],"at":[-600,0,-69],"color":"#e8e3da","shape":"box","rotate":null,"hero":true,"label":"Wall"}},"materials":{"pine-1x10":{"name":"Pine board","kind":"linear","spec":"19 × 235 mm (1×10)","unit":null,"color":"#d9b88a"},"ply-6":{"name":"Plywood","kind":"sheet","spec":"6 mm birch","unit":null,"color":"#e6cfa4"},"screw-4x50":{"name":"Wood screw","kind":"each","spec":"4 × 50 mm, countersunk","unit":"piece","color":"#8f959c"},"screw-3x16":{"name":"Wood screw","kind":"each","spec":"3 × 16 mm, pan head","unit":"piece","color":"#8f959c"},"glue":{"name":"Wood glue","kind":"amount","spec":"PVA, interior","unit":"ml","color":null},"sand-120":{"name":"Sandpaper","kind":"each","spec":"120 grit","unit":"sheets","color":null},"sand-180":{"name":"Sandpaper","kind":"each","spec":"180 grit","unit":"sheets","color":null},"sand-240":{"name":"Sandpaper","kind":"each","spec":"240 grit","unit":"sheets","color":null},"poly":{"name":"Wipe-on polyurethane","kind":"amount","spec":"satin, water-based","unit":"L","color":null},"rags":{"name":"Lint-free cloth","kind":"each","spec":"cotton","unit":"cloth","color":null},"anti-tip":{"name":"Anti-tip furniture kit","kind":"each","spec":"2 brackets, strap, screws, wall plugs","unit":"piece","color":"#9aa3ab"},"kit-screw":{"name":"Kit screw","kind":"each","spec":"in the anti-tip kit","unit":"piece","color":"#8f959c"}},"motions":[],"steps":[{"id":"cut","title":"Cut the parts","phase":"Prepare","minutes":45,"cuts":true,"tools":["tape","pencil","square","saw","trestles","clamps","glasses","ears"],"teach":["measure-mark","cut-straight"],"do":["Put the boards on the two trestles.","Mark each cut from the cut list.",{"t":"Measure each length two times before you cut.","new":true},"Cut each part on the waste side of the line.","Write the part letter on the back face of each part."],"check":"Make sure that you have two parts A, four parts B and one part C.","why":"Parts with letters are easy to find. Two measurements stop most errors.","tip":"Cut the two long sides first. If you make an error, you can use the board for a shelf.","pose":"kit","index":0,"fasteners":[],"wait":0},{"id":"sand","title":"Sand the parts","phase":"Prepare","minutes":40,"uses":{"sand-120":2,"sand-180":2},"tools":["block","mask"],"teach":["sand"],"do":["Sand the front faces and the front edges with 120 grit.","Sand the same faces with 180 grit.","Remove the dust with a dry cloth."],"check":"Make sure that no saw marks show on the front edges.","why":"Flat parts are easier to sand than a box. The finish shows each scratch.","pose":"kit","focus":["A1","A2","B1","B2","B3","B4"],"index":1,"fasteners":[],"wait":0},{"id":"mark","title":"Drill the sides","phase":"Prepare","minutes":35,"tools":["tape","pencil","square","drill","bits","glasses"],"teach":["pilot-hole","countersink"],"do":["Put the two sides A next to each other with the bottom ends aligned.","Mark the shelf lines at 60, 330, 600 and 881 mm from the bottom end.","Draw each line across both sides with the square.","Mark three holes 10 mm above each line, at 40, 118 and 195 mm from the back edge.","Drill a 3 mm pilot hole at each mark.","Countersink each hole on the outer face."],"check":"Make sure that each side has 12 holes and that the holes on the two sides align.","why":"Holes in the two sides at the same positions make the shelves level.","pose":"kit","focus":["A1","A2"],"index":2,"fasteners":[],"wait":0},{"id":"bottom","title":"Attach the bottom shelf","phase":"Build","minutes":20,"parts":["A1","B1"],"fasteners":[{"material":"screw-4x50","at":[0,69.5,40],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,69.5,117.5],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,69.5,195],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1}],"uses":{"glue":5},"tools":["drill","clamps","glasses"],"teach":["glue-joint","clamp"],"warn":[{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Stand side A on its bottom end.","Apply glue to one end of shelf B.","Align the bottom face of shelf B with the lowest line.","Clamp the shelf to the side.","Install three 50 mm screws through the side into the shelf."],"check":"Make sure that the front edge of the shelf is flush with the front edge of the side.","why":"The glue makes the joint stiff. The screws hold it while the glue dries.","tip":"Drive the screws slowly. Stop when the head is flush with the face.","index":3,"wait":0},{"id":"top","title":"Attach the top shelf","phase":"Build","minutes":15,"parts":["B4"],"fasteners":[{"material":"screw-4x50","at":[0,890.5,40],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,890.5,117.5],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,890.5,195],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1}],"uses":{"glue":5},"tools":["drill","clamps","glasses"],"warn":[{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Apply glue to one end of a second shelf B.","Align its top face with the top end of the side.","Install three 50 mm screws through the side into the shelf."],"check":"Make sure that the top shelf is flush with the top end.","index":4,"wait":0},{"id":"side","title":"Attach the second side","phase":"Build","minutes":20,"parts":["A2"],"fasteners":[{"material":"screw-4x50","at":[800,69.5,40],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,69.5,117.5],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,69.5,195],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,890.5,40],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,890.5,117.5],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,890.5,195],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1}],"uses":{"glue":10},"tools":["drill","clamps","glasses"],"teach":["clamp"],"warn":[{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Apply glue to the free ends of the two shelves.","Put the second side A on the shelf ends.","Align the holes with the shelf lines.","Install three screws into each shelf."],"check":"Make sure that the frame stands flat on the floor.","index":5,"wait":0},{"id":"middle","title":"Install the middle shelves","phase":"Build","minutes":25,"parts":["B2","B3"],"fasteners":[{"material":"screw-4x50","at":[0,339.5,40],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,339.5,117.5],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,339.5,195],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,339.5,40],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,339.5,117.5],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,339.5,195],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,609.5,40],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,609.5,117.5],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[0,609.5,195],"dir":[1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,609.5,40],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,609.5,117.5],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[800,609.5,195],"dir":[-1,0,0],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1}],"uses":{"glue":20},"tools":["drill","clamps","glasses"],"warn":[{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Apply glue to the two ends of a shelf B.","Slide the shelf between the sides to its line.","Install three screws through each side into the shelf.","Do the same steps for the last shelf."],"check":"Make sure that each shelf is level.","tip":"Put a scrap block under the shelf at the line height. The block holds the shelf while you drive the screws.","index":6,"wait":0},{"id":"back","title":"Attach the back panel","phase":"Build","minutes":30,"parts":["C1"],"fasteners":[{"material":"screw-3x16","at":[9.5,150,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[9.5,450,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[9.5,750,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[790.5,150,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[790.5,450,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[790.5,750,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[200,69.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[400,69.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[600,69.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[200,339.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[400,339.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[600,339.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[200,609.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[400,609.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[600,609.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[200,890.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[400,890.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1},{"material":"screw-3x16","at":[600,890.5,-6],"dir":[0,0,1],"len":16,"d":3,"head":"pan","color":"#8f959c","count":1}],"tools":["tape","drill","clamps","glasses"],"teach":["square-diagonals"],"warn":[{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Stand the frame upright with the back toward you.","Measure the two diagonals of the frame.","Push the top of the frame to the side until the two diagonals are equal.","Clamp the back panel C to the frame with its edges aligned.","Install 18 short screws through the panel into the sides and the shelves."],"check":"Make sure that the two diagonals are equal within 2 mm.","why":"The back panel locks the frame square. Without it, the shelf can lean to one side.","view":{"az":205,"el":24},"index":7,"wait":0},{"id":"finish","title":"Apply the finish","phase":"Finish","minutes":60,"wait":240,"uses":{"sand-240":1,"rags":2},"finish":{"material":"poly","coats":2,"parts":["A1","A2","B1","B2","B3","B4","C1"]},"tools":["gloves"],"teach":["finish-wipe"],"do":["Remove all dust with a dry cloth.","Apply the first coat to all faces.","Wait 2 hours.","Sand lightly with 240 grit.","Apply the second coat."],"check":"Make sure that the finish is dry and smooth before you put books on the shelves.","index":8,"fasteners":[]},{"id":"wall","title":"Attach the shelf to the wall","phase":"Finish","minutes":20,"parts":["D1","E1"],"fasteners":[{"material":"kit-screw","at":[392,903,15],"dir":[0,-1,0],"len":16,"d":4,"head":null,"color":"#8f959c","count":1},{"material":"kit-screw","at":[408,903,15],"dir":[0,-1,0],"len":16,"d":4,"head":null,"color":"#8f959c","count":1},{"material":"screw-4x50","at":[392,935,-6],"dir":[0,0,-1],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1},{"material":"screw-4x50","at":[408,935,-6],"dir":[0,0,-1],"len":50,"d":4,"head":"flat","color":"#8f959c","count":1}],"tools":["finder","drill","level","pencil","glasses"],"teach":["find-stud"],"warn":[{"type":"warning","text":"Attach the shelf to the wall before you load it. A free bookshelf can fall on a child."},{"type":"warning","text":"Do not drill above, below or beside a socket or a switch. Cables run there."},{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Put the shelf against the wall in its final position.","Find a stud behind the top of the shelf.","Attach the shelf bracket D to the top shelf with two screws.","Attach the wall bracket E to the stud with two 50 mm screws.","Connect the two brackets with the strap."],"check":"Pull the top of the shelf. Make sure that the shelf does not move.","why":"Most furniture falls forward when a child climbs it. The strap stops this.","view":{"az":25,"el":32,"zoom":5},"props":["wall"],"index":9,"wait":0}],"tools":[{"id":"tape","name":"Tape measure","have":true,"get":"buy","days":1,"qty":1,"power":false,"ppe":false,"est":true,"first":0},{"id":"pencil","name":"Pencil","have":true,"get":"buy","days":1,"qty":1,"power":false,"ppe":false,"est":true,"first":0},{"id":"square","name":"Speed square","have":false,"get":"buy","price":9.98,"days":1,"qty":1,"store":"hardware","power":false,"ppe":false,"est":true,"first":0},{"id":"saw","name":"Circular saw","spec":"fine blade, 40 teeth or more","have":false,"get":"borrow","days":1,"qty":1,"power":true,"ppe":false,"est":true,"first":0},{"id":"trestles","name":"Two trestles","have":false,"get":"borrow","days":1,"qty":1,"power":false,"ppe":false,"est":true,"first":0},{"id":"clamps","name":"Bar clamp","spec":"600 mm","have":false,"get":"buy","price":12.97,"days":1,"qty":2,"store":"hardware","power":false,"ppe":false,"est":true,"first":0},{"id":"drill","name":"Cordless drill","have":true,"get":"buy","days":1,"qty":1,"power":true,"ppe":false,"est":true,"first":2},{"id":"bits","name":"Drill bit set","spec":"3 mm bit and countersink bit","have":false,"get":"buy","price":8.97,"days":1,"qty":1,"store":"hardware","power":false,"ppe":false,"est":true,"first":2},{"id":"block","name":"Sanding block","have":false,"get":"buy","price":4.48,"days":1,"qty":1,"store":"hardware","power":false,"ppe":false,"est":true,"first":1},{"id":"glasses","name":"Safety glasses","have":false,"get":"buy","price":6.97,"days":1,"qty":1,"store":"hardware","power":false,"ppe":true,"est":true,"first":0},{"id":"ears","name":"Ear protection","have":false,"get":"buy","price":9.97,"days":1,"qty":1,"store":"hardware","power":false,"ppe":true,"est":true,"first":0},{"id":"mask","name":"Dust mask","spec":"N95","have":false,"get":"buy","price":7.48,"days":1,"qty":1,"store":"hardware","power":false,"ppe":true,"est":true,"first":1},{"id":"gloves","name":"Nitrile gloves","have":false,"get":"buy","price":5.98,"days":1,"qty":1,"store":"online","power":false,"ppe":true,"est":true,"first":8},{"id":"finder","name":"Stud finder","spec":"with cable and pipe detection","have":false,"get":"borrow","days":1,"qty":1,"power":false,"ppe":false,"est":true,"first":9},{"id":"level","name":"Spirit level","have":true,"get":"buy","days":1,"qty":1,"power":false,"ppe":false,"est":true,"first":9}],"techniques":{"measure-mark":{"name":"Measure and mark","why":"The saw blade removes 3 mm of wood. The X tells you which side of the line to cut on.","warn":[],"do":["Hook the tape on the square end of the board.","Read the tape at eye level.","Make a small V mark with a sharp pencil.","Put the square against the edge of the board.","Draw a line through the V along the square.","Write an X on the waste side of the line."],"tools":["Tape measure","Pencil","Square"]},"cut-straight":{"name":"Cut on the line","why":"The blade removes 3 mm of wood. A cut on the waste side keeps the part at its full length.","warn":[{"type":"warning","text":"Wear safety glasses. The saw can throw chips into your eyes."},{"type":"warning","text":"Wear ear protection. A loud saw can hurt your ears."},{"type":"warning","text":"Keep your hands 150 mm from the blade. The blade can cut your fingers."},{"type":"warning","text":"Stand to the side of the saw line. A saw that jumps back can hit you."},{"type":"warning","text":"Support the board so that the cut stays open. A cut that closes on the blade makes the saw jump back toward you."},{"type":"warning","text":"Do not lock or remove the lower blade guard. The guard covers the blade after the cut."}],"do":["Clamp the board to a bench or a sawhorse, with the line near the support.","Put a second support under a long waste piece, near the line.","Do not cut between two supports that are far apart.","Align the blade with the waste side of the line.","Let the saw reach full speed before it touches the wood.","Push the saw slowly along the line.","Let a short waste piece fall. Do not hold it.","Before you lift the saw, let the blade stop."],"tools":["Saw","Clamp"]},"sand":{"name":"Sand a face","why":"Each finer grit removes the scratches of the grit before it.","warn":[{"type":"warning","text":"Wear a dust mask. Fine dust can hurt your lungs."},{"type":"caution","text":"Do not sand across the grain. Cross scratches show through the finish."}],"do":["Wrap the sandpaper around a flat block.","Sand along the grain with a medium grit.","Remove the dust with a dry cloth.","Sand again with a finer grit."],"tools":["Sanding block","Sandpaper","Dust mask"]},"pilot-hole":{"name":"Drill a pilot hole","why":"A pilot hole gives the screw a path. Without it, the wood can split near an edge.","warn":[{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Select a drill bit that is a little smaller than the screw shaft.","Mark the hole position with a pencil.","Clamp small parts before you drill.","Hold the drill at 90° to the face.","Drill to the depth of the screw."],"tools":["Drill","Drill bit"]},"countersink":{"name":"Countersink the hole","why":"The cone lets the screw head sit flush with the face.","warn":[{"type":"warning","text":"Wear safety glasses. The drill bit can throw chips into your eyes."}],"do":["Put the countersink bit in the pilot hole.","Drill until the cone is as wide as the screw head.","Remove the dust from the hole."],"tools":["Drill","Countersink bit"]},"glue-joint":{"name":"Glue a joint","why":"Too much glue makes a weak, wet joint. Dry glue stains do not take the finish.","warn":[],"do":["Apply a thin line of glue to one face.","Spread the glue with your finger or a scrap.","Put the parts together in 10 minutes or less.","Wipe off the extra glue with a wet cloth."],"tools":["Wet cloth"]},"clamp":{"name":"Clamp two parts","why":"The scrap blocks prevent dents in the face.","warn":[{"type":"caution","text":"Do not tighten the clamp too much. Too much force pushes out all the glue."}],"do":["Put a scrap block between each clamp jaw and the wood.","Tighten the clamp until the joint closes.","When a thin line of glue comes out, stop."],"tools":["Clamps","Scrap blocks"]},"square-diagonals":{"name":"Square a frame","why":"A square frame has two equal diagonals. Shelves and doors then fit.","warn":[],"do":["Measure the frame from corner to corner.","Measure the other diagonal.","If the two lengths are not equal, push the long diagonal corners together.","Measure again until the two lengths are equal within 2 mm."],"tools":["Tape measure"]},"finish-wipe":{"name":"Apply a wipe-on finish","why":"Thin coats dry hard and even. A thick coat stays soft and runs.","warn":[{"type":"warning","text":"Wear nitrile gloves. The finish can hurt your skin."},{"type":"warning","text":"Open a window. Finish fumes can make you ill."},{"type":"warning","text":"Put used rags flat outdoors to dry, or in a closed metal can of water. Oily rags can catch fire."}],"do":["Stir the can for 1 minute.","Apply a thin coat with a lint-free cloth.","Wait for the time on the can.","Sand lightly with fine sandpaper between coats."],"tools":["Lint-free cloth","Gloves"]},"find-stud":{"name":"Find a stud in the wall","why":"A screw in a stud holds the load. A screw in plasterboard (drywall) alone can pull out.","warn":[{"type":"warning","text":"Do not drill above, below or beside a socket or a switch. Cables run there."},{"type":"warning","text":"Use a cable and pipe detector before you drill. A drill can hit a cable or a pipe."}],"do":["Move a cable and pipe detector over the area.","Mark each cable and pipe that the detector finds.","Do not drill within 150 mm of a ceiling or a corner.","Move a stud finder slowly along the wall.","Mark the two edges of the stud.","Drill a 2 mm test hole between the marks.","If the bit goes into wood, use that position."],"tools":["Cable and pipe detector","Stud finder","Drill"]}},"cuts":[{"material":"pine-1x10","name":"Pine board","kind":"linear","color":"#d9b88a","optimal":true,"search":"exact","boards":[{"stock":{"length":2440,"price":27.98},"cuts":[{"id":"A1","label":"A","len":900,"at":0},{"id":"B1","label":"B","len":762,"at":903},{"id":"B2","label":"B","len":762,"at":1668}],"used":2430,"waste":10},{"stock":{"length":2440,"price":27.98},"cuts":[{"id":"A2","label":"A","len":900,"at":0},{"id":"B3","label":"B","len":762,"at":903},{"id":"B4","label":"B","len":762,"at":1668}],"used":2430,"waste":10}]},{"material":"ply-6","name":"Plywood","kind":"sheet","color":"#e6cfa4","sheets":[{"stock":{"w":1220,"h":1220,"price":24},"cuts":[{"id":"C1","label":"C","x":0,"y":0,"w":900,"h":800,"rotated":false}],"usedArea":0.72,"waste":0.7684}]}],"boq":[{"code":"T01","group":"Timber and sheet","key":"pine-1x10:2440","id":"pine-1x10","name":"Pine board","spec":"19 × 235 mm (1×10), 2440 mm long","need":"6 pieces, 4848 mm","needQty":4848,"qty":2,"unit":"board","rate":27.98,"amount":55.96,"est":true,"store":"lumber","first":0,"note":"","get":"buy"},{"code":"T02","group":"Timber and sheet","key":"ply-6:1220x1220","id":"ply-6","name":"Plywood","spec":"6 mm birch, 1220 × 1220 mm","need":"1 piece, 0.72 m²","needQty":0.72,"qty":1,"unit":"sheet","rate":24,"amount":24,"est":true,"store":"lumber","first":0,"note":"","get":"buy"},{"code":"H01","group":"Hardware","key":"screw-4x50","id":"screw-4x50","name":"Wood screw","spec":"4 × 50 mm, countersunk","need":"26 pieces + 10% spare","needQty":26,"qty":1,"unit":"pack of 50","rate":8.98,"amount":8.98,"est":true,"store":"hardware","first":3,"note":"","get":"buy"},{"code":"H02","group":"Hardware","key":"screw-3x16","id":"screw-3x16","name":"Wood screw","spec":"3 × 16 mm, pan head","need":"18 pieces + 10% spare","needQty":18,"qty":1,"unit":"pack of 100","rate":6.5,"amount":6.5,"est":true,"store":"hardware","first":7,"note":"","get":"buy"},{"code":"H03","group":"Hardware","key":"anti-tip","id":"anti-tip","name":"Anti-tip furniture kit","spec":"2 brackets, strap, screws, wall plugs","need":"2 pieces","needQty":2,"qty":1,"unit":"kit","rate":9.97,"amount":9.97,"est":true,"store":"hardware","first":9,"note":"","get":"buy"},{"code":"H04","group":"Hardware","key":"kit-screw","id":"kit-screw","name":"Kit screw","spec":"in the anti-tip kit","need":"2 pieces, in the kit","needQty":2,"qty":2,"unit":"piece","rate":0,"amount":0,"est":false,"store":"hardware","first":9,"note":"","get":"kit"},{"code":"C01","group":"Consumables","key":"sand-120","id":"sand-120","name":"Sandpaper","spec":"120 grit","need":"2 sheets","needQty":2,"qty":1,"unit":"pack of 5","rate":5.48,"amount":5.48,"est":true,"store":"online","first":1,"note":"","get":"buy"},{"code":"C02","group":"Consumables","key":"sand-180","id":"sand-180","name":"Sandpaper","spec":"180 grit","need":"2 sheets","needQty":2,"qty":1,"unit":"pack of 5","rate":5.48,"amount":5.48,"est":true,"store":"online","first":1,"note":"","get":"buy"},{"code":"C03","group":"Consumables","key":"glue","id":"glue","name":"Wood glue","spec":"PVA, interior","need":"40 ml","needQty":40,"qty":1,"unit":"237 ml bottle","rate":5.97,"amount":5.97,"est":true,"store":"hardware","first":3,"note":"","get":"buy"},{"code":"C04","group":"Consumables","key":"sand-240","id":"sand-240","name":"Sandpaper","spec":"240 grit","need":"1 sheet","needQty":1,"qty":1,"unit":"pack of 5","rate":5.48,"amount":5.48,"est":true,"store":"online","first":8,"note":"","get":"buy"},{"code":"F01","group":"Finish","key":"poly","id":"poly","name":"Wipe-on polyurethane","spec":"satin, water-based","need":"0.72 L + 10% spare","needQty":0.723,"qty":1,"unit":"0.946 L can","rate":16.98,"amount":16.98,"est":true,"store":"hardware","first":8,"note":"3.98 m² × 2 coats ÷ 11 m² per L. The area counts every face of each finished part, so it is an upper bound.","get":"buy"},{"code":"F02","group":"Finish","key":"rags","id":"rags","name":"Lint-free cloth","spec":"cotton","need":"2 cloths","needQty":2,"qty":1,"unit":"pack of 10","rate":6.49,"amount":6.49,"est":true,"store":"online","first":8,"note":"","get":"buy"},{"code":"S01","group":"Safety","key":"tool/glasses","id":"glasses","name":"Safety glasses","spec":"","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":6.97,"amount":6.97,"est":true,"store":"hardware","first":0,"note":"","get":"buy"},{"code":"S02","group":"Safety","key":"tool/ears","id":"ears","name":"Ear protection","spec":"","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":9.97,"amount":9.97,"est":true,"store":"hardware","first":0,"note":"","get":"buy"},{"code":"S03","group":"Safety","key":"tool/mask","id":"mask","name":"Dust mask","spec":"N95","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":7.48,"amount":7.48,"est":true,"store":"hardware","first":1,"note":"","get":"buy"},{"code":"S04","group":"Safety","key":"tool/gloves","id":"gloves","name":"Nitrile gloves","spec":"","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":5.98,"amount":5.98,"est":true,"store":"online","first":8,"note":"","get":"buy"},{"code":"X01","group":"Tools","key":"tool/square","id":"square","name":"Speed square","spec":"","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":9.98,"amount":9.98,"est":true,"store":"hardware","first":0,"note":"","get":"buy"},{"code":"X02","group":"Tools","key":"tool/saw","id":"saw","name":"Circular saw","spec":"fine blade, 40 teeth or more","need":"borrow 1","needQty":1,"qty":1,"unit":"each","rate":0,"amount":0,"est":false,"store":null,"first":0,"note":"","get":"borrow"},{"code":"X03","group":"Tools","key":"tool/trestles","id":"trestles","name":"Two trestles","spec":"","need":"borrow 1","needQty":1,"qty":1,"unit":"each","rate":0,"amount":0,"est":false,"store":null,"first":0,"note":"","get":"borrow"},{"code":"X04","group":"Tools","key":"tool/clamps","id":"clamps","name":"Bar clamp","spec":"600 mm","need":"buy 2","needQty":2,"qty":2,"unit":"each","rate":12.97,"amount":25.94,"est":true,"store":"hardware","first":0,"note":"","get":"buy"},{"code":"X05","group":"Tools","key":"tool/block","id":"block","name":"Sanding block","spec":"","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":4.48,"amount":4.48,"est":true,"store":"hardware","first":1,"note":"","get":"buy"},{"code":"X06","group":"Tools","key":"tool/bits","id":"bits","name":"Drill bit set","spec":"3 mm bit and countersink bit","need":"buy 1","needQty":1,"qty":1,"unit":"each","rate":8.97,"amount":8.97,"est":true,"store":"hardware","first":2,"note":"","get":"buy"},{"code":"X07","group":"Tools","key":"tool/finder","id":"finder","name":"Stud finder","spec":"with cable and pipe detection","need":"borrow 1","needQty":1,"qty":1,"unit":"each","rate":0,"amount":0,"est":false,"store":null,"first":9,"note":"","get":"borrow"}],"purchase":[{"store":"online","name":"Online order","online":true,"lead":3,"note":"Order 3 days before you start.","url":null,"orderBy":null,"items":["sand-120","sand-180","sand-240","rags","tool/gloves"],"subtotal":28.91},{"store":"hardware","name":"Hardware store","online":false,"lead":0,"note":"","url":null,"orderBy":null,"items":["tool/glasses","tool/ears","tool/square","tool/clamps","tool/mask","tool/block","tool/bits","screw-4x50","glue","screw-3x16","poly","anti-tip"],"subtotal":122.19},{"store":"lumber","name":"Timber yard","online":false,"lead":0,"note":"Pick straight boards. Look along each edge before you buy it.","url":null,"orderBy":null,"items":["pine-1x10:2440","ply-6:1220x1220"],"subtotal":79.96},{"store":"_borrow","name":"Borrow","online":false,"lead":0,"note":"Ask a friend, a neighbour or a tool library.","url":null,"orderBy":null,"items":["tool/saw","tool/trestles","tool/finder"],"subtotal":0}],"plan":{"phases":[{"name":"Prepare","steps":[0,1,2],"minutes":120,"wait":0},{"name":"Build","steps":[3,4,5,6,7],"minutes":110,"wait":0},{"name":"Finish","steps":[8,9],"minutes":80,"wait":240}],"active":310,"wait":240,"levels":{"new":1.5,"some":1.2,"pro":1}},"totals":{"subtotal":231.06,"contingencyRate":0.1,"contingency":23.11,"taxRate":0,"taxLabel":null,"taxIncluded":false,"tax":0,"total":254.17,"currency":"USD","area":3.977,"areaDisplay":"3.98 m²","unknownPrices":0},"safety":{"tip":{"height":900,"depth":241,"ratio":3.73,"anchored":true,"limit":2},"ppe":["glasses","ears","mask","gloves"],"handoffs":[],"power":["saw","drill"],"notes":["When you use a saw or a router, wear safety glasses and ear protection. The tool can throw chips, and the noise can hurt your ears.","When you drill, wear safety glasses. The bit can throw chips into your eyes.","When you sand, wear a dust mask. Fine dust can hurt your lungs."]},"problems":[{"level":"info","code":"I_ESTIMATE","path":"estimate","where":"project","msg":"The prices are estimates.","hint":"Replace them with the prices at your store. Set \"est\": false on each price that you confirm."}],"counts":{"error":0,"warn":0,"ste":0,"info":1}}</script>
 <!-- three.js 0.160.0 (three.module.min.js, OrbitControls.js). MIT License. Copyright 2010-2023 Three.js Authors. https://github.com/mrdoob/three.js/blob/r160/LICENSE -->
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"},"integrity":{"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js":"sha384-8/hf5tabFfIo0BPku31TKUvGIKpWGYaMwNtlSNqNyZzXgZCMd4lnOGWbJElML9dv","https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js":"sha384-qlO/ZugKPxAQUAvTlQoo0QECzxJIJySZmCF/DHdb2Xn/hHndFwX/vfUAC9Hbk6LP"}}</script>
 <script type="module">
 const { createViewer } = (() => {
 // The 3D step viewer. No static import: createViewer() loads three.js with import() and, on failure, writes the
 // reason into the viewer slot. Parts already built are plain, the parts of this step are lit and arrive along their
-// path, parts still to come are hidden (or ghosted). Units are millimetres, y is up. One WebGL renderer is shared:
-// only the viewer on screen owns the canvas.
+// path, parts still to come are hidden (or ghosted), and X-ray shows the parts built before as glass. Units are
+// millimetres, y is up. One WebGL renderer is shared: only the viewer on screen owns the canvas.
+// The Plan view (hero) tours itself: the finished object turns and shows each motion, then goes together step by step,
+// as a pure function of the tour time (tourPose). Any input hands control to the reader; 25 s of quiet hands it back.
 const REDUCED = matchMedia("(prefers-reduced-motion: reduce)");
 const CAPTURE = /[?&]capture\b/.test(location.search); // keep the drawing buffer only for screen captures
+const TOUR_AT = Number(new URLSearchParams(location.search).get("tour")); // capture: the tour time to show
+const IDLE = 25000; // ms of quiet before the tour starts again
+const PIXELS = [1.5, 1, 0.75]; // the pixel ratio of each quality tier; tier 1 also halves the shadow map, tier 2 drops shadows
 const MSG = {
   webgl: "3D needs WebGL. The steps still work without it.",
   network: "3D needs a network connection. The steps still work without it.",
@@ -436,23 +452,29 @@ function fail(host, err) {
 function renderer() {
   if (shared) return shared;
   const r = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: CAPTURE });
-  r.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  r.setPixelRatio(Math.min(devicePixelRatio, PIXELS[0]));
   r.shadowMap.enabled = true;
   r.shadowMap.type = THREE.PCFSoftShadowMap;
   const c = r.domElement;
   c.tabIndex = 0;
   c.setAttribute("role", "img");
   c.addEventListener("keydown", (e) => { if (shared.owner?.key(e)) { e.preventDefault(); e.stopPropagation(); } });
-  return (shared = { r, canvas: c, owner: null });
+  // tier: 0 full quality. A slow frame rate (a laptop's built-in GPU) steps it down; the viewers apply it on their next frame.
+  return (shared = { r, canvas: c, owner: null, tier: 0, perf: { n: 0, sum: 0 } });
 }
 
-// createViewer(host, data, { mode: "hero" | "steps", label, onSpin }) -> viewer API, or null when 3D cannot run.
+// createViewer(host, data, { mode: "hero" | "steps", label, onSpin, onTour }) -> viewer API, or null when 3D cannot run.
+// Every shader compiles before the first frame (compileAsync), so the page does not stop on its first draw.
 async function createViewer(host, data, opts = {}) {
   try { await load3d(); } catch (e) { fail(host, e); return null; }
-  try { return build(host, data, opts); } catch (e) { fail(host, e); return null; }
+  try {
+    const v = build(host, data, opts);
+    await v.warm();
+    return v;
+  } catch (e) { fail(host, e); return null; }
 }
 
-function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
+function build(host, data, { mode = "steps", label = "3D view", onSpin, onTour } = {}) {
   const T = THREE, hero = mode === "hero", R = renderer(), canvas = R.canvas;
   const box = host.querySelector("[data-canvas]"), layer = host.querySelector("[data-tags]");
   const UP = new T.Vector3(0, 1, 0), V = (a) => new T.Vector3(...a), RAD = Math.PI / 180;
@@ -521,8 +543,18 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     const flat = [...p.size].sort((a, b) => b - a), round = p.shape === "cylinder" && axisOf(p.size) >= 0;
     const kitSize = round ? [p.size[axisOf(p.size)], p.size[(axisOf(p.size) + 1) % 3], p.size[(axisOf(p.size) + 1) % 3]] : [flat[0], flat[2], flat[1]];
     const kit = p.kind === "each" ? null : solid(shape(p.shape, kitSize), mat, edge); // bought parts are not cut; printed parts lie in the kit too
-    return { ...p, i, center, base, mat, edge, mesh, kit, kitSize, round, offset: new T.Vector3(), fly: new T.Vector3(), state: "hidden", wb };
+    // q0: the part's own rotation. mq, pivot, slide: where a motion has moved it (the Plan view only).
+    return { ...p, i, center, base, mat, edge, mesh, kit, kitSize, round, offset: new T.Vector3(), fly: new T.Vector3(), state: "hidden", wb,
+      q0: mesh.quaternion.clone(), mq: new T.Quaternion(), pivot: new T.Vector3(), slide: new T.Vector3(), motion: null };
   });
+  // the motions of the finished object: one value k (0 rest, 1 the full travel) poses their parts
+  const AX = { x: [1, 0, 0], y: [0, 1, 0], z: [0, 0, 1] };
+  const motions = (Array.isArray(data.motions) ? data.motions : []).map((m) => {
+    const list = parts.filter((p) => (m.parts ?? []).includes(p.id) && !p.motion);
+    const mo = { ...m, list, axis: V(AX[m.axis] ?? AX.y), pivot: isVec(m.pivot) ? V(m.pivot) : new T.Vector3(), k: 0 };
+    list.forEach((p) => (p.motion = mo));
+    return mo;
+  }).filter((m) => m.list.length && Number.isFinite(m.travel));
   const assembly = new T.Group(), kitGroup = new T.Group();
   parts.forEach((p) => { assembly.add(p.mesh); if (p.kit) kitGroup.add(p.kit); });
   scene.add(assembly, kitGroup);
@@ -612,8 +644,9 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     Object.assign(f, { want, away, spin });
     const visible = want && (Boolean(f.host) || !explode);
     P3.copy(f.home).addScaledVector(f.dir, -f.len * 1.6 * away);
-    if (f.host) P3.add(f.host.offset);
+    if (f.host) moved(f.host, P3).add(f.host.offset);
     Q.copy(f.q).multiply(SPIN.setFromAxisAngle(UP, spin));
+    if (f.host?.motion) Q.premultiply(f.host.mq);
     M4.compose(P3, Q, visible ? ONE : ZERO);
     for (const m of f.t.meshes) { m.setMatrixAt(f.k, M4); m.instanceMatrix.needsUpdate = true; }
     f.visible = visible;
@@ -661,8 +694,9 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
   layer.setAttribute("aria-hidden", "true");
 
   // ---- state and animations. kind "camera" is dropped when the user takes over; the rest finish at once.
-  let step = hero ? data.steps.length : 0, explode = false, ghost = false, userView = false, framed = false, sized = false;
-  let paused = REDUCED.matches, active = false, tap = null, onScreen = false, running = false, need = true;
+  // xray: null follows each step's view.xray; true or false is the reader's choice for every step
+  let step = hero ? data.steps.length : 0, explode = false, ghost = false, xray = null, userView = false, framed = false, sized = false;
+  let active = false, tap = null, onScreen = false, running = false, need = true, last = 0, tier = -1;
   const anims = [];
   const now = () => performance.now();
   const animate = (dur, fn, delay = 0, kind = "part") => {
@@ -674,7 +708,20 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
   const finish = () => { for (const a of anims.splice(0)) if (a.kind !== "camera") a.fn(1); };
   const kitPose = () => !hero && data.steps[step]?.pose === "kit";
   const stepOf = (p) => (typeof p.step === "number" ? p.step : Infinity); // a part no step installs never shows in steps
-  const place = (p) => p.mesh.position.copy(p.center).add(p.offset).add(p.fly);
+  // a point of a part where its motion has moved it: turned about the pivot, then slid
+  const moved = (p, v) => (p.motion ? v.sub(p.pivot).applyQuaternion(p.mq).add(p.pivot).add(p.slide) : v);
+  const place = (p) => { moved(p, p.mesh.position.copy(p.center)).add(p.offset).add(p.fly); p.mesh.quaternion.copy(p.mq).multiply(p.q0); };
+  // pose motion m at share k: the parts and the screws in them follow
+  function setMotion(m, k) {
+    m.k = Math.min(1, Math.max(0, k));
+    for (const p of m.list) {
+      p.pivot.copy(m.pivot);
+      if (m.kind === "turn") { p.mq.setFromAxisAngle(m.axis, m.travel * m.k * RAD); p.slide.set(0, 0, 0); }
+      else { p.mq.identity(); p.slide.copy(m.axis).multiplyScalar(m.travel * m.k); }
+      place(p);
+    }
+    for (const f of fast) if (f.host?.motion === m) placeF(f, f.want, f.away, f.spin);
+  }
   // where "Apart" puts a part: 35% further out from the model centre (nowhere in the kit pose). A part never goes into
   // a prop that shows: it slides along the face of the prop that it is on (a bracket goes up the wall, not into it),
   // else it stops short of the prop.
@@ -695,19 +742,23 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     return o;
   };
 
-  // states: hidden, ghost, done, current (installed in this step), coat (built before, finished in this step)
+  // the path a part of step s arrives along: step.from, else outward from the model centre and from above
+  const awayOf = (p, s) => (isVec(s?.from) ? V(s.from) : p.center.clone().sub(modelCenter).setY(0).normalize().multiplyScalar(modelSize * 0.32).add(new T.Vector3(0, modelSize * 0.18, 0)));
+
+  // states: hidden, ghost, done, glass (done, seen through in X-ray), current (installed in this step), coat (built
+  // before, finished in this step), moving (a motion of the Plan view tour)
   function paint(p, state) {
     p.state = state;
-    const lit = state === "current" || state === "coat", see = state === "ghost";
+    const lit = state === "current" || state === "coat" || state === "moving", see = state === "ghost" || state === "glass";
     p.mat.color.copy(p.base);
     if (lit) p.mat.color.lerp(new T.Color(tok.accent), 0.22);
     p.mat.emissive.set(lit ? tok.accent : "#000000").multiplyScalar(lit ? 0.12 : 0);
     p.mat.transparent = see;
-    p.mat.opacity = see ? 0.14 : 1;
+    p.mat.opacity = state === "glass" ? 0.2 : see ? 0.14 : 1;
     p.mat.depthWrite = !see;
-    p.mesh.castShadow = !see; // a ghost (a part still to come) throws no shadow on the wall or the floor
+    p.mesh.castShadow = !see; // a ghost (a part still to come) or glass throws no shadow on the wall or the floor
     p.edge.color.set(lit ? tok.accent : tok.ink);
-    p.edge.opacity = see ? 0.18 : lit ? 1 : 0.55;
+    p.edge.opacity = state === "glass" ? 0.4 : see ? 0.18 : lit ? 1 : 0.55;
     p.mat.needsUpdate = true;
   }
 
@@ -725,9 +776,12 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     // both show as not pressed and do nothing. app.js skips a click on a disabled toggle. The flags stay, so a later step
     // shows the reader's own choice again. On a step where every part is already in place, "Show finished" stays as it is.
     const none = parts.length === 0; // a repair with no parts: nothing to move apart or to ghost
-    const gb = host.querySelector("[data-v=ghost]"), eb = host.querySelector("[data-v=explode]");
+    const gb = host.querySelector("[data-v=ghost]"), eb = host.querySelector("[data-v=explode]"), xb = host.querySelector("[data-v=xray]");
     if (gb) { gb.setAttribute("aria-pressed", String(!kit && !none && (ghost || auto))); gb.setAttribute("aria-disabled", String(kit || none || auto)); }
     if (eb) { eb.setAttribute("aria-pressed", String(!kit && !none && explode)); eb.setAttribute("aria-disabled", String(kit || none)); }
+    // X-ray: the reader's choice, else the step's view.xray. Nothing to see through in the kit pose or before a part is in.
+    const built = !hero && !kit && parts.some((p) => stepOf(p) < step), glass = built && (xray ?? s?.view?.xray === true);
+    if (xb) { xb.setAttribute("aria-pressed", String(glass)); xb.setAttribute("aria-disabled", String(!built)); }
     tags.forEach((el) => (el.hidden = true));
     for (const p of parts) {
       p.fly.set(0, 0, 0);
@@ -736,7 +790,7 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
         if (p.kit) tag(p).hidden = false;
         continue;
       }
-      const at = stepOf(p), state = hero ? "done" : at < step ? (coat.has(p.id) ? "coat" : "done") : at === step ? "current" : ghost || auto ? "ghost" : "hidden";
+      const at = stepOf(p), state = hero ? "done" : at < step ? (coat.has(p.id) ? "coat" : glass ? "glass" : "done") : at === step ? "current" : ghost || auto ? "ghost" : "hidden";
       p.mesh.visible = state !== "hidden";
       paint(p, state);
       place(p);
@@ -745,7 +799,7 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     // parts of this step arrive along a path: step.from, else outward from the model centre and from above
     const arriving = kit ? [] : parts.filter((p) => p.state === "current");
     if (fly) arriving.forEach((p, k) => {
-      const away = isVec(s?.from) ? V(s.from) : p.center.clone().sub(modelCenter).setY(0).normalize().multiplyScalar(modelSize * 0.32).add(new T.Vector3(0, modelSize * 0.18, 0));
+      const away = awayOf(p, s);
       animate(950, (t) => {
         const e = ease(t), see = e < 1;
         p.fly.copy(away).multiplyScalar(1 - e);
@@ -754,6 +808,7 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
         p.mat.opacity = Math.min(1, 0.15 + e * 1.2);
       }, k * 160);
     });
+    if (hero) for (const m of motions) setMotion(m, m.k);
     const landed = arriving.length ? 950 + (arriving.length - 1) * 160 : 0;
     let order = 0;
     for (const f of fast) {
@@ -832,8 +887,112 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     animate(850, (t) => { const e = easeIO(t); camera.position.lerpVectors(p0, pos, e); controls.target.lerpVectors(t0, c, e); }, 0, "camera");
   }
 
-  const spin = (on) => { controls.autoRotate = hero && on; onSpin?.(controls.autoRotate); wake(); };
-  controls.addEventListener("start", () => { userView = true; finish(); if (controls.autoRotate) spin(false); host.dataset.user = ""; });
+  // ---- the Plan view tour. Segments: each motion opens, holds and closes (or the object turns for 5 s with none), then
+  // each step that installs parts brings them in, then the finished object holds. Frame 0 is the finished object.
+  // A state holds 1 s for a short text, plus 0.25 s for each word after three.
+  const hold = (text) => 1 + 0.25 * Math.max(0, String(text ?? "").trim().split(/\s+/).filter(Boolean).length - 3);
+  const MOVE = 1.1, tour = [];
+  let TOUR = 0;
+  if (hero) {
+    if (motions.length) for (const m of motions) { const d = 2 * MOVE + hold(`${m.name} ${m.text ?? ""}`); tour.push({ kind: "motion", m, t0: TOUR, t1: TOUR + d }); TOUR += d + 0.3; }
+    else { tour.push({ kind: "show", t0: 0, t1: 5 }); TOUR = 5; }
+    data.steps.forEach((s, i) => {
+      const mine = s.pose === "kit" ? [] : parts.filter((p) => stepOf(p) === i);
+      if (!mine.length) return;
+      const land = 0.95 + (mine.length - 1) * 0.16, screws = fast.filter((f) => f.step === i).length;
+      const d = Math.max(land + (screws ? 0.52 + Math.min(0.7, screws * 0.045) : 0), hold(s.title)) + 0.35;
+      tour.push({ kind: "step", i, s, land, t0: TOUR, t1: TOUR + d });
+      TOUR += d;
+    });
+    if (tour.at(-1).kind === "step") { tour.push({ kind: "show", t0: TOUR, t1: TOUR + 1.5 }); TOUR += 1.5; }
+  }
+  // the tour frames the object with each motion at its full travel too, so a door that opens stays in the picture
+  const tourBox = bounds.clone();
+  for (const m of motions) { setMotion(m, 1); m.list.forEach((p) => tourBox.union(new T.Box3().setFromObject(p.mesh))); setMotion(m, 0); }
+  let touring = false, tourT = 0, held = REDUCED.matches, idle = 0, lastCaption = null;
+  const glide = { t: -1, pos: new T.Vector3(), target: new T.Vector3() };
+  // the camera of the tour at time t: one full turn round the object in one loop, at the Plan view height
+  function tourCamera(t) {
+    const az = (32 + (360 * t) / TOUR) * RAD, el = 22 * RAD, c = tourBox.getCenter(new T.Vector3());
+    const back = new T.Vector3(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el)), fit = fitDistance(tourBox, c, back);
+    c.addScaledVector(fit.up, -LIFT * fit.d * fit.tv);
+    return { pos: back.multiplyScalar(fit.d).add(c), target: c };
+  }
+  const bump = (u, len) => (u < MOVE ? easeIO(u / MOVE) : u < len - MOVE ? 1 : 1 - easeIO((u - (len - MOVE)) / MOVE));
+  // tourPose(t): every part, screw, motion and the camera at tour time t, from nothing but t
+  function tourPose(t) {
+    t = ((t % TOUR) + TOUR) % TOUR;
+    const seg = tour.find((x) => t < x.t1) ?? tour.at(-1), u = t - seg.t0, building = seg.kind === "step" ? seg.i : Infinity;
+    for (const m of motions) {
+      const k = seg.kind === "motion" && seg.m === m ? bump(u, seg.t1 - seg.t0) : 0;
+      if (k !== m.k) setMotion(m, k);
+    }
+    let order = 0;
+    for (const p of parts) {
+      const at = stepOf(p), moving = seg.kind === "motion" && p.motion === seg.m && seg.m.k > 0.001;
+      const state = building === Infinity ? (moving ? "moving" : "done") : at < building ? "done" : at === building ? "current" : "hidden";
+      if (state !== p.state) { paint(p, state); p.mesh.visible = state !== "hidden"; }
+      p.fly.set(0, 0, 0);
+      if (state === "current") {
+        const e = ease((u - order++ * 0.16) / 0.95), see = e < 1;
+        p.fly.copy(awayOf(p, seg.s)).multiplyScalar(1 - e);
+        if (p.mat.transparent !== see) { p.mat.transparent = see; p.mat.needsUpdate = true; }
+        p.mat.opacity = Math.min(1, 0.15 + e * 1.2);
+      }
+      place(p);
+    }
+    let n = 0;
+    for (const f of fast) {
+      const state = f.step < building ? "done" : f.step === building ? "current" : "hidden";
+      if (state !== f.state) { f.state = state; colorF(f, state === "current"); }
+      const e = state === "current" ? ease((u - seg.land - n++ * 0.045) / 0.52) : 1;
+      placeF(f, state !== "hidden" && e > 0, 1 - e, 6 * (1 - e));
+    }
+    const cam = tourCamera(t), g = glide.t < 0 ? 1 : easeIO(Math.min(1, (tourT - glide.t) / 1.2));
+    camera.position.lerpVectors(glide.pos, cam.pos, g);
+    controls.target.lerpVectors(glide.target, cam.target, g);
+    camera.lookAt(controls.target);
+    // the line under the view: the step or the motion, with the value its parts show now
+    const m = seg.kind === "motion" ? seg.m : null;
+    const caption = seg.kind === "step" ? { kind: "step", step: seg.i, text: seg.s.title } : m ? { kind: "motion", id: m.id, k: Math.round(m.k * 100) / 100, text: m.text ?? "" } : { kind: "show", text: "" };
+    const key = JSON.stringify(caption);
+    if (key !== lastCaption) { lastCaption = key; onTour?.(caption); }
+  }
+  function startTour() {
+    if (!hero || !TOUR) return;
+    clearTimeout(idle);
+    finish();
+    glide.t = 0;
+    glide.pos.copy(camera.position);
+    glide.target.copy(controls.target);
+    touring = true;
+    held = false;
+    tourT = 0;
+    userView = false;
+    delete host.dataset.user;
+    onSpin?.(true);
+    wake();
+  }
+  // the reader takes over: the finished object, as the tour left the motions; 25 s of quiet gives the tour back
+  function takeOver() {
+    clearTimeout(idle);
+    if (touring) {
+      touring = false;
+      for (const p of parts) { p.fly.set(0, 0, 0); paint(p, "done"); p.mesh.visible = true; place(p); }
+      for (const f of fast) { f.state = "done"; colorF(f, false); placeF(f, true); }
+      lastCaption = null;
+      onTour?.({ kind: "off", text: "" });
+      onSpin?.(false);
+    }
+    if (hero && !held && !REDUCED.matches && !CAPTURE) idle = setTimeout(startTour, IDLE);
+  }
+  const spin = (on) => {
+    if (!hero) return;
+    if (on) startTour();
+    else { held = true; takeOver(); }
+  };
+  controls.addEventListener("start", () => { userView = true; finish(); takeOver(); host.dataset.user = ""; });
+  controls.addEventListener("end", () => { if (hero && !touring) takeOver(); });
   controls.addEventListener("change", () => wake());
 
   // keyboard orbit on the focused canvas: arrows turn, + and - zoom
@@ -846,7 +1005,7 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     finish();
     userView = true;
     host.dataset.user = "";
-    if (controls.autoRotate) spin(false);
+    takeOver();
     const sph = new T.Spherical().setFromVector3(camera.position.clone().sub(controls.target));
     if (r) {
       sph.theta += r[0] * 10 * RAD;
@@ -875,10 +1034,22 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
   document.addEventListener("pointerdown", (e) => { if (active && !host.contains(e.target)) setActive(false); });
 
   // ---- loop: render only while something moves, and only in the viewer that owns the canvas
-  function wake() { need = true; if (!running && onScreen && R.owner === api) { running = true; requestAnimationFrame(tick); } }
+  function wake() { need = true; if (!running && onScreen && R.owner === api) { running = true; last = 0; requestAnimationFrame(tick); } }
+  // the quality tier of the shared renderer: a lower pixel ratio, then a smaller shadow map, then no shadows
+  function applyTier() {
+    if (tier === R.tier) return;
+    tier = R.tier;
+    R.r.setPixelRatio(Math.min(devicePixelRatio, PIXELS[tier]));
+    const size = tier >= 1 || small ? 1024 : 2048;
+    if (sun.shadow.mapSize.x !== size) { sun.shadow.mapSize.set(size, size); sun.shadow.map?.dispose(); sun.shadow.map = null; }
+    if (sun.castShadow !== tier < 2) { sun.castShadow = tier < 2; scene.traverse((o) => o.material && (o.material.needsUpdate = true)); }
+    if (box.clientWidth && box.clientHeight) R.r.setSize(box.clientWidth, box.clientHeight, false);
+  }
   function tick() {
     if (R.owner !== api || !onScreen) { running = false; return; }
-    const t = now();
+    const t = now(), dt = last ? (t - last) / 1000 : 0;
+    last = t;
+    applyTier();
     for (let i = anims.length - 1; i >= 0; i--) {
       const a = anims[i];
       if (t < a.t0) continue;
@@ -886,9 +1057,15 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
       a.fn(k);
       if (k >= 1) anims.splice(i, 1);
     }
-    const moved = controls.update();
-    if (need || moved || anims.length || controls.autoRotate) { R.r.render(scene, camera); placeTags(); need = false; }
-    if (anims.length || moved || controls.autoRotate) requestAnimationFrame(tick);
+    if (touring) { tourT += Math.min(dt, 0.1); tourPose(tourT); }
+    const orbit = !touring && controls.update(), busy = anims.length || orbit || touring;
+    // 40 frames in motion slower than 24 ms each (under about 42 fps): one quality tier down, for every viewer
+    if (busy && dt > 0 && dt < 0.25 && R.tier < PIXELS.length - 1) {
+      R.perf.sum += dt;
+      if (++R.perf.n >= 40) { if (R.perf.sum / R.perf.n > 0.024) R.tier++; R.perf.n = R.perf.sum = 0; }
+    }
+    if (need || busy) { R.r.render(scene, camera); placeTags(); need = false; }
+    if (busy) requestAnimationFrame(tick);
     else running = false;
   }
 
@@ -933,7 +1110,7 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
   const overlap = (a, b) => Math.max(0, Math.min(a.r, b.r) - Math.max(a.l, b.l)) * Math.max(0, Math.min(a.b, b.b) - Math.max(a.t, b.t));
   function placeTags() {
     const w = canvas.clientWidth, h = canvas.clientHeight, kit = kitPose(), placed = [];
-    const solids = kit ? [] : [...parts.filter((p) => p.mesh.visible && p.state !== "ghost").map((p) => p.mesh), ...props.filter((pr) => pr.m.visible).map((pr) => pr.m)];
+    const solids = kit ? [] : [...parts.filter((p) => p.mesh.visible && p.state !== "ghost" && p.state !== "glass").map((p) => p.mesh), ...props.filter((pr) => pr.m.visible).map((pr) => pr.m)];
     placePins(w, h, solids);
     tags.forEach((el) => (el.style.visibility = ""));
     // in the order of the parts, so the first parts keep their tags; the kit reads the tag sizes before it moves one
@@ -969,7 +1146,8 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     if (R.owner !== api) return;
     // setSize clears the canvas: draw again before the browser paints
     R.r.setSize(w, h, false);
-    controls.update();
+    if (touring || still) tourPose(tourT);
+    else controls.update();
     R.r.render(scene, camera);
     placeTags();
     wake();
@@ -985,38 +1163,51 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     need = true;
     resize();
   }
-  new ResizeObserver(resize).observe(box);
-  new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; if (onScreen) { claim(); wake(); } }).observe(host);
   const retheme = () => {
     readTokens();
     grid.material.color.set(tok.grid);
     for (const pr of props) pr.m.material.color.copy(pr.base).multiplyScalar(tok.prop);
     finish();
     apply({ fly: false });
+    if (touring || still) { for (const p of parts) p.state = ""; tourPose(tourT); } // paint every part again in the tour
   };
-  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", retheme);
-  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  // live reduced-motion: finish every move at once and stop the turn
-  REDUCED.addEventListener("change", () => { if (!REDUCED.matches) return; finish(); paused = true; spin(false); });
+  // live reduced-motion: finish every move at once and stop the tour
+  REDUCED.addEventListener("change", () => { if (!REDUCED.matches) return; finish(); spin(false); });
 
   const clamp = (i) => (Number.isInteger(i) ? Math.max(0, Math.min(data.steps.length - 1, i)) : 0);
+  // a screen capture holds the tour still at ?tour=<seconds> (0: the finished object), so every capture is the same
+  const still = hero && CAPTURE && TOUR > 0;
   const api = {
     get step() { return step; },
-    get spinning() { return controls.autoRotate; },
+    get spinning() { return touring; },
+    get tour() { return { touring, t: tourT, length: TOUR }; },
     go(i, fly = true) { step = clamp(i); finish(); apply({ fly }); },
     replay() { finish(); apply({ fly: true }); },
     explode(on) { explode = on; applyExplode(true); frame(); },
     ghost(on) { ghost = on; finish(); apply({ fly: false }); },
+    xray(on) { xray = Boolean(on); finish(); apply({ fly: false }); },
+    // the reader drives motion id to share k (0 to 1): the tour stops
+    motion(id, k) { const m = motions.find((x) => x.id === id); if (!m) return; userView = true; takeOver(); setMotion(m, k); wake(); },
     reset() { userView = false; delete host.dataset.user; frame({ force: true }); },
-    spin(on) { paused = !on; spin(on); },
+    spin(on) { spin(on); },
     label(text) { label = String(text); if (R.owner === api) canvas.setAttribute("aria-label", label); },
     release() { controls.enabled = false; setActive(false); },
     key,
     retheme,
+    // compile every shader before the first frame, then start to draw when the viewer is on screen
+    async warm() {
+      try { await R.r.compileAsync?.(scene, camera); } catch { /* the first frame compiles what is left */ }
+      new ResizeObserver(resize).observe(box);
+      new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; if (onScreen) { claim(); wake(); } }).observe(host);
+      matchMedia("(prefers-color-scheme: dark)").addEventListener("change", retheme);
+      new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+      if (still) { tourT = Number.isFinite(TOUR_AT) && TOUR_AT > 0 ? TOUR_AT : 0; tourPose(tourT); }
+      else if (hero && !held && !REDUCED.matches) startTour();
+      else if (hero) onSpin?.(false);
+      host.dataset.ready = "";
+    },
   };
   apply({ fly: false });
-  spin(hero && !paused);
-  host.dataset.ready = "";
   return api;
 }
 return { createViewer };
@@ -1171,13 +1362,19 @@ const stepChip = (i) => h`<button type="button" data-go="${i}" aria-label="Step 
 const fastCount = (s) => s.fasteners.reduce((a, f) => a + (f.count ?? 1), 0);
 const viewerBox = (mode) => h`<div class="viewer" data-viewer="${mode}"><div data-canvas></div><div data-tags></div>
 <p class="hint" aria-hidden="true"><span class="h-mouse">Drag to turn. Scroll to zoom.</span><span class="h-touch">Tap the view to turn it.</span><span class="h-on">Drag to turn. Tap outside to scroll.</span></p>
-<div class="vbar"><div class="vtools">${mode === "hero" ? h`<button type="button" data-v="spin" aria-label="Pause the turn">Pause</button>`
-  : h`<button type="button" data-v="replay">Replay</button><button type="button" data-v="explode" aria-pressed="false">Apart</button><button type="button" data-v="ghost" aria-pressed="false">Show finished</button><button type="button" data-v="reset">Reset view</button>`}</div>${mode === "steps" && h`<div class="readout" data-readout aria-hidden="true"></div>`}</div></div>`;
+<div class="vbar"><div class="vtools">${mode === "hero" ? h`<button type="button" data-v="spin" aria-label="Pause the tour">Pause</button>`
+  : h`<button type="button" data-v="replay">Replay</button><button type="button" data-v="explode" aria-pressed="false">Apart</button><button type="button" data-v="ghost" aria-pressed="false">Show finished</button><button type="button" data-v="xray" aria-pressed="false" aria-disabled="true" title="See through the parts built before">X-ray</button><button type="button" data-v="reset" aria-label="Reset view">Reset<span class="wide"> view</span></button>`}</div>${mode === "steps" && h`<div class="readout" data-readout aria-hidden="true"></div>`}</div></div>`;
 
 // ---------- Plan
+// The motions of the finished object: one slider each, and the value its parts show (a slide in the project unit, a
+// turn in degrees). The Plan view tour moves the same sliders.
+const MOTIONS = Array.isArray(D.motions) ? D.motions : [];
+const motionValue = (m, k) => (m.kind === "turn" ? `${Math.round(Math.abs(m.travel) * k)}°` : len(Math.abs(m.travel) * k));
+const tryIt = () => MOTIONS.length > 0 && h`<section class="try" aria-labelledby="try-h"><h3 id="try-h">Try it</h3>${MOTIONS.map((m) => h`<div class="motion">
+<label for="m-${m.id}">${m.name}</label><input type="range" id="m-${m.id}" min="0" max="100" step="1" value="0" data-motion="${m.id}" aria-valuetext="${m.name}: ${motionValue(m, 0)}"><output for="m-${m.id}" data-mout="${m.id}">${motionValue(m, 0)}</output></div>`)}</section>`;
 function planShell() {
   const size = sizeOf();
-  return h`<div class="grid2"><div>${viewerBox("hero")}<div class="fig"><span>Fig 1 · ${D.meta.title}, finished</span>${size && h`<span>${size.map((v) => len(v, false)).join(" × ")} ${U} (W × H × D)</span>`}</div></div><div class="stack" data-fill="plan"></div></div>`;
+  return h`<div class="grid2"><div>${viewerBox("hero")}<p class="tourline" data-tourline aria-hidden="true"></p><div class="fig"><span>Fig 1 · ${D.meta.title}, finished</span>${size && h`<span>${size.map((v) => len(v, false)).join(" × ")} ${U} (W × H × D)</span>`}</div>${tryIt()}</div><div class="stack" data-fill="plan"></div></div>`;
 }
 function planText() {
   const ppe = D.tools.filter((t) => t.ppe), get = D.tools.filter((t) => !t.have && !t.ppe), have = D.tools.filter((t) => t.have && !t.ppe);
@@ -1559,7 +1756,21 @@ document.addEventListener("click", (e) => {
   } else if (d.v === "spin") heroView?.spin(!heroView.spinning);
   else if (d.v === "replay") stepsView?.replay();
   else if (d.v === "reset") stepsView?.reset();
-  else if ((d.v === "explode" || d.v === "ghost") && t.getAttribute("aria-disabled") !== "true") { const on = t.getAttribute("aria-pressed") !== "true"; t.setAttribute("aria-pressed", String(on)); stepsView?.[d.v](on); }
+  else if ((d.v === "explode" || d.v === "ghost" || d.v === "xray") && t.getAttribute("aria-disabled") !== "true") { const on = t.getAttribute("aria-pressed") !== "true"; t.setAttribute("aria-pressed", String(on)); stepsView?.[d.v](on); }
+});
+// a motion slider: the reader drives the part, and the tour stops
+const showMotion = (m, k) => {
+  const v = motionValue(m, k), input = $(`[data-motion="${CSS.escape(m.id)}"]`), out = $(`[data-mout="${CSS.escape(m.id)}"]`);
+  if (input && document.activeElement !== input) input.value = String(Math.round(k * 100));
+  input?.setAttribute("aria-valuetext", `${m.name}: ${v}`);
+  if (out) out.textContent = v;
+};
+document.addEventListener("input", (e) => {
+  const t = e.target, m = t.dataset?.motion !== undefined && MOTIONS.find((x) => x.id === t.dataset.motion);
+  if (!m) return;
+  const k = Number(t.value) / 100;
+  showMotion(m, k);
+  heroView?.motion(m.id, k);
 });
 document.addEventListener("change", (e) => {
   const t = e.target;
@@ -1606,8 +1817,15 @@ tab(start.tab ?? S.tab, { hash: Boolean(location.hash) });
 const fitBoxes = [$("table.parts")?.parentElement, $("[data-panel=shop] table.boq")?.closest(".scroll")].filter(Boolean);
 if (fitBoxes.length && typeof ResizeObserver === "function") { const ro = new ResizeObserver(() => requestAnimationFrame(() => { fitParts(); fitBoq(); })); fitBoxes.forEach((b) => ro.observe(b)); }
 document.fonts?.ready.then(() => { fitParts(true); fitBoq(true); });
-const onSpin = (on) => { const b = $('[data-v="spin"]'); if (b) { b.textContent = on ? "Pause" : "Play"; b.setAttribute("aria-label", on ? "Pause the turn" : "Play the turn"); } };
+const onSpin = (on) => { const b = $('[data-v="spin"]'); if (b) { b.textContent = on ? "Pause" : "Play"; b.setAttribute("aria-label", on ? "Pause the tour" : "Play the tour"); } };
+// the tour line under the Plan view: the step that goes in, or the motion and the value its parts show
+const onTour = (c) => {
+  const line = $("[data-tourline]"), m = c.kind === "motion" ? MOTIONS.find((x) => x.id === c.id) : null;
+  if (m) showMotion(m, c.k);
+  else if (c.kind !== "off") MOTIONS.forEach((x) => showMotion(x, 0)); // the tour holds every other motion at rest
+  if (line) line.textContent = c.kind === "step" ? `Step ${c.step + 1} · ${c.text}` : m ? `${m.name} · ${motionValue(m, c.k)}${c.text ? ` · ${c.text}` : ""}` : "";
+};
 const heroHost = $('[data-viewer="hero"]'), stepsHost = $('[data-viewer="steps"]');
-if (heroHost) createViewer(heroHost, D, { mode: "hero", onSpin, label: `3D model of the ${D.meta.title}, finished. ${KEYS}` }).then((v) => { heroView = v; });
+if (heroHost) createViewer(heroHost, D, { mode: "hero", onSpin, onTour, label: `3D model of the ${D.meta.title}, finished. ${KEYS}` }).then((v) => { heroView = v; });
 if (stepsHost) createViewer(stepsHost, D, { mode: "steps", label: stepLabel(S.step) }).then((v) => { stepsView = v; v?.go(S.step, false); });
 </script>

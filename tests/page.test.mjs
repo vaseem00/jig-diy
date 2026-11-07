@@ -287,7 +287,7 @@ test("the 3D toolbar: the buttons stay on one row, and a readout that does not f
   for (const [prop, v] of [["white-space", "nowrap"], ["overflow", "hidden"], ["text-overflow", "ellipsis"], ["min-width", "0"], ["max-width", "100%"], ["margin-left", "auto"]]) assert.equal(decl(ro, prop), v, `.readout ${prop}`);
   assert.ok(app.includes("if (ro) ro.title = ro.textContent = "), "the title of the readout holds its full text");
   assert.equal(decl(rule(".readout", media("(max-width:520px)")), "display"), "none", "a phone has no readout");
-  // a phone: narrow buttons, so that the 4 buttons stay on one row from 360 px (the live test measures it)
+  // a phone: narrow buttons, so that the 5 buttons stay on one row from 360 px (the live test measures it); a viewer under 681 px wide (container query) shows Reset view as Reset
   assert.equal(decl(rule(".vtools", media("(max-width:520px)")), "gap"), "3px");
   assert.equal(decl(rule(".vtools button", media("(max-width:520px)")), "padding"), "6px 5px");
 });
@@ -317,7 +317,7 @@ test("viewer: a ghost casts no shadow, and the viewer owns 'Show finished' and '
   assert.ok(viewer.includes("const none = parts.length === 0;"));
   assert.ok(viewer.includes('gb.setAttribute("aria-pressed", String(!kit && !none && (ghost || auto))); gb.setAttribute("aria-disabled", String(kit || none || auto));'));
   assert.ok(viewer.includes('eb.setAttribute("aria-pressed", String(!kit && !none && explode)); eb.setAttribute("aria-disabled", String(kit || none));'));
-  assert.ok(app.includes('(d.v === "explode" || d.v === "ghost") && t.getAttribute("aria-disabled") !== "true"'), "app.js skips a click on a disabled toggle");
+  assert.ok(app.includes('(d.v === "explode" || d.v === "ghost" || d.v === "xray") && t.getAttribute("aria-disabled") !== "true"'), "app.js skips a click on a disabled toggle");
   assert.match(css, /button:disabled,button\[aria-disabled="true"\]\{opacity:\.55/);
 });
 

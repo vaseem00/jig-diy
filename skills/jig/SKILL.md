@@ -19,7 +19,7 @@ description: >-
 license: MIT
 compatibility: Requires Node.js 22 or later. The guide page loads three.js 0.160.0 from cdn.jsdelivr.net and fonts from fonts.googleapis.com when it opens. Screen captures need Chrome, Chromium or Edge.
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   pack: jig-diy
   author: vaseem00
 ---
@@ -66,7 +66,7 @@ If your agent does not fill in `${CLAUDE_SKILL_DIR}`, use the folder that holds 
 | `new <id> --units mm --dir <folder>` | Writes a starter `project.json` from [engine/templates/starter.json](engine/templates/starter.json) |
 | `check <project>` | Validates the project in guide mode and prints the report |
 | `build <project> --strict` | Checks, then writes `<id>.html` next to the project. Refuses on errors |
-| `capture <page> --hash build/4 --out <png>` | Screenshots one tab or step in headless Chrome or Edge, and prints console errors and sideways scroll |
+| `capture <page> --hash build/4 --out <png>` | Screenshots one tab or step in headless Chrome or Edge, and prints console errors and sideways scroll. `--sheet` puts every tab and step in one review image; `--tour 2` holds the Plan tour at 2 s |
 | `plan`, `boq`, `buy`, `cut`, `lint`, `safety` | One output each. The sibling skills use them |
 | `schema` | Prints the JSON Schema of the project |
 
@@ -79,10 +79,10 @@ If your agent does not fill in `${CLAUDE_SKILL_DIR}`, use the folder that holds 
 
 One HTML page with four tabs and a level switch (First time, Some experience, Experienced):
 
-1. **Plan.** The finished object turning in 3D, with work time, waiting time, cost, part count, step count and the tools to get. Below that, the phases on a timeline with step chips, and a safety and tools summary.
+1. **Plan.** A 3D tour that runs by itself: the finished object turns, each motion (a drawer, a lid, a wheel) opens and closes, then the object goes together step by step. Any click hands control to the reader, and a "Try it" slider drives each motion with its real value. Beside it: work time, waiting time, cost, part count, step count and the tools to get, then the phases on a timeline with step chips, and a safety and tools summary.
 2. **Shop.** The purchase plan: online orders first (they have lead time), then one trip per store, each item with the step that first needs it and a tick box. Then the full BOQ: code, item, spec, exact need, packs to buy, rate and amount, grouped, with a subtotal, a contingency, tax and a total.
 3. **Cut list or Print list.** Every board and sheet to buy, drawn to scale, each cut labelled with its part letter and length, kerf included and waste shown, and every part to print with its filament and printer time. A build from a kit and bought parts has nothing to cut or print, and the tab does not show.
-4. **Build.** The 3D viewer and the step card side by side. Done parts are plain, this step's parts are lit and arrive along their path, rings mark the screw heads and letters mark the new parts. The card shows WARNING and CAUTION boxes first, then the numbered instructions, technique cards, a check with a tick box, and Why and Tip notes by level.
+4. **Build.** The 3D viewer and the step card side by side. Done parts are plain, this step's parts are lit and arrive along their path, rings mark the screw heads and letters mark the new parts. X-ray shows the parts built before as glass, so work inside a case shows. The card shows WARNING and CAUTION boxes first, then the numbered instructions, technique cards, a check with a tick box, and Why and Tip notes by level.
 
 Without network or WebGL, the text of every tab still works, and the viewer says why it is empty. Printed, the page drops the 3D and prints every step in order. The page keeps the ticks, level, tab and current step in the reader's browser, and nothing else.
 
@@ -120,6 +120,7 @@ Work in this order. Most of the quality comes from steps 2 to 4, before you writ
    - Compute each position from its neighbour, never by eye: a shelf on a side starts at the side's `at` plus its thickness.
    - Put each row of screws in one fastener with `repeat: { count, step }`.
    - Write `project.mjs` only when positions follow patterns that `repeat` cannot express.
+   - If parts move when the object is finished (a drawer, a lid, a door, a wheel, a cover that lifts off), add a `motions` entry for each, with the real travel and the real pivot from the hardware drawing ([engine/docs/format.md](engine/docs/format.md) section 9.3). Check one value by hand: a 70 mm wheel rolls 220 mm in one turn.
    - After the materials and parts, run `cut` (or `boq`) on the project: it checks sizes, sections and stock without steps. Run `check` after the first steps, then after each block of steps. Do not write ten steps before the first check. Until a step exists, `check` and `plan` report `E_SCHEMA` "The project has no steps".
 7. **Build to zero.** Read every problem in the report, and fix the model, not the rule.
    ```
@@ -128,12 +129,13 @@ Work in this order. Most of the quality comes from steps 2 to 4, before you writ
    ```
    Then read the cut and print lines and the BOQ and ask: would a maker of this object buy these materials? Would I buy these boards? Is the waste sensible? Does each count match the real object (4 shelves, 24 screws)? Never silence a finding by bending the rule. Rewrite the sentence or move the part.
    - On `E_HANDOFF`, decide from the meaning of the step. Hand-off work: add the `handoff` entry and remove its steps. A false alarm (the propane tank of a weed burner, a USB socket on a battery box): add a `safety.cleared` entry with the reason, never reworded text, and tell the user ([engine/docs/safety.md](engine/docs/safety.md) section 11).
-8. **Look at it like a beginner.** Capture the page and read every PNG: the Plan tab, the first kit step, every assembly step, the Shop tab and the Cut or Print list tab when it shows, phone width and dark theme.
+8. **Look at it like a beginner.** Make a review sheet (every tab and step as a named tile in one image) and read every tile. Then capture close-ups where a tile looks wrong, phone width and dark theme, and the Plan tour inside each motion (`--hash plan --tour 2`). Fix, build, and make the sheet again until a full pass finds nothing.
    ```
+   node "${CLAUDE_SKILL_DIR}/engine/jig.mjs" capture pine-bookshelf/pine-bookshelf.html --sheet --cols 4
    node "${CLAUDE_SKILL_DIR}/engine/jig.mjs" capture pine-bookshelf/pine-bookshelf.html --hash build/4 --out pine-bookshelf/shots/step-04.png
    node "${CLAUDE_SKILL_DIR}/engine/jig.mjs" capture pine-bookshelf/pine-bookshelf.html --hash shop --width 390 --theme dark --out pine-bookshelf/shots/shop-phone-dark.png
    ```
-   At each step, ask: can a person who has never done this see which part goes where, which way round, and where each screw goes? Are the new parts lit and lettered? Do the rings sit on the screw heads? Is the camera on the side of the work? If not, set `view: { az, el, zoom }` for that step. The capture must print no console errors and no sideways scroll. [engine/docs/verify.md](engine/docs/verify.md) has the full checklist.
+   At each step, ask: can a person who has never done this see which part goes where, which way round, and where each screw goes? Are the new parts lit and lettered? Do the rings sit on the screw heads? Is the camera on the side of the work? If not, set `view: { az, el, zoom }` for that step. If the new parts are inside parts built before, set `view.xray: true`. The capture must print no console errors and no sideways scroll. [engine/docs/verify.md](engine/docs/verify.md) has the full checklist.
 9. **Deliver.** Give the full path of `<id>.html`. If your host has the Artifact tool, build with `--artifact` and publish `<id>-artifact.html`. For any other page-publishing tool, publish `<id>.html`. If the reader may have no network in the workshop, build with `--offline` too.
 10. **Iterate on their words.** "Make it cheaper" changes materials and stock. "I only have a hand saw" changes tools, techniques, time and maybe the joints. "In inches" changes `units` and every length in the file. Change the model and build again. Never edit the HTML.
 
@@ -164,6 +166,8 @@ WARNINGs, CAUTIONs and checks show at every level. Safety never depends on level
 - **Words stay out of the picture.** Part letters and screw rings are the only marks in the 3D. All words are in the card.
 - **Context props, not parts.** A wall, a bench or a floor area goes in `props` and shows only on the steps that list it, and in the Plan view unless `hero: false`. Props never enter the BOQ.
 - **The picture shows the assembled orientation.** The 3D stays upright, so each step reads as progress. Write the text to agree with it ("Stand the frame upright with the back toward you."). If the real work must happen on the floor or on its back, say so in the text, and set the step's `view.note` to "The picture shows the <object> upright." Never mention the picture in `do`, `check`, `why` or `tip`: print and `plan.md` have no picture.
+- **The part doing the work opens up.** X-ray (`view.xray`) shows work inside a case or behind a panel. A view that sees inside beats ten orbits round the outside.
+- **Show it working.** Each `motion` plays in the Plan tour, and its slider shows the value from the same `travel`. Fix a `W_MOTION_HIT` with a number (travel, pivot, position), never with the camera. Frame 0 of the tour is the finished object.
 
 [engine/docs/method.md](engine/docs/method.md) section 11 explains each rule.
 

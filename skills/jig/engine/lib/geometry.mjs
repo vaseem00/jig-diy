@@ -39,6 +39,56 @@ export function boxOf(item) {
   return { min: c.map((v, i) => r6(v - e[i])), max: c.map((v, i) => r6(v + e[i])) };
 }
 
+// Matrix of a turn of deg degrees about axis a (0 x, 1 y, 2 z), counterclockwise seen from the + end of the axis.
+function axisTurn(a, deg) {
+  const c = Math.cos(deg * RAD), s = Math.sin(deg * RAD);
+  return a === 0 ? [[1, 0, 0], [0, c, -s], [0, s, c]] : a === 1 ? [[c, 0, s], [0, 1, 0], [-s, 0, c]] : [[c, -s, 0], [s, c, 0], [0, 0, 1]];
+}
+const mul = (A, B) => A.map((row) => [0, 1, 2].map((j) => row.reduce((sum, v, k) => sum + v * B[k][j], 0)));
+export const AXES = { x: 0, y: 1, z: 2 };
+
+// { min, max } of a part moved by a motion { kind, axis, travel, pivot } to share k (0 rest, 1 the full travel). A
+// turn gives the exact bounds of the turned box, or of the turned cylinder. null when at or size is missing.
+export function movedBox(item, motion, k) {
+  const b = boxOf(item);
+  if (!b) return null;
+  const a = AXES[motion.axis], amount = motion.travel * k;
+  if (motion.kind === "slide") {
+    const d = [0, 0, 0];
+    d[a] = amount;
+    return { min: b.min.map((v, i) => r6(v + d[i])), max: b.max.map((v, i) => r6(v + d[i])) };
+  }
+  const h = item.size.map((s) => s / 2), c = item.at.map((v, i) => v + h[i]), p = motion.pivot;
+  const T = axisTurn(a, amount), M = mul(T, vec(item.rotate) ? matrix(item.rotate) : [[1, 0, 0], [0, 1, 0], [0, 0, 1]]);
+  const nc = T.map((row, i) => p[i] + row.reduce((sum, v, j) => sum + v * (c[j] - p[j]), 0));
+  const cyl = item.shape === "cylinder" ? cylinderAxis(item.size) : -1;
+  const e = M.map((row) => cyl < 0
+    ? row.reduce((sum, r, j) => sum + Math.abs(r) * h[j], 0)
+    : Math.abs(row[cyl]) * h[cyl] + h[(cyl + 1) % 3] * Math.sqrt(Math.max(0, 1 - row[cyl] ** 2)));
+  return { min: nc.map((v, i) => r6(v - e[i])), max: nc.map((v, i) => r6(v + e[i])) };
+}
+
+// The first clash of a motion: { k, a, b, overlap } at the first share k of SHARES where a moved part a overlaps a part
+// or prop b that does not move with it by more than tol on all three axes, or null. A pair that overlaps at rest is not
+// a clash of the motion (E_GEOMETRY or joins covers it), and neither is a pair in joins.
+export const SHARES = [0.25, 0.5, 0.75, 1];
+export function motionClash(parts, props, motion, tol = 1) {
+  const all = listOf(parts), mine = new Set(motion.parts);
+  const moving = all.filter((p) => mine.has(p.id) && boxOf(p));
+  const fixed = [...all.filter((p) => !mine.has(p.id)).map((p) => ({ id: p.id, joins: p.joins, b: boxOf(p) })),
+    ...Object.entries(props && typeof props === "object" ? props : {}).map(([id, p]) => ({ id, prop: true, b: boxOf(p) }))].filter((x) => x.b);
+  const deep = (A, B) => [0, 1, 2].map((i) => overlap(A, B, i));
+  for (const k of SHARES) for (const m of moving) {
+    const B = movedBox(m, motion, k), rest = boxOf(m);
+    for (const f of fixed) {
+      if (m.joins?.includes(f.id) || f.joins?.includes(m.id)) continue;
+      const o = deep(B, f.b);
+      if (o.every((v) => v > tol) && !deep(rest, f.b).every((v) => v > tol)) return { k, a: m.id, b: f.id, prop: Boolean(f.prop), overlap: o };
+    }
+  }
+  return null;
+}
+
 // Union bounds { min, max, size } of parts, props or boxes; null when none has a position.
 export function bounds(items) {
   const boxes = listOf(items).map((b) => (b && vec(b.min) && vec(b.max) ? b : boxOf(b))).filter(Boolean);

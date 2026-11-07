@@ -1,9 +1,14 @@
 // The 3D step viewer. No static import: createViewer() loads three.js with import() and, on failure, writes the
 // reason into the viewer slot. Parts already built are plain, the parts of this step are lit and arrive along their
-// path, parts still to come are hidden (or ghosted). Units are millimetres, y is up. One WebGL renderer is shared:
-// only the viewer on screen owns the canvas.
+// path, parts still to come are hidden (or ghosted), and X-ray shows the parts built before as glass. Units are
+// millimetres, y is up. One WebGL renderer is shared: only the viewer on screen owns the canvas.
+// The Plan view (hero) tours itself: the finished object turns and shows each motion, then goes together step by step,
+// as a pure function of the tour time (tourPose). Any input hands control to the reader; 25 s of quiet hands it back.
 const REDUCED = matchMedia("(prefers-reduced-motion: reduce)");
 const CAPTURE = /[?&]capture\b/.test(location.search); // keep the drawing buffer only for screen captures
+const TOUR_AT = Number(new URLSearchParams(location.search).get("tour")); // capture: the tour time to show
+const IDLE = 25000; // ms of quiet before the tour starts again
+const PIXELS = [1.5, 1, 0.75]; // the pixel ratio of each quality tier; tier 1 also halves the shadow map, tier 2 drops shadows
 const MSG = {
   webgl: "3D needs WebGL. The steps still work without it.",
   network: "3D needs a network connection. The steps still work without it.",
@@ -45,23 +50,29 @@ function fail(host, err) {
 function renderer() {
   if (shared) return shared;
   const r = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: CAPTURE });
-  r.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  r.setPixelRatio(Math.min(devicePixelRatio, PIXELS[0]));
   r.shadowMap.enabled = true;
   r.shadowMap.type = THREE.PCFSoftShadowMap;
   const c = r.domElement;
   c.tabIndex = 0;
   c.setAttribute("role", "img");
   c.addEventListener("keydown", (e) => { if (shared.owner?.key(e)) { e.preventDefault(); e.stopPropagation(); } });
-  return (shared = { r, canvas: c, owner: null });
+  // tier: 0 full quality. A slow frame rate (a laptop's built-in GPU) steps it down; the viewers apply it on their next frame.
+  return (shared = { r, canvas: c, owner: null, tier: 0, perf: { n: 0, sum: 0 } });
 }
 
-// createViewer(host, data, { mode: "hero" | "steps", label, onSpin }) -> viewer API, or null when 3D cannot run.
+// createViewer(host, data, { mode: "hero" | "steps", label, onSpin, onTour }) -> viewer API, or null when 3D cannot run.
+// Every shader compiles before the first frame (compileAsync), so the page does not stop on its first draw.
 export async function createViewer(host, data, opts = {}) {
   try { await load3d(); } catch (e) { fail(host, e); return null; }
-  try { return build(host, data, opts); } catch (e) { fail(host, e); return null; }
+  try {
+    const v = build(host, data, opts);
+    await v.warm();
+    return v;
+  } catch (e) { fail(host, e); return null; }
 }
 
-function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
+function build(host, data, { mode = "steps", label = "3D view", onSpin, onTour } = {}) {
   const T = THREE, hero = mode === "hero", R = renderer(), canvas = R.canvas;
   const box = host.querySelector("[data-canvas]"), layer = host.querySelector("[data-tags]");
   const UP = new T.Vector3(0, 1, 0), V = (a) => new T.Vector3(...a), RAD = Math.PI / 180;
@@ -130,8 +141,18 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     const flat = [...p.size].sort((a, b) => b - a), round = p.shape === "cylinder" && axisOf(p.size) >= 0;
     const kitSize = round ? [p.size[axisOf(p.size)], p.size[(axisOf(p.size) + 1) % 3], p.size[(axisOf(p.size) + 1) % 3]] : [flat[0], flat[2], flat[1]];
     const kit = p.kind === "each" ? null : solid(shape(p.shape, kitSize), mat, edge); // bought parts are not cut; printed parts lie in the kit too
-    return { ...p, i, center, base, mat, edge, mesh, kit, kitSize, round, offset: new T.Vector3(), fly: new T.Vector3(), state: "hidden", wb };
+    // q0: the part's own rotation. mq, pivot, slide: where a motion has moved it (the Plan view only).
+    return { ...p, i, center, base, mat, edge, mesh, kit, kitSize, round, offset: new T.Vector3(), fly: new T.Vector3(), state: "hidden", wb,
+      q0: mesh.quaternion.clone(), mq: new T.Quaternion(), pivot: new T.Vector3(), slide: new T.Vector3(), motion: null };
   });
+  // the motions of the finished object: one value k (0 rest, 1 the full travel) poses their parts
+  const AX = { x: [1, 0, 0], y: [0, 1, 0], z: [0, 0, 1] };
+  const motions = (Array.isArray(data.motions) ? data.motions : []).map((m) => {
+    const list = parts.filter((p) => (m.parts ?? []).includes(p.id) && !p.motion);
+    const mo = { ...m, list, axis: V(AX[m.axis] ?? AX.y), pivot: isVec(m.pivot) ? V(m.pivot) : new T.Vector3(), k: 0 };
+    list.forEach((p) => (p.motion = mo));
+    return mo;
+  }).filter((m) => m.list.length && Number.isFinite(m.travel));
   const assembly = new T.Group(), kitGroup = new T.Group();
   parts.forEach((p) => { assembly.add(p.mesh); if (p.kit) kitGroup.add(p.kit); });
   scene.add(assembly, kitGroup);
@@ -221,8 +242,9 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     Object.assign(f, { want, away, spin });
     const visible = want && (Boolean(f.host) || !explode);
     P3.copy(f.home).addScaledVector(f.dir, -f.len * 1.6 * away);
-    if (f.host) P3.add(f.host.offset);
+    if (f.host) moved(f.host, P3).add(f.host.offset);
     Q.copy(f.q).multiply(SPIN.setFromAxisAngle(UP, spin));
+    if (f.host?.motion) Q.premultiply(f.host.mq);
     M4.compose(P3, Q, visible ? ONE : ZERO);
     for (const m of f.t.meshes) { m.setMatrixAt(f.k, M4); m.instanceMatrix.needsUpdate = true; }
     f.visible = visible;
@@ -270,8 +292,9 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
   layer.setAttribute("aria-hidden", "true");
 
   // ---- state and animations. kind "camera" is dropped when the user takes over; the rest finish at once.
-  let step = hero ? data.steps.length : 0, explode = false, ghost = false, userView = false, framed = false, sized = false;
-  let paused = REDUCED.matches, active = false, tap = null, onScreen = false, running = false, need = true;
+  // xray: null follows each step's view.xray; true or false is the reader's choice for every step
+  let step = hero ? data.steps.length : 0, explode = false, ghost = false, xray = null, userView = false, framed = false, sized = false;
+  let active = false, tap = null, onScreen = false, running = false, need = true, last = 0, tier = -1;
   const anims = [];
   const now = () => performance.now();
   const animate = (dur, fn, delay = 0, kind = "part") => {
@@ -283,7 +306,20 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
   const finish = () => { for (const a of anims.splice(0)) if (a.kind !== "camera") a.fn(1); };
   const kitPose = () => !hero && data.steps[step]?.pose === "kit";
   const stepOf = (p) => (typeof p.step === "number" ? p.step : Infinity); // a part no step installs never shows in steps
-  const place = (p) => p.mesh.position.copy(p.center).add(p.offset).add(p.fly);
+  // a point of a part where its motion has moved it: turned about the pivot, then slid
+  const moved = (p, v) => (p.motion ? v.sub(p.pivot).applyQuaternion(p.mq).add(p.pivot).add(p.slide) : v);
+  const place = (p) => { moved(p, p.mesh.position.copy(p.center)).add(p.offset).add(p.fly); p.mesh.quaternion.copy(p.mq).multiply(p.q0); };
+  // pose motion m at share k: the parts and the screws in them follow
+  function setMotion(m, k) {
+    m.k = Math.min(1, Math.max(0, k));
+    for (const p of m.list) {
+      p.pivot.copy(m.pivot);
+      if (m.kind === "turn") { p.mq.setFromAxisAngle(m.axis, m.travel * m.k * RAD); p.slide.set(0, 0, 0); }
+      else { p.mq.identity(); p.slide.copy(m.axis).multiplyScalar(m.travel * m.k); }
+      place(p);
+    }
+    for (const f of fast) if (f.host?.motion === m) placeF(f, f.want, f.away, f.spin);
+  }
   // where "Apart" puts a part: 35% further out from the model centre (nowhere in the kit pose). A part never goes into
   // a prop that shows: it slides along the face of the prop that it is on (a bracket goes up the wall, not into it),
   // else it stops short of the prop.
@@ -304,19 +340,23 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     return o;
   };
 
-  // states: hidden, ghost, done, current (installed in this step), coat (built before, finished in this step)
+  // the path a part of step s arrives along: step.from, else outward from the model centre and from above
+  const awayOf = (p, s) => (isVec(s?.from) ? V(s.from) : p.center.clone().sub(modelCenter).setY(0).normalize().multiplyScalar(modelSize * 0.32).add(new T.Vector3(0, modelSize * 0.18, 0)));
+
+  // states: hidden, ghost, done, glass (done, seen through in X-ray), current (installed in this step), coat (built
+  // before, finished in this step), moving (a motion of the Plan view tour)
   function paint(p, state) {
     p.state = state;
-    const lit = state === "current" || state === "coat", see = state === "ghost";
+    const lit = state === "current" || state === "coat" || state === "moving", see = state === "ghost" || state === "glass";
     p.mat.color.copy(p.base);
     if (lit) p.mat.color.lerp(new T.Color(tok.accent), 0.22);
     p.mat.emissive.set(lit ? tok.accent : "#000000").multiplyScalar(lit ? 0.12 : 0);
     p.mat.transparent = see;
-    p.mat.opacity = see ? 0.14 : 1;
+    p.mat.opacity = state === "glass" ? 0.2 : see ? 0.14 : 1;
     p.mat.depthWrite = !see;
-    p.mesh.castShadow = !see; // a ghost (a part still to come) throws no shadow on the wall or the floor
+    p.mesh.castShadow = !see; // a ghost (a part still to come) or glass throws no shadow on the wall or the floor
     p.edge.color.set(lit ? tok.accent : tok.ink);
-    p.edge.opacity = see ? 0.18 : lit ? 1 : 0.55;
+    p.edge.opacity = state === "glass" ? 0.4 : see ? 0.18 : lit ? 1 : 0.55;
     p.mat.needsUpdate = true;
   }
 
@@ -334,9 +374,12 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     // both show as not pressed and do nothing. app.js skips a click on a disabled toggle. The flags stay, so a later step
     // shows the reader's own choice again. On a step where every part is already in place, "Show finished" stays as it is.
     const none = parts.length === 0; // a repair with no parts: nothing to move apart or to ghost
-    const gb = host.querySelector("[data-v=ghost]"), eb = host.querySelector("[data-v=explode]");
+    const gb = host.querySelector("[data-v=ghost]"), eb = host.querySelector("[data-v=explode]"), xb = host.querySelector("[data-v=xray]");
     if (gb) { gb.setAttribute("aria-pressed", String(!kit && !none && (ghost || auto))); gb.setAttribute("aria-disabled", String(kit || none || auto)); }
     if (eb) { eb.setAttribute("aria-pressed", String(!kit && !none && explode)); eb.setAttribute("aria-disabled", String(kit || none)); }
+    // X-ray: the reader's choice, else the step's view.xray. Nothing to see through in the kit pose or before a part is in.
+    const built = !hero && !kit && parts.some((p) => stepOf(p) < step), glass = built && (xray ?? s?.view?.xray === true);
+    if (xb) { xb.setAttribute("aria-pressed", String(glass)); xb.setAttribute("aria-disabled", String(!built)); }
     tags.forEach((el) => (el.hidden = true));
     for (const p of parts) {
       p.fly.set(0, 0, 0);
@@ -345,7 +388,7 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
         if (p.kit) tag(p).hidden = false;
         continue;
       }
-      const at = stepOf(p), state = hero ? "done" : at < step ? (coat.has(p.id) ? "coat" : "done") : at === step ? "current" : ghost || auto ? "ghost" : "hidden";
+      const at = stepOf(p), state = hero ? "done" : at < step ? (coat.has(p.id) ? "coat" : glass ? "glass" : "done") : at === step ? "current" : ghost || auto ? "ghost" : "hidden";
       p.mesh.visible = state !== "hidden";
       paint(p, state);
       place(p);
@@ -354,7 +397,7 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     // parts of this step arrive along a path: step.from, else outward from the model centre and from above
     const arriving = kit ? [] : parts.filter((p) => p.state === "current");
     if (fly) arriving.forEach((p, k) => {
-      const away = isVec(s?.from) ? V(s.from) : p.center.clone().sub(modelCenter).setY(0).normalize().multiplyScalar(modelSize * 0.32).add(new T.Vector3(0, modelSize * 0.18, 0));
+      const away = awayOf(p, s);
       animate(950, (t) => {
         const e = ease(t), see = e < 1;
         p.fly.copy(away).multiplyScalar(1 - e);
@@ -363,6 +406,7 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
         p.mat.opacity = Math.min(1, 0.15 + e * 1.2);
       }, k * 160);
     });
+    if (hero) for (const m of motions) setMotion(m, m.k);
     const landed = arriving.length ? 950 + (arriving.length - 1) * 160 : 0;
     let order = 0;
     for (const f of fast) {
@@ -441,8 +485,112 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     animate(850, (t) => { const e = easeIO(t); camera.position.lerpVectors(p0, pos, e); controls.target.lerpVectors(t0, c, e); }, 0, "camera");
   }
 
-  const spin = (on) => { controls.autoRotate = hero && on; onSpin?.(controls.autoRotate); wake(); };
-  controls.addEventListener("start", () => { userView = true; finish(); if (controls.autoRotate) spin(false); host.dataset.user = ""; });
+  // ---- the Plan view tour. Segments: each motion opens, holds and closes (or the object turns for 5 s with none), then
+  // each step that installs parts brings them in, then the finished object holds. Frame 0 is the finished object.
+  // A state holds 1 s for a short text, plus 0.25 s for each word after three.
+  const hold = (text) => 1 + 0.25 * Math.max(0, String(text ?? "").trim().split(/\s+/).filter(Boolean).length - 3);
+  const MOVE = 1.1, tour = [];
+  let TOUR = 0;
+  if (hero) {
+    if (motions.length) for (const m of motions) { const d = 2 * MOVE + hold(`${m.name} ${m.text ?? ""}`); tour.push({ kind: "motion", m, t0: TOUR, t1: TOUR + d }); TOUR += d + 0.3; }
+    else { tour.push({ kind: "show", t0: 0, t1: 5 }); TOUR = 5; }
+    data.steps.forEach((s, i) => {
+      const mine = s.pose === "kit" ? [] : parts.filter((p) => stepOf(p) === i);
+      if (!mine.length) return;
+      const land = 0.95 + (mine.length - 1) * 0.16, screws = fast.filter((f) => f.step === i).length;
+      const d = Math.max(land + (screws ? 0.52 + Math.min(0.7, screws * 0.045) : 0), hold(s.title)) + 0.35;
+      tour.push({ kind: "step", i, s, land, t0: TOUR, t1: TOUR + d });
+      TOUR += d;
+    });
+    if (tour.at(-1).kind === "step") { tour.push({ kind: "show", t0: TOUR, t1: TOUR + 1.5 }); TOUR += 1.5; }
+  }
+  // the tour frames the object with each motion at its full travel too, so a door that opens stays in the picture
+  const tourBox = bounds.clone();
+  for (const m of motions) { setMotion(m, 1); m.list.forEach((p) => tourBox.union(new T.Box3().setFromObject(p.mesh))); setMotion(m, 0); }
+  let touring = false, tourT = 0, held = REDUCED.matches, idle = 0, lastCaption = null;
+  const glide = { t: -1, pos: new T.Vector3(), target: new T.Vector3() };
+  // the camera of the tour at time t: one full turn round the object in one loop, at the Plan view height
+  function tourCamera(t) {
+    const az = (32 + (360 * t) / TOUR) * RAD, el = 22 * RAD, c = tourBox.getCenter(new T.Vector3());
+    const back = new T.Vector3(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el)), fit = fitDistance(tourBox, c, back);
+    c.addScaledVector(fit.up, -LIFT * fit.d * fit.tv);
+    return { pos: back.multiplyScalar(fit.d).add(c), target: c };
+  }
+  const bump = (u, len) => (u < MOVE ? easeIO(u / MOVE) : u < len - MOVE ? 1 : 1 - easeIO((u - (len - MOVE)) / MOVE));
+  // tourPose(t): every part, screw, motion and the camera at tour time t, from nothing but t
+  function tourPose(t) {
+    t = ((t % TOUR) + TOUR) % TOUR;
+    const seg = tour.find((x) => t < x.t1) ?? tour.at(-1), u = t - seg.t0, building = seg.kind === "step" ? seg.i : Infinity;
+    for (const m of motions) {
+      const k = seg.kind === "motion" && seg.m === m ? bump(u, seg.t1 - seg.t0) : 0;
+      if (k !== m.k) setMotion(m, k);
+    }
+    let order = 0;
+    for (const p of parts) {
+      const at = stepOf(p), moving = seg.kind === "motion" && p.motion === seg.m && seg.m.k > 0.001;
+      const state = building === Infinity ? (moving ? "moving" : "done") : at < building ? "done" : at === building ? "current" : "hidden";
+      if (state !== p.state) { paint(p, state); p.mesh.visible = state !== "hidden"; }
+      p.fly.set(0, 0, 0);
+      if (state === "current") {
+        const e = ease((u - order++ * 0.16) / 0.95), see = e < 1;
+        p.fly.copy(awayOf(p, seg.s)).multiplyScalar(1 - e);
+        if (p.mat.transparent !== see) { p.mat.transparent = see; p.mat.needsUpdate = true; }
+        p.mat.opacity = Math.min(1, 0.15 + e * 1.2);
+      }
+      place(p);
+    }
+    let n = 0;
+    for (const f of fast) {
+      const state = f.step < building ? "done" : f.step === building ? "current" : "hidden";
+      if (state !== f.state) { f.state = state; colorF(f, state === "current"); }
+      const e = state === "current" ? ease((u - seg.land - n++ * 0.045) / 0.52) : 1;
+      placeF(f, state !== "hidden" && e > 0, 1 - e, 6 * (1 - e));
+    }
+    const cam = tourCamera(t), g = glide.t < 0 ? 1 : easeIO(Math.min(1, (tourT - glide.t) / 1.2));
+    camera.position.lerpVectors(glide.pos, cam.pos, g);
+    controls.target.lerpVectors(glide.target, cam.target, g);
+    camera.lookAt(controls.target);
+    // the line under the view: the step or the motion, with the value its parts show now
+    const m = seg.kind === "motion" ? seg.m : null;
+    const caption = seg.kind === "step" ? { kind: "step", step: seg.i, text: seg.s.title } : m ? { kind: "motion", id: m.id, k: Math.round(m.k * 100) / 100, text: m.text ?? "" } : { kind: "show", text: "" };
+    const key = JSON.stringify(caption);
+    if (key !== lastCaption) { lastCaption = key; onTour?.(caption); }
+  }
+  function startTour() {
+    if (!hero || !TOUR) return;
+    clearTimeout(idle);
+    finish();
+    glide.t = 0;
+    glide.pos.copy(camera.position);
+    glide.target.copy(controls.target);
+    touring = true;
+    held = false;
+    tourT = 0;
+    userView = false;
+    delete host.dataset.user;
+    onSpin?.(true);
+    wake();
+  }
+  // the reader takes over: the finished object, as the tour left the motions; 25 s of quiet gives the tour back
+  function takeOver() {
+    clearTimeout(idle);
+    if (touring) {
+      touring = false;
+      for (const p of parts) { p.fly.set(0, 0, 0); paint(p, "done"); p.mesh.visible = true; place(p); }
+      for (const f of fast) { f.state = "done"; colorF(f, false); placeF(f, true); }
+      lastCaption = null;
+      onTour?.({ kind: "off", text: "" });
+      onSpin?.(false);
+    }
+    if (hero && !held && !REDUCED.matches && !CAPTURE) idle = setTimeout(startTour, IDLE);
+  }
+  const spin = (on) => {
+    if (!hero) return;
+    if (on) startTour();
+    else { held = true; takeOver(); }
+  };
+  controls.addEventListener("start", () => { userView = true; finish(); takeOver(); host.dataset.user = ""; });
+  controls.addEventListener("end", () => { if (hero && !touring) takeOver(); });
   controls.addEventListener("change", () => wake());
 
   // keyboard orbit on the focused canvas: arrows turn, + and - zoom
@@ -455,7 +603,7 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     finish();
     userView = true;
     host.dataset.user = "";
-    if (controls.autoRotate) spin(false);
+    takeOver();
     const sph = new T.Spherical().setFromVector3(camera.position.clone().sub(controls.target));
     if (r) {
       sph.theta += r[0] * 10 * RAD;
@@ -484,10 +632,22 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
   document.addEventListener("pointerdown", (e) => { if (active && !host.contains(e.target)) setActive(false); });
 
   // ---- loop: render only while something moves, and only in the viewer that owns the canvas
-  function wake() { need = true; if (!running && onScreen && R.owner === api) { running = true; requestAnimationFrame(tick); } }
+  function wake() { need = true; if (!running && onScreen && R.owner === api) { running = true; last = 0; requestAnimationFrame(tick); } }
+  // the quality tier of the shared renderer: a lower pixel ratio, then a smaller shadow map, then no shadows
+  function applyTier() {
+    if (tier === R.tier) return;
+    tier = R.tier;
+    R.r.setPixelRatio(Math.min(devicePixelRatio, PIXELS[tier]));
+    const size = tier >= 1 || small ? 1024 : 2048;
+    if (sun.shadow.mapSize.x !== size) { sun.shadow.mapSize.set(size, size); sun.shadow.map?.dispose(); sun.shadow.map = null; }
+    if (sun.castShadow !== tier < 2) { sun.castShadow = tier < 2; scene.traverse((o) => o.material && (o.material.needsUpdate = true)); }
+    if (box.clientWidth && box.clientHeight) R.r.setSize(box.clientWidth, box.clientHeight, false);
+  }
   function tick() {
     if (R.owner !== api || !onScreen) { running = false; return; }
-    const t = now();
+    const t = now(), dt = last ? (t - last) / 1000 : 0;
+    last = t;
+    applyTier();
     for (let i = anims.length - 1; i >= 0; i--) {
       const a = anims[i];
       if (t < a.t0) continue;
@@ -495,9 +655,15 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
       a.fn(k);
       if (k >= 1) anims.splice(i, 1);
     }
-    const moved = controls.update();
-    if (need || moved || anims.length || controls.autoRotate) { R.r.render(scene, camera); placeTags(); need = false; }
-    if (anims.length || moved || controls.autoRotate) requestAnimationFrame(tick);
+    if (touring) { tourT += Math.min(dt, 0.1); tourPose(tourT); }
+    const orbit = !touring && controls.update(), busy = anims.length || orbit || touring;
+    // 40 frames in motion slower than 24 ms each (under about 42 fps): one quality tier down, for every viewer
+    if (busy && dt > 0 && dt < 0.25 && R.tier < PIXELS.length - 1) {
+      R.perf.sum += dt;
+      if (++R.perf.n >= 40) { if (R.perf.sum / R.perf.n > 0.024) R.tier++; R.perf.n = R.perf.sum = 0; }
+    }
+    if (need || busy) { R.r.render(scene, camera); placeTags(); need = false; }
+    if (busy) requestAnimationFrame(tick);
     else running = false;
   }
 
@@ -542,7 +708,7 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
   const overlap = (a, b) => Math.max(0, Math.min(a.r, b.r) - Math.max(a.l, b.l)) * Math.max(0, Math.min(a.b, b.b) - Math.max(a.t, b.t));
   function placeTags() {
     const w = canvas.clientWidth, h = canvas.clientHeight, kit = kitPose(), placed = [];
-    const solids = kit ? [] : [...parts.filter((p) => p.mesh.visible && p.state !== "ghost").map((p) => p.mesh), ...props.filter((pr) => pr.m.visible).map((pr) => pr.m)];
+    const solids = kit ? [] : [...parts.filter((p) => p.mesh.visible && p.state !== "ghost" && p.state !== "glass").map((p) => p.mesh), ...props.filter((pr) => pr.m.visible).map((pr) => pr.m)];
     placePins(w, h, solids);
     tags.forEach((el) => (el.style.visibility = ""));
     // in the order of the parts, so the first parts keep their tags; the kit reads the tag sizes before it moves one
@@ -578,7 +744,8 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     if (R.owner !== api) return;
     // setSize clears the canvas: draw again before the browser paints
     R.r.setSize(w, h, false);
-    controls.update();
+    if (touring || still) tourPose(tourT);
+    else controls.update();
     R.r.render(scene, camera);
     placeTags();
     wake();
@@ -594,37 +761,50 @@ function build(host, data, { mode = "steps", label = "3D view", onSpin } = {}) {
     need = true;
     resize();
   }
-  new ResizeObserver(resize).observe(box);
-  new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; if (onScreen) { claim(); wake(); } }).observe(host);
   const retheme = () => {
     readTokens();
     grid.material.color.set(tok.grid);
     for (const pr of props) pr.m.material.color.copy(pr.base).multiplyScalar(tok.prop);
     finish();
     apply({ fly: false });
+    if (touring || still) { for (const p of parts) p.state = ""; tourPose(tourT); } // paint every part again in the tour
   };
-  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", retheme);
-  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  // live reduced-motion: finish every move at once and stop the turn
-  REDUCED.addEventListener("change", () => { if (!REDUCED.matches) return; finish(); paused = true; spin(false); });
+  // live reduced-motion: finish every move at once and stop the tour
+  REDUCED.addEventListener("change", () => { if (!REDUCED.matches) return; finish(); spin(false); });
 
   const clamp = (i) => (Number.isInteger(i) ? Math.max(0, Math.min(data.steps.length - 1, i)) : 0);
+  // a screen capture holds the tour still at ?tour=<seconds> (0: the finished object), so every capture is the same
+  const still = hero && CAPTURE && TOUR > 0;
   const api = {
     get step() { return step; },
-    get spinning() { return controls.autoRotate; },
+    get spinning() { return touring; },
+    get tour() { return { touring, t: tourT, length: TOUR }; },
     go(i, fly = true) { step = clamp(i); finish(); apply({ fly }); },
     replay() { finish(); apply({ fly: true }); },
     explode(on) { explode = on; applyExplode(true); frame(); },
     ghost(on) { ghost = on; finish(); apply({ fly: false }); },
+    xray(on) { xray = Boolean(on); finish(); apply({ fly: false }); },
+    // the reader drives motion id to share k (0 to 1): the tour stops
+    motion(id, k) { const m = motions.find((x) => x.id === id); if (!m) return; userView = true; takeOver(); setMotion(m, k); wake(); },
     reset() { userView = false; delete host.dataset.user; frame({ force: true }); },
-    spin(on) { paused = !on; spin(on); },
+    spin(on) { spin(on); },
     label(text) { label = String(text); if (R.owner === api) canvas.setAttribute("aria-label", label); },
     release() { controls.enabled = false; setActive(false); },
     key,
     retheme,
+    // compile every shader before the first frame, then start to draw when the viewer is on screen
+    async warm() {
+      try { await R.r.compileAsync?.(scene, camera); } catch { /* the first frame compiles what is left */ }
+      new ResizeObserver(resize).observe(box);
+      new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; if (onScreen) { claim(); wake(); } }).observe(host);
+      matchMedia("(prefers-color-scheme: dark)").addEventListener("change", retheme);
+      new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+      if (still) { tourT = Number.isFinite(TOUR_AT) && TOUR_AT > 0 ? TOUR_AT : 0; tourPose(tourT); }
+      else if (hero && !held && !REDUCED.matches) startTour();
+      else if (hero) onSpin?.(false);
+      host.dataset.ready = "";
+    },
   };
   apply({ fly: false });
-  spin(hero && !paused);
-  host.dataset.ready = "";
   return api;
 }

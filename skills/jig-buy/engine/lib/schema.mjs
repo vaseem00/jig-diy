@@ -71,6 +71,7 @@ export const SCHEMA = {
     props: map(ref("prop"), "Context boxes (wall, bench, floor). Shown in 3D, never bought. Key: prop id."),
     techniques: map(ref("technique"), "Extra technique cards, or cards that replace a built-in card. Key: technique id."),
     steps: list(ref("step"), "The build sequence. The plan, check and build commands need it."),
+    motions: list(ref("motion"), "Parts of the finished object that move (a drawer, a lid, a wheel). The Plan view shows each one working."),
     uses: ref("uses", "Project-wide consumables not tied to a step: { materialId: amount }."),
     finish: list(ref("finish"), "Project-wide finishes not tied to a step."),
     handoff: list(obj("Work this guide leaves to a professional.", ["topic", "text"], {
@@ -260,8 +261,19 @@ export const SCHEMA = {
         el: num("Elevation in degrees.", { minimum: -90, maximum: 90 }),
         zoom: pos("Zoom. More than 1 is closer."),
         note: str("A short note under the 3D view, shown at every level; never in print, plan.md or the no-script copy. For example \"The picture shows the cube upright.\"", { minLength: 1, maxLength: 120 }),
+        xray: bool("true: the parts built before this step show as glass, so the new parts inside them show. The reader can turn it off."),
       }),
       props: ids("Prop ids shown in this step."),
+    }),
+    motion: obj("A motion of the finished object: parts that slide or turn together. One value drives the 3D and the readout.", ["id", "name", "kind", "parts", "axis", "travel"], {
+      id: ref("id", "Unique motion id."),
+      name: str("What moves, for example \"Drawer\" or \"Left wheel\".", { minLength: 1, maxLength: 40 }),
+      kind: { enum: ["slide", "turn"], description: "slide: the parts move along the axis. turn: the parts turn about the axis line through pivot." },
+      parts: list(ref("id"), "Ids of the parts that move together. A part moves in one motion only.", { minItems: 1 }),
+      axis: { enum: ["x", "y", "z"], description: "slide: the direction of the move. turn: the direction of the turn axis." },
+      travel: num("slide: the distance in project units; negative moves the other way. turn: the angle in degrees, -360 to 360; positive turns counterclockwise, seen from the + end of the axis.", { minimum: -MAX, maximum: MAX }),
+      pivot: ref("vec3", "turn only: a point on the turn axis in project units, for example the centre of the hinge pin."),
+      text: str("What the motion shows, in STE descriptive sentences. Shown under the Plan view while the motion plays.", { minLength: 1, maxLength: 160 }),
     }),
   },
 };

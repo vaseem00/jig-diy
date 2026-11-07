@@ -148,13 +148,19 @@ const stepChip = (i) => h`<button type="button" data-go="${i}" aria-label="Step 
 const fastCount = (s) => s.fasteners.reduce((a, f) => a + (f.count ?? 1), 0);
 const viewerBox = (mode) => h`<div class="viewer" data-viewer="${mode}"><div data-canvas></div><div data-tags></div>
 <p class="hint" aria-hidden="true"><span class="h-mouse">Drag to turn. Scroll to zoom.</span><span class="h-touch">Tap the view to turn it.</span><span class="h-on">Drag to turn. Tap outside to scroll.</span></p>
-<div class="vbar"><div class="vtools">${mode === "hero" ? h`<button type="button" data-v="spin" aria-label="Pause the turn">Pause</button>`
-  : h`<button type="button" data-v="replay">Replay</button><button type="button" data-v="explode" aria-pressed="false">Apart</button><button type="button" data-v="ghost" aria-pressed="false">Show finished</button><button type="button" data-v="reset">Reset view</button>`}</div>${mode === "steps" && h`<div class="readout" data-readout aria-hidden="true"></div>`}</div></div>`;
+<div class="vbar"><div class="vtools">${mode === "hero" ? h`<button type="button" data-v="spin" aria-label="Pause the tour">Pause</button>`
+  : h`<button type="button" data-v="replay">Replay</button><button type="button" data-v="explode" aria-pressed="false">Apart</button><button type="button" data-v="ghost" aria-pressed="false">Show finished</button><button type="button" data-v="xray" aria-pressed="false" aria-disabled="true" title="See through the parts built before">X-ray</button><button type="button" data-v="reset" aria-label="Reset view">Reset<span class="wide"> view</span></button>`}</div>${mode === "steps" && h`<div class="readout" data-readout aria-hidden="true"></div>`}</div></div>`;
 
 // ---------- Plan
+// The motions of the finished object: one slider each, and the value its parts show (a slide in the project unit, a
+// turn in degrees). The Plan view tour moves the same sliders.
+const MOTIONS = Array.isArray(D.motions) ? D.motions : [];
+const motionValue = (m, k) => (m.kind === "turn" ? `${Math.round(Math.abs(m.travel) * k)}°` : len(Math.abs(m.travel) * k));
+const tryIt = () => MOTIONS.length > 0 && h`<section class="try" aria-labelledby="try-h"><h3 id="try-h">Try it</h3>${MOTIONS.map((m) => h`<div class="motion">
+<label for="m-${m.id}">${m.name}</label><input type="range" id="m-${m.id}" min="0" max="100" step="1" value="0" data-motion="${m.id}" aria-valuetext="${m.name}: ${motionValue(m, 0)}"><output for="m-${m.id}" data-mout="${m.id}">${motionValue(m, 0)}</output></div>`)}</section>`;
 function planShell() {
   const size = sizeOf();
-  return h`<div class="grid2"><div>${viewerBox("hero")}<div class="fig"><span>Fig 1 · ${D.meta.title}, finished</span>${size && h`<span>${size.map((v) => len(v, false)).join(" × ")} ${U} (W × H × D)</span>`}</div></div><div class="stack" data-fill="plan"></div></div>`;
+  return h`<div class="grid2"><div>${viewerBox("hero")}<p class="tourline" data-tourline aria-hidden="true"></p><div class="fig"><span>Fig 1 · ${D.meta.title}, finished</span>${size && h`<span>${size.map((v) => len(v, false)).join(" × ")} ${U} (W × H × D)</span>`}</div>${tryIt()}</div><div class="stack" data-fill="plan"></div></div>`;
 }
 function planText() {
   const ppe = D.tools.filter((t) => t.ppe), get = D.tools.filter((t) => !t.have && !t.ppe), have = D.tools.filter((t) => t.have && !t.ppe);
@@ -536,7 +542,21 @@ document.addEventListener("click", (e) => {
   } else if (d.v === "spin") heroView?.spin(!heroView.spinning);
   else if (d.v === "replay") stepsView?.replay();
   else if (d.v === "reset") stepsView?.reset();
-  else if ((d.v === "explode" || d.v === "ghost") && t.getAttribute("aria-disabled") !== "true") { const on = t.getAttribute("aria-pressed") !== "true"; t.setAttribute("aria-pressed", String(on)); stepsView?.[d.v](on); }
+  else if ((d.v === "explode" || d.v === "ghost" || d.v === "xray") && t.getAttribute("aria-disabled") !== "true") { const on = t.getAttribute("aria-pressed") !== "true"; t.setAttribute("aria-pressed", String(on)); stepsView?.[d.v](on); }
+});
+// a motion slider: the reader drives the part, and the tour stops
+const showMotion = (m, k) => {
+  const v = motionValue(m, k), input = $(`[data-motion="${CSS.escape(m.id)}"]`), out = $(`[data-mout="${CSS.escape(m.id)}"]`);
+  if (input && document.activeElement !== input) input.value = String(Math.round(k * 100));
+  input?.setAttribute("aria-valuetext", `${m.name}: ${v}`);
+  if (out) out.textContent = v;
+};
+document.addEventListener("input", (e) => {
+  const t = e.target, m = t.dataset?.motion !== undefined && MOTIONS.find((x) => x.id === t.dataset.motion);
+  if (!m) return;
+  const k = Number(t.value) / 100;
+  showMotion(m, k);
+  heroView?.motion(m.id, k);
 });
 document.addEventListener("change", (e) => {
   const t = e.target;
@@ -583,7 +603,14 @@ tab(start.tab ?? S.tab, { hash: Boolean(location.hash) });
 const fitBoxes = [$("table.parts")?.parentElement, $("[data-panel=shop] table.boq")?.closest(".scroll")].filter(Boolean);
 if (fitBoxes.length && typeof ResizeObserver === "function") { const ro = new ResizeObserver(() => requestAnimationFrame(() => { fitParts(); fitBoq(); })); fitBoxes.forEach((b) => ro.observe(b)); }
 document.fonts?.ready.then(() => { fitParts(true); fitBoq(true); });
-const onSpin = (on) => { const b = $('[data-v="spin"]'); if (b) { b.textContent = on ? "Pause" : "Play"; b.setAttribute("aria-label", on ? "Pause the turn" : "Play the turn"); } };
+const onSpin = (on) => { const b = $('[data-v="spin"]'); if (b) { b.textContent = on ? "Pause" : "Play"; b.setAttribute("aria-label", on ? "Pause the tour" : "Play the tour"); } };
+// the tour line under the Plan view: the step that goes in, or the motion and the value its parts show
+const onTour = (c) => {
+  const line = $("[data-tourline]"), m = c.kind === "motion" ? MOTIONS.find((x) => x.id === c.id) : null;
+  if (m) showMotion(m, c.k);
+  else if (c.kind !== "off") MOTIONS.forEach((x) => showMotion(x, 0)); // the tour holds every other motion at rest
+  if (line) line.textContent = c.kind === "step" ? `Step ${c.step + 1} · ${c.text}` : m ? `${m.name} · ${motionValue(m, c.k)}${c.text ? ` · ${c.text}` : ""}` : "";
+};
 const heroHost = $('[data-viewer="hero"]'), stepsHost = $('[data-viewer="steps"]');
-if (heroHost) createViewer(heroHost, D, { mode: "hero", onSpin, label: `3D model of the ${D.meta.title}, finished. ${KEYS}` }).then((v) => { heroView = v; });
+if (heroHost) createViewer(heroHost, D, { mode: "hero", onSpin, onTour, label: `3D model of the ${D.meta.title}, finished. ${KEYS}` }).then((v) => { heroView = v; });
 if (stepsHost) createViewer(stepsHost, D, { mode: "steps", label: stepLabel(S.step) }).then((v) => { stepsView = v; v?.go(S.step, false); });

@@ -27,8 +27,8 @@ A project is one file that holds the whole build: what you buy, what you cut, wh
 
 ## 1. World and units
 
-- `units` is `"mm"` (the default) or `"in"`. Every length in the file uses it: part and prop `size` and `at`, `from`, stock lengths, sheet sizes, `section`, `thick`, `kerf`, `trim`, `perLength`, and fastener `at`, `len`, `d` and `repeat.step`.
-- These are not lengths: `rotate` and `view.az`/`view.el` (degrees), `view.zoom` (a factor), `minutes`, `wait`, prices and `coverage` (area per unit of finish: m² in a `mm` project, ft² in an `in` project).
+- `units` is `"mm"` (the default) or `"in"`. Every length in the file uses it: part and prop `size` and `at`, `from`, stock lengths, sheet sizes, `section`, `thick`, `kerf`, `trim`, `perLength`, and fastener `at`, `len`, `d` and `repeat.step`, and a motion's `pivot` and the `travel` of a slide.
+- These are not lengths: `rotate`, the `travel` of a turn and `view.az`/`view.el` (degrees), `view.zoom` (a factor), `minutes`, `wait`, prices and `coverage` (area per unit of finish: m² in a `mm` project, ft² in an `in` project).
 - JSON has no fractions. Write inches as decimals: 1 1/2 in is `1.5`, 30 1/16 in is `30.0625`.
 - The engine works in millimetres inside. It shows lengths in the project unit: `mm` as whole numbers or one decimal, `in` as fractions to 1/16 ("30 1/16 in").
 - Axes: x to the right, y up, z toward the viewer. The floor is y = 0.
@@ -61,6 +61,7 @@ A project is one file that holds the whole build: what you buy, what you cut, wh
 | `props` | `{ id: Prop }` | `{}` | Context boxes: a wall, a bench, a floor. Never bought (section 7) |
 | `techniques` | `{ id: Technique }` | `{}` | Extra cards, or cards that replace a built-in card (section 8) |
 | `steps` | Step list | `[]` | The build sequence (section 9). `plan`, `check` and `build` need it |
+| `motions` | Motion list | `[]` | Parts of the finished object that slide or turn: a drawer, a lid, a wheel (section 9.3) |
 | `uses` | `{ materialId: amount }` | `{}` | Consumables not tied to a step (section 10) |
 | `finish` | Finish list | `[]` | Finishes not tied to a step (section 10) |
 | `handoff` | `[{ topic, text }]` | `[]` | Work this guide leaves to a professional (section 11) |
@@ -298,7 +299,7 @@ Each card also has a `why` line. The page shows a card the first time a First ti
 | `pose` | `"kit"`: the cut and printed parts lie flat on the floor with their letters (preparation steps) |
 | `focus` | Part ids lit in the kit pose |
 | `from` | `[dx, dy, dz]`: the path the new parts arrive along. A drawer slides in from the front (`[0, 0, 400]`), a top drops from above (`[0, 300, 0]`) |
-| `view` | `{ az, el, zoom, note }`: camera. `az` 0 is the front, 90 the right side, 180 the back. `el` is the height of the camera in degrees: the schema takes -90 to 90, but the viewer cannot look from below, so it holds an `el` below about 1 at the horizon. Use 1 to 89. `zoom` above 1 is closer. `note` (120 characters or fewer, linted as a description) is a short line under the 3D view, at every level. It is never in print, `plan.md` or the no-script copy, where there is no picture |
+| `view` | `{ az, el, zoom, note, xray }`: camera. `xray: true` opens the step with the parts built before as glass, so new parts inside them show (wiring in a case, a part behind a panel); the reader's X-ray button changes it for every step. `az` 0 is the front, 90 the right side, 180 the back. `el` is the height of the camera in degrees: the schema takes -90 to 90, but the viewer cannot look from below, so it holds an `el` below about 1 at the horizon. Use 1 to 89. `zoom` above 1 is closer. `note` (120 characters or fewer, linted as a description) is a short line under the 3D view, at every level. It is never in print, `plan.md` or the no-script copy, where there is no picture |
 | `props` | Prop ids shown in this step |
 
 Every level sees the warnings, the instructions and the check. Safety never depends on level.
@@ -334,8 +335,37 @@ A fastener is positional (drawn in 3D) or counted (not drawn):
 | `view.note` | description | 25 words, 120 characters | Every level, under the 3D view only |
 | `summary`, `handoff[].text` | description | 25 words | Every level |
 | `safety.cleared[].why` | description | 25 words, 10 to 240 characters | Never: only the safety review shows it |
+| `motions[].text` | description | 25 words, 160 characters | Every level, under the Plan view while the motion plays; the "What moves" list of `plan.md` and the no-script copy |
 
 The linter also checks: a command verb first, one instruction per sentence, the condition before the command, active voice, no -ing verb forms and common word replacements. [ste.md](ste.md) has the rules and the word list.
+
+### 9.3 Motions: what moves on the finished object
+
+A motion is a set of parts that slide or turn together after the build: a drawer, a lid on its hinges, a door, a wheel, a cover that lifts off. One value drives it: 0 is the parts where `at` puts them, 1 is the full `travel`. The Plan view shows each motion working, a "Try it" slider moves it, and the value under the slider (the distance or the angle) comes from the same `travel`.
+
+```json
+"motions": [
+  { "id": "door", "name": "Door", "kind": "turn", "parts": ["F1"], "axis": "y", "pivot": [0, 5, 418], "travel": -100,
+    "text": "The door turns open on its two hinges." },
+  { "id": "drawer", "name": "Drawer", "kind": "slide", "parts": ["G1", "G2", "G3"], "axis": "z", "travel": 300 }
+]
+```
+
+| Field | Meaning |
+|---|---|
+| `id` | Unique motion id |
+| `name` | What moves, 40 characters or fewer: "Door", "Left wheel" |
+| `kind` | `slide`: the parts move along `axis`. `turn`: the parts turn about a line along `axis` through `pivot` |
+| `parts` | Part ids that move together. A part is in one motion only |
+| `axis` | `x`, `y` or `z` |
+| `travel` | A slide: the distance in the project unit, negative for the other way. A turn: degrees, -360 to 360, not 0. A positive turn is counterclockwise seen from the + end of the axis: about `y`, seen from above |
+| `pivot` | A turn only, required: a point on the turn axis in the project unit, such as the centre of the hinge pin or the axle |
+| `text` | What the motion shows, as STE description (optional) |
+
+- Screws move with the part that their shank enters first.
+- In guide mode, the engine moves the parts to 25, 50, 75 and 100% of the travel. A part that then goes more than 1 mm into a part or a prop that does not move with it is warning `W_MOTION_HIT`. The check uses boxes: the box of a turned part is larger than the part, so a corner can report a hit that is not there. Fix a real hit with a number (a shorter travel, a pivot at the real hinge, a part moved out of the path). Never hide it with the camera.
+- A pair of parts that already overlaps at rest, or that lists the other in `joins`, is not a hit.
+- Model a motion only when the object really moves when it is finished. A motion is not a build step: the steps still show how the parts go in.
 
 ## 10. Project-wide uses and finish
 
@@ -404,6 +434,7 @@ Each problem has a `path` into the project (`steps[3].do[1]`), a `where` for peo
 | `W_COUNTED_FASTENER` | A counted fastener in guide mode | Give `at` and `dir`, with `repeat` for a row |
 | `W_TIP_SMALL` | Under 600 mm (24 in) tall, over `safety.tipRatio`, with no anchor (a lamp, a box) | Make the base wider or deeper, or put weight in the base. A wall fixing is for furniture 600 mm (24 in) tall or more |
 | `W_CLEARED_UNUSED` | A `safety.cleared` entry clears nothing: no text of its topic, a topic that `handoff` names, or a second entry for one topic | Remove the entry. `--strict` stops on this warning |
+| `W_MOTION_HIT` | Guide mode: at 25, 50, 75 or 100% of its travel, a part of a motion goes more than 1 mm into a part or prop that does not move with it | A slide: make the travel shorter, or move the other part out of the path. A turn: put the pivot at the centre of the hinge pin or the axle, else make the angle smaller |
 | `W_NO_PRINT_STEP` | Plan or guide mode: no step has `prints` for a printed material, so its printer time is in no step | Add `"prints": true` to the step in which the printer makes the parts, or add the material id to its `prints` list |
 | `STE_*` | A sentence breaks a writing rule | Rewrite the sentence. Add a real trade word to `terms` or `verbs` |
 | `STE_WARN_NO_RISK` | A WARNING or CAUTION with no risk sentence after its command: "When you drill, wear safety glasses." | Give the risk in a second sentence: "Wear safety glasses. The bit can throw chips into your eyes." |

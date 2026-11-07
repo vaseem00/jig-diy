@@ -4,8 +4,8 @@
 import { spawn } from "node:child_process";
 import { existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
-import { delimiter, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
-import { fileURLToPath } from "node:url";
+import { basename, delimiter, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 export class CaptureError extends Error {
   constructor(message, cause) { super(message, cause ? { cause } : undefined); this.name = "CaptureError"; }
@@ -107,10 +107,12 @@ function connect(url, timeout) {
   });
 }
 
-// The page URL with ?capture (the viewer keeps its drawing buffer) and the hash to open.
-export function captureUrl(url, hash) {
+// The page URL with ?capture (the viewer keeps its drawing buffer and holds the Plan view tour still), the tour time
+// (?tour=<seconds>: the Plan view shows the tour at that time) and the hash to open.
+export function captureUrl(url, hash, tour) {
   const u = new URL(url);
   if (!/(^|[?&])capture(=|&|$)/.test(u.search.slice(1))) u.search = u.search.length > 1 ? `${u.search}&capture` : "?capture";
+  if (Number.isFinite(tour) && tour >= 0) u.searchParams.set("tour", String(Math.round(tour * 100) / 100));
   if (hash) u.hash = String(hash).replace(/^#/, "");
   return u.href;
 }
@@ -167,16 +169,55 @@ export function browserArgs(profile, { platform = process.platform, root = proce
   ];
 }
 
-// capture(url, opts) -> { out, url, consoleErrors: [text], sidewaysScroll: bool }.
+// capture(url, opts) -> { out, url, consoleErrors: [text], sidewaysScroll: bool, route }.
 // opts: out (.png or .webp, required), width, height, scale (device pixel ratio), theme (light | dark), select (a CSS
-// selector to clip to; else the full page height), wait (ms after load), hash ("build/3"), reducedMotion, browser, timeout,
+// selector to clip to; else the full page height), viewport (true: clip to the window, not the full page height), wait
+// (ms after load), hash ("build/3"), tour (seconds: the Plan view tour at that time), reducedMotion, browser, timeout,
 // tmp (the folder that holds the browser profile; default the system temp folder).
-export async function capture(url, { out, width = 1280, height = 900, scale = 1, theme, select, wait = 4000, hash, reducedMotion = false, browser, timeout = 60000, tmp = tmpdir() } = {}) {
-  const format = /\.webp$/i.test(out ?? "") ? "webp" : /\.png$/i.test(out ?? "") ? "png" : null;
-  if (!format) throw new CaptureError(`The output "${out ?? ""}" must end in .png or .webp.`);
+export async function capture(url, opts = {}) {
+  const [one] = await captureMany(url, [{ hash: opts.hash, out: opts.out }], opts);
+  return one;
+}
+
+// The review sheet page: the tiles in a grid, each with its route label in the top left corner.
+const escHtml = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+export function sheetHtml(tiles, { cols = 3, tile = 512 } = {}) {
+  const cells = tiles.map((t) => `<figure><img src="${escHtml(t.file)}" alt=""><figcaption>${escHtml(t.label)}</figcaption></figure>`).join("");
+  return `<!doctype html><meta charset="utf-8"><title>jig review sheet</title><style>
+html,body{margin:0;background:#333}main{display:grid;grid-template-columns:repeat(${cols},${tile}px);gap:4px;padding:4px;width:max-content}
+figure{position:relative;margin:0;background:#fff}img{display:block;width:${tile}px;height:auto}
+figcaption{position:absolute;right:6px;top:6px;max-width:70%;padding:2px 8px;border-radius:4px;background:rgba(0,0,0,.72);color:#fff;font:600 15px/1.4 system-ui,sans-serif}
+</style><main>${cells}</main>\n`;
+}
+
+// captureSheet(url, { out, hashes, labels, cols, ...captureMany opts }) -> { out, shots, consoleErrors, sideways }.
+// The review loop in one image: each route (window size, not the full page) as a tile with its label, cols tiles to a
+// row. The tiles live in a temporary folder that is removed after. sideways: the routes that scroll sideways.
+export async function captureSheet(url, { out, hashes, labels, cols = 3, tmp = tmpdir(), ...opts } = {}) {
+  if (!/\.(webp|png)$/i.test(out ?? "")) throw new CaptureError(`The output "${out ?? ""}" must end in .png or .webp.`);
+  if (!Array.isArray(hashes) || !hashes.length) throw new CaptureError("No route for the sheet.");
+  const dir = mkdtempSync(join(tmp, "jig-sheet-"));
+  try {
+    const shots = await captureMany(url, hashes.map((hash, i) => ({ hash, out: join(dir, `${String(i).padStart(3, "0")}.png`) })), { ...opts, viewport: true, tmp });
+    const n = Math.max(1, Math.min(Number(cols) || 3, shots.length)), tile = 512;
+    writeFileSync(join(dir, "sheet.html"), sheetHtml(shots.map((s, i) => ({ file: basename(s.out), label: labels?.[i] ?? `#${String(hashes[i]).replace(/^#/, "")}` })), { cols: n, tile }));
+    const [sheet] = await captureMany(pathToFileURL(join(dir, "sheet.html")).href, [{ out }], { width: n * (tile + 4) + 4, height: 400, scale: 1, wait: 400, browser: opts.browser, timeout: opts.timeout, tmp });
+    return { out: sheet.out, shots: shots.map((s, i) => ({ hash: hashes[i], route: s.route, sidewaysScroll: s.sidewaysScroll })),
+      consoleErrors: shots.at(-1).consoleErrors, sideways: shots.filter((s) => s.sidewaysScroll).map((s) => s.route) };
+  } finally {
+    try { rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 }); } catch { /* locked: the folder stays in the temp folder */ }
+  }
+}
+
+// captureMany(url, shots, opts) -> one result for each shot { hash, out }, in one browser session. The first shot
+// opens the page; each later one sets location.hash and waits opts.wait (default 2500 ms). Every result carries the
+// console errors of the whole session so far.
+export async function captureMany(url, shots, { width = 1280, height = 900, scale = 1, theme, select, viewport = false, wait, tour, reducedMotion = false, browser, timeout = 60000, tmp = tmpdir() } = {}) {
+  if (!Array.isArray(shots) || !shots.length) throw new CaptureError("No shot to capture.");
+  for (const s of shots) if (!/\.(webp|png)$/i.test(s.out ?? "")) throw new CaptureError(`The output "${s.out ?? ""}" must end in .png or .webp.`);
   const exe = browser ?? findBrowser();
   if (!exe) throw new CaptureError("No Chrome, Chromium or Edge found. Install one, or set JIG_BROWSER to the browser program.");
-  const page = captureUrl(url, hash), file = resolve(out), consoleErrors = [];
+  const page = captureUrl(url, shots[0].hash, tour), consoleErrors = [], results = [];
   removeStaleProfiles({ dir: tmp });
   const profile = mkdtempSync(join(tmp, "jig-capture-"));
   const args = browserArgs(profile);
@@ -222,41 +263,49 @@ export async function capture(url, { out, width = 1280, height = 900, scale = 1,
     const nav = await send("Page.navigate", { url: page });
     if (nav.errorText) throw new CaptureError(`The page "${url}" cannot open: ${nav.errorText}.`);
     await Promise.race([load, later(Math.min(timeout, 30000))]);
-    await sleep(wait);
+    await sleep(wait ?? 4000);
     const evaluate = async (expression) => {
       const r = await send("Runtime.evaluate", { expression, returnByValue: true, awaitPromise: true });
       if (r.exceptionDetails) throw new CaptureError(`The page script failed: ${r.exceptionDetails.exception?.description ?? r.exceptionDetails.text}`);
       return r.result?.value;
     };
-    const sidewaysScroll = await evaluate("document.documentElement.scrollWidth > document.documentElement.clientWidth + 1");
-    const route = await evaluate("location.hash"); // a jig page rewrites a step or tab that it does not have
-    // Clip: the selected element (scrolled into view; centred when it fits, so a sticky bar at the top does not cover
-    // it), or the full page height at the window width.
-    const box = await evaluate(select
-      ? `(() => { const el = document.querySelector(${JSON.stringify(select)}); if (!el) return null;
-          el.scrollIntoView({ block: el.getBoundingClientRect().height < innerHeight * 0.8 ? "center" : "start" });
-          const r = el.getBoundingClientRect(); return { x: r.left + scrollX, y: r.top + scrollY, width: r.width, height: r.height }; })()`
-      : `(() => { scrollTo(0, 0); const d = document.documentElement; return { x: 0, y: 0, width: d.clientWidth || innerWidth,
-          height: Math.max(d.scrollHeight, document.body ? document.body.scrollHeight : 0, innerHeight) }; })()`);
-    if (!box) throw new CaptureError(`No element matches --select "${select}".`);
-    if (!(box.width > 0 && box.height > 0)) throw new CaptureError(`The element "${select}" has no size on the page.`);
-    if (select) await sleep(150);
-    const clip = { x: Math.max(0, box.x), y: Math.max(0, box.y), width: box.width, height: Math.min(box.height, Math.floor(16000 / scale)), scale: 1 };
-    const shot = await send("Page.captureScreenshot", { format, ...(format === "webp" ? { quality: 90 } : {}), clip, captureBeyondViewport: true });
-    // Never write through a link: a linked folder, a symbolic link, or a hard link (a file with more than one name).
-    const shell = shellCwd(), rel = shell && relative(process.cwd(), file);
-    const linked = linkedFolder(file, [pageDir(url), process.cwd()])
-      ?? (shell && rel !== ".." && !rel.startsWith(`..${sep}`) && !isAbsolute(rel) ? linkedFolder(join(shell, rel), [pageDir(url), shell]) : null);
-    if (linked) throw new CaptureError(`The folder "${linked}" is a link to another folder. jig does not write through links. Remove the link, or give --out another path.`);
-    let st;
-    try { st = lstatSync(file, { throwIfNoEntry: false }); } catch { st = undefined; }
-    if (st && (st.isSymbolicLink() || (st.isFile() && st.nlink > 1)))
-      throw new CaptureError(`The file "${out}" is a link to another file. jig does not write through links. Remove the link, or give --out another path.`);
-    try {
-      mkdirSync(dirname(file), { recursive: true });
-      writeFileSync(file, Buffer.from(shot.data, "base64"));
-    } catch (e) { throw new CaptureError(`The image "${out}" cannot be written (${e.code ?? e.message}).`, e); }
-    return { out: file, url: page, consoleErrors, sidewaysScroll: sidewaysScroll === true, route: typeof route === "string" ? route : "" };
+    for (let n = 0; n < shots.length; n++) {
+      const { hash, out } = shots[n], format = /\.webp$/i.test(out) ? "webp" : "png", file = resolve(out);
+      if (n > 0) {
+        await evaluate(`location.hash = ${JSON.stringify(String(hash ?? "").replace(/^#/, ""))}`);
+        await sleep(wait ?? 2500);
+      }
+      const sidewaysScroll = await evaluate("document.documentElement.scrollWidth > document.documentElement.clientWidth + 1");
+      const route = await evaluate("location.hash"); // a jig page rewrites a step or tab that it does not have
+      // Clip: the selected element (scrolled into view; centred when it fits, so a sticky bar at the top does not cover
+      // it), or the full page height at the window width.
+      const box = await evaluate(select
+        ? `(() => { const el = document.querySelector(${JSON.stringify(select)}); if (!el) return null;
+            el.scrollIntoView({ block: el.getBoundingClientRect().height < innerHeight * 0.8 ? "center" : "start" });
+            const r = el.getBoundingClientRect(); return { x: r.left + scrollX, y: r.top + scrollY, width: r.width, height: r.height }; })()`
+        : `(() => { scrollTo(0, 0); const d = document.documentElement; return { x: 0, y: 0, width: d.clientWidth || innerWidth,
+            height: ${viewport ? "innerHeight" : "Math.max(d.scrollHeight, document.body ? document.body.scrollHeight : 0, innerHeight)"} }; })()`);
+      if (!box) throw new CaptureError(`No element matches --select "${select}".`);
+      if (!(box.width > 0 && box.height > 0)) throw new CaptureError(`The element "${select}" has no size on the page.`);
+      if (select) await sleep(150);
+      const clip = { x: Math.max(0, box.x), y: Math.max(0, box.y), width: box.width, height: Math.min(box.height, Math.floor(16000 / scale)), scale: 1 };
+      const shot = await send("Page.captureScreenshot", { format, ...(format === "webp" ? { quality: 90 } : {}), clip, captureBeyondViewport: true });
+      // Never write through a link: a linked folder, a symbolic link, or a hard link (a file with more than one name).
+      const shell = shellCwd(), rel = shell && relative(process.cwd(), file);
+      const linked = linkedFolder(file, [pageDir(url), process.cwd()])
+        ?? (shell && rel !== ".." && !rel.startsWith(`..${sep}`) && !isAbsolute(rel) ? linkedFolder(join(shell, rel), [pageDir(url), shell]) : null);
+      if (linked) throw new CaptureError(`The folder "${linked}" is a link to another folder. jig does not write through links. Remove the link, or give --out another path.`);
+      let st;
+      try { st = lstatSync(file, { throwIfNoEntry: false }); } catch { st = undefined; }
+      if (st && (st.isSymbolicLink() || (st.isFile() && st.nlink > 1)))
+        throw new CaptureError(`The file "${out}" is a link to another file. jig does not write through links. Remove the link, or give --out another path.`);
+      try {
+        mkdirSync(dirname(file), { recursive: true });
+        writeFileSync(file, Buffer.from(shot.data, "base64"));
+      } catch (e) { throw new CaptureError(`The image "${out}" cannot be written (${e.code ?? e.message}).`, e); }
+      results.push({ out: file, url: n ? captureUrl(url, hash, tour) : page, consoleErrors: [...consoleErrors], sidewaysScroll: sidewaysScroll === true, route: typeof route === "string" ? route : "" });
+    }
+    return results;
   } finally {
     if (cdp) { await Promise.race([cdp.send("Browser.close").catch(() => {}), later(2000)]); cdp.close(); }
     if (child?.pid && child.exitCode === null && child.signalCode === null) {
